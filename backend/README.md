@@ -85,3 +85,28 @@ This document will be most useful as a living document as things like the
 package management tool, file structure, etc. are subject to change. Developers 
 are encouraged to update this doc when important changes are made so that 
 everyone can benefit from an up-to-date README.
+
+## Docker
+
+### Building image
+
+Inside of the backend folder run the following command to build your docker image.
+
+`docker build -t healthcipes-backend .`
+
+This will create an image with the name healthcipes-backend
+
+### Running container
+
+Inside of the backend folder run the following command to run your docker container 
+from the image you built from the previous command.
+
+`docker run -d --name healthcipes-backend-container -p 8080:80 healthcipes-backend`
+
+- `-d` will the run the container in the background
+- `--name` Assigns a name to your container
+- `-p 80:80` publish ports
+    - `8080:80` will publish port 80 within the container to port 8080 on the Docker host 
+    - access through localhost:8080
+    - [Learn more](https://docs.docker.com/config/containers/container-networking/)
+

@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:8080"
   db:
-    image: mysql:5.7
+    build: ./database
     restart: always
     environment:
       MYSQL_DATABASE: 'db'

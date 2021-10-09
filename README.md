@@ -54,6 +54,14 @@ To get a local copy up and running follow these simple steps.
   npm install --global yarn
   ```
 
+### Docker
+
+```sh
+docker compose up
+```
+Backend is exposed on port 8080
+MySQL is exposed on port 3306
+
 ### Installation
 
 1. 

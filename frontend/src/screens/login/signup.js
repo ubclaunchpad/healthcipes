@@ -1,29 +1,28 @@
 import React, {useState, useRef} from 'react';
 import {
   Text,
-  StyleSheet,
   TextInput,
   SafeAreaView,
-  ScrollView,
-  Button,
+  Image,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
 } from 'react-native';
+import LoginButton from '../../components/loginButton';
+import color from '../../styles/color';
+import loginStyles from './loginStyles';
 
 export default function SignUp({navigation}) {
+  const [username, onUsernameChange] = useState('');
   const [email, onEmailChange] = useState('');
   const [password, onPasswordChange] = useState('');
+  const [confirmPassword, onConfirmChange] = useState('');
+  const emailInput = useRef(null);
   const passwordInput = useRef(null);
-
-  const localStyle = StyleSheet.create({
-    ForgotButton: {
-      alignSelf: 'flex-start',
-      marginLeft: '10%',
-      padding: 0,
-      paddingBottom: 30,
-    },
-    ForgotTitle: {
-      fontSize: 12,
-    },
-  });
+  const confirmInput = useRef(null);
 
   // Login User
   async function login(loginEmail, loginPassword) {
@@ -43,36 +42,102 @@ export default function SignUp({navigation}) {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView scrollEnabled={false} keyboardShouldPersistTaps="handled">
-        <Text>Login</Text>
-        <TextInput
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          placeholder="Email"
-          onChangeText={text => onEmailChange(text)}
-          value={email}
-          onSubmitEditing={() => {
-            passwordInput.current.focus();
-          }}
-        />
-        <TextInput
-          textContentType="newPassword"
-          secureTextEntry
-          placeholder="Password"
-          onChangeText={text => onPasswordChange(text)}
-          value={password}
-          ref={passwordInput}
-        />
-        <Button
-          titleStyle={localStyle.ForgotTitle}
-          buttonStyle={localStyle.ForgotButton}
-          title="Forgot Password?"
-          onPress={() => {
-            navigation.push('Forgot');
-          }}
-        />
-      </ScrollView>
+    <SafeAreaView style={{flex: 1}}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? '' : ''}
+        style={{flex: 1}}
+        contentContainerStyle={{flex: 1}}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
+          <View
+            style={{
+              paddingHorizontal: '15%',
+              flex: 1,
+            }}>
+            <Image
+              source={require('../../assets/Logo.png')}
+              style={{
+                width: '50%',
+                resizeMode: 'contain',
+                alignSelf: 'center',
+                flex: 1.5,
+              }}
+            />
+            <View style={{flex: 2.5}}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                }}>
+                Register
+              </Text>
+              <TextInput
+                textContentType="username"
+                placeholder="Username"
+                autoCorrect={false}
+                onChangeText={text => onUsernameChange(text)}
+                value={username}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                onSubmitEditing={() => {
+                  emailInput.current.focus();
+                }}
+              />
+              <TextInput
+                textContentType="emailAddress"
+                placeholder="Email"
+                autoCorrect={false}
+                onChangeText={text => onEmailChange(text)}
+                value={email}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                onSubmitEditing={() => {
+                  passwordInput.current.focus();
+                }}
+                ref={emailInput}
+              />
+              <TextInput
+                textContentType="newPassword"
+                secureTextEntry
+                placeholder="Password"
+                autoCorrect={false}
+                onChangeText={text => onPasswordChange(text)}
+                value={password}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                onSubmitEditing={() => {
+                  confirmInput.current.focus();
+                }}
+                ref={passwordInput}
+              />
+              <TextInput
+                textContentType="newPassword"
+                secureTextEntry
+                placeholder="Confirm Password"
+                autoCorrect={false}
+                onChangeText={text => onConfirmChange(text)}
+                value={confirmPassword}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                ref={confirmInput}
+              />
+            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              {LoginButton('Sign Up', submitForm)}
+            </View>
+            <View style={{flex: 1}}>
+              <TouchableOpacity
+                style={{alignSelf: 'center'}}
+                onPress={() => {
+                  navigation.push('Login');
+                }}>
+                <Text style={{fontWeight: '300'}}>
+                  Already have an account?{'   '}Login
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

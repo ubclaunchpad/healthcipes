@@ -9,6 +9,7 @@ import auth from '@react-native-firebase/auth';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/screens/login/signup';
 import Login from './src/screens/login/login';
+import Forgot from './src/screens/login/forgot';
 
 enableScreens();
 
@@ -118,7 +119,8 @@ export default function App() {
           initialRouteName="SignUp"
           screenOptions={{headerShown: false}}>
           <SignUpLoginStack.Screen name="SignUp" component={SignUp} />
-          <SignUpLoginStack.Screen name="LogIn" component={Login} />
+          <SignUpLoginStack.Screen name="Login" component={Login} />
+          <SignUpLoginStack.Screen name="Forgot" component={Forgot} />
         </SignUpLoginStack.Navigator>
       </NavigationContainer>
     );

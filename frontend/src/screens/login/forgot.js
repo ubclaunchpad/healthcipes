@@ -15,7 +15,7 @@ import LoginButton from '../../components/loginButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
 
-export default function Login({navigation}) {
+export default function Forgot({navigation}) {
   const [email, onEmailChange] = useState('');
   const [password, onPasswordChange] = useState('');
   const emailInput = useRef(null);
@@ -77,10 +77,12 @@ export default function Login({navigation}) {
             <View style={{flex: 3}}>
               <Text
                 style={{
-                  fontSize: 20,
+                  fontSize: 30,
                   fontWeight: 'bold',
+                  width: '70%',
+                  marginBottom: 30,
                 }}>
-                Login
+                Forgot Password?
               </Text>
               <TextInput
                 textContentType="emailAddress"
@@ -95,27 +97,9 @@ export default function Login({navigation}) {
                 }}
                 ref={emailInput}
               />
-              <TextInput
-                textContentType="newPassword"
-                secureTextEntry
-                placeholder="Password"
-                autoCorrect={false}
-                onChangeText={text => onPasswordChange(text)}
-                value={password}
-                style={loginStyles.textInput}
-                placeholderTextColor={color.gray}
-                ref={passwordInput}
-              />
               <View style={{marginTop: 80}}>
                 {LoginButton("Let's go!", submitForm)}
               </View>
-              <TouchableOpacity
-                style={{alignSelf: 'center', marginTop: 30}}
-                onPress={() => {
-                  navigation.push('Forgot');
-                }}>
-                <Text style={{fontWeight: '300'}}>Forgot Password?</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>

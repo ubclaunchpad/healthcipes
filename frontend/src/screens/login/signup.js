@@ -1,0 +1,179 @@
+import React, {useState, useRef} from 'react';
+import {
+  Text,
+  TextInput,
+  SafeAreaView,
+  Image,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
+} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import LoginButton from '../../components/loginButton';
+import color from '../../styles/color';
+import loginStyles from './loginStyles';
+
+export default function SignUp({navigation}) {
+  const [username, onUsernameChange] = useState('');
+  const [email, onEmailChange] = useState('');
+  const [password, onPasswordChange] = useState('');
+  const [confirmPassword, onConfirmChange] = useState('');
+  const emailInput = useRef(null);
+  const passwordInput = useRef(null);
+  const confirmInput = useRef(null);
+
+  // Sign Up User
+  async function signUp(
+    newUsername,
+    newEmail,
+    newPassword,
+    newConfirmPassword,
+  ) {
+    const usernameLower = newUsername.toLowerCase();
+    if (newEmail !== '') {
+      if (newPassword !== '') {
+        if (newPassword === newConfirmPassword) {
+          if (newPassword.length >= 6) {
+            if (
+              usernameLower.length <= 30 &&
+              !usernameLower.includes('/') &&
+              usernameLower.length >= 1
+            ) {
+              await auth()
+                .createUserWithEmailAndPassword(newEmail, newPassword)
+                .then(result => {
+                  console.log(result);
+                });
+            } else {
+              console.log('Invalid Username');
+            }
+          } else {
+            console.log('Invalid Password');
+          }
+        } else {
+          console.log('Password Does Not Match');
+        }
+      } else {
+        console.log('Password Cannot Be Empty');
+      }
+    } else {
+      console.log('Email Cannot Be Empty');
+    }
+  }
+
+  // Function to Pass
+  const submitForm = (
+    newUsername,
+    newEmail,
+    newPassword,
+    newConfirmPassword,
+  ) => {
+    signUp(newUsername, newEmail, newPassword, newConfirmPassword);
+  };
+
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? '' : ''}
+        style={{flex: 1}}
+        contentContainerStyle={{flex: 1}}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
+          <View
+            style={{
+              paddingHorizontal: '15%',
+              flex: 1,
+            }}>
+            <Image
+              source={require('../../assets/Logo.png')}
+              style={{
+                width: '50%',
+                resizeMode: 'contain',
+                alignSelf: 'center',
+                flex: 1.5,
+              }}
+            />
+            <View style={{flex: 2.5}}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                }}>
+                Register
+              </Text>
+              <TextInput
+                textContentType="username"
+                placeholder="Username"
+                autoCorrect={false}
+                onChangeText={text => onUsernameChange(text)}
+                value={username}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                onSubmitEditing={() => {
+                  emailInput.current.focus();
+                }}
+              />
+              <TextInput
+                textContentType="emailAddress"
+                placeholder="Email"
+                autoCorrect={false}
+                onChangeText={text => onEmailChange(text)}
+                value={email}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                onSubmitEditing={() => {
+                  passwordInput.current.focus();
+                }}
+                ref={emailInput}
+              />
+              <TextInput
+                textContentType="newPassword"
+                secureTextEntry
+                placeholder="Password"
+                autoCorrect={false}
+                onChangeText={text => onPasswordChange(text)}
+                value={password}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                onSubmitEditing={() => {
+                  confirmInput.current.focus();
+                }}
+                ref={passwordInput}
+              />
+              <TextInput
+                textContentType="newPassword"
+                secureTextEntry
+                placeholder="Confirm Password"
+                autoCorrect={false}
+                onChangeText={text => onConfirmChange(text)}
+                value={confirmPassword}
+                style={loginStyles.textInput}
+                placeholderTextColor={color.gray}
+                ref={confirmInput}
+              />
+            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              {LoginButton(
+                'Sign Up',
+                submitForm(username, email, password, confirmPassword),
+              )}
+            </View>
+            <View style={{flex: 1}}>
+              <TouchableOpacity
+                style={{alignSelf: 'center'}}
+                onPress={() => {
+                  navigation.push('Login');
+                }}>
+                <Text style={{fontWeight: '300'}}>
+                  Already have an account?{'   '}Login
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}

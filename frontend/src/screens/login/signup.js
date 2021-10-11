@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
 import LoginButton from '../../components/loginButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
@@ -24,10 +25,37 @@ export default function SignUp({navigation}) {
   const passwordInput = useRef(null);
   const confirmInput = useRef(null);
 
-  // Login User
-  async function login(loginEmail, loginPassword) {
-    if (loginEmail !== '') {
-      if (loginPassword !== '') {
+  // Sign Up User
+  async function signUp(
+    newUsername,
+    newEmail,
+    newPassword,
+    newConfirmPassword,
+  ) {
+    const usernameLower = newUsername.toLowerCase();
+    if (newEmail !== '') {
+      if (newPassword !== '') {
+        if (newPassword === newConfirmPassword) {
+          if (newPassword.length >= 6) {
+            if (
+              usernameLower.length <= 30 &&
+              !usernameLower.includes('/') &&
+              usernameLower.length >= 1
+            ) {
+              await auth()
+                .createUserWithEmailAndPassword(newEmail, newPassword)
+                .then(result => {
+                  console.log(result);
+                });
+            } else {
+              console.log('Invalid Username');
+            }
+          } else {
+            console.log('Invalid Password');
+          }
+        } else {
+          console.log('Password Does Not Match');
+        }
       } else {
         console.log('Password Cannot Be Empty');
       }
@@ -37,8 +65,13 @@ export default function SignUp({navigation}) {
   }
 
   // Function to Pass
-  const submitForm = () => {
-    login(email, password);
+  const submitForm = (
+    newUsername,
+    newEmail,
+    newPassword,
+    newConfirmPassword,
+  ) => {
+    signUp(newUsername, newEmail, newPassword, newConfirmPassword);
   };
 
   return (
@@ -122,7 +155,10 @@ export default function SignUp({navigation}) {
               />
             </View>
             <View style={{flex: 1, justifyContent: 'center'}}>
-              {LoginButton('Sign Up', submitForm)}
+              {LoginButton(
+                'Sign Up',
+                submitForm(username, email, password, confirmPassword),
+              )}
             </View>
             <View style={{flex: 1}}>
               <TouchableOpacity

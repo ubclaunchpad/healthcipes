@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import color from '../styles/color';
 
 export default function LoginButton(text, action) {

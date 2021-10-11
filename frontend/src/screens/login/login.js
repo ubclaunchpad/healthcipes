@@ -1,16 +1,15 @@
 import React, {useState, useRef} from 'react';
 import {
   Text,
-  StyleSheet,
   TextInput,
   SafeAreaView,
   TouchableOpacity,
-  Button,
   Keyboard,
   TouchableWithoutFeedback,
   View,
   Image,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
 import LoginButton from '../../components/loginButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
@@ -21,22 +20,15 @@ export default function Login({navigation}) {
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
 
-  const localStyle = StyleSheet.create({
-    ForgotButton: {
-      alignSelf: 'flex-start',
-      marginLeft: '10%',
-      padding: 0,
-      paddingBottom: 30,
-    },
-    ForgotTitle: {
-      fontSize: 12,
-    },
-  });
-
   // Login User
   async function login(loginEmail, loginPassword) {
     if (loginEmail !== '') {
       if (loginPassword !== '') {
+        await auth()
+          .signInWithEmailAndPassword(loginEmail, loginPassword)
+          .then(res => {
+            console.log(res);
+          });
       } else {
         console.log('Password Cannot Be Empty');
       }
@@ -46,8 +38,8 @@ export default function Login({navigation}) {
   }
 
   // Function to Pass
-  const submitForm = () => {
-    login(email, password);
+  const submitForm = (myEmail, myPassword) => {
+    login(myEmail, myPassword);
   };
 
   return (
@@ -107,7 +99,7 @@ export default function Login({navigation}) {
                 ref={passwordInput}
               />
               <View style={{marginTop: 80}}>
-                {LoginButton("Let's go!", submitForm)}
+                {LoginButton("Let's go!", submitForm(email, password))}
               </View>
               <TouchableOpacity
                 style={{alignSelf: 'center', marginTop: 30}}

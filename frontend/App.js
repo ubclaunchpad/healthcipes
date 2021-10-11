@@ -10,6 +10,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/screens/login/signup';
 import Login from './src/screens/login/login';
 import Forgot from './src/screens/login/forgot';
+import LoginButton from './src/components/loginButton';
 
 enableScreens();
 
@@ -17,6 +18,9 @@ function HomeScreen() {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
+      {LoginButton('Logout', () => {
+        auth().signOut();
+      })}
     </View>
   );
 }

@@ -1,112 +1,167 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import 'react-native-gesture-handler';
+import React, {useState, useEffect} from 'react';
+import {Text, View} from 'react-native';
+import {enableScreens} from 'react-native-screens';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import auth from '@react-native-firebase/auth';
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SignUp from './src/screens/login/signup';
+import Login from './src/screens/login/login';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+enableScreens();
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+function HomeScreen() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Home Screen</Text>
     </View>
   );
-};
+}
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+const HomeStack = createNativeStackNavigator();
+function Home() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <HomeStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+    </HomeStack.Navigator>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const NotificationStack = createNativeStackNavigator();
+function NotificationScreen() {
+  return (
+    <NotificationStack.Navigator
+      initialRouteName="Notification"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <NotificationStack.Screen name="Notification" component={HomeScreen} />
+    </NotificationStack.Navigator>
+  );
+}
 
-export default App;
+const CreateStack = createNativeStackNavigator();
+function CreateScreen() {
+  return (
+    <CreateStack.Navigator
+      initialRouteName="Create"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <CreateStack.Screen name="Create" component={HomeScreen} />
+    </CreateStack.Navigator>
+  );
+}
+
+const PantryStack = createNativeStackNavigator();
+function PantryScreen() {
+  return (
+    <PantryStack.Navigator
+      initialRouteName="Pantry"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <PantryStack.Screen name="Pantry" component={HomeScreen} />
+    </PantryStack.Navigator>
+  );
+}
+
+const ProfileStack = createNativeStackNavigator();
+function Profile() {
+  return (
+    <ProfileStack.Navigator
+      initialRouteName="Profile"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <ProfileStack.Screen name="Profile" component={HomeScreen} />
+    </ProfileStack.Navigator>
+  );
+}
+
+const SignUpLoginStack = createNativeStackNavigator();
+
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    // Handle user state changes
+    function onAuthStateChanged(newUser) {
+      setUser(newUser);
+      if (initializing) {
+        setInitializing(false);
+      }
+    }
+
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, [initializing]);
+
+  if (initializing) {
+    return null;
+  }
+
+  if (!user) {
+    return (
+      <NavigationContainer>
+        <SignUpLoginStack.Navigator
+          initialRouteName="SignUp"
+          screenOptions={{headerShown: false}}>
+          <SignUpLoginStack.Screen name="SignUp" component={SignUp} />
+          <SignUpLoginStack.Screen name="LogIn" component={Login} />
+        </SignUpLoginStack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarLabel: '',
+          }}
+        />
+        <Tab.Screen
+          name="Notification"
+          component={NotificationScreen}
+          options={{
+            tabBarLabel: '',
+          }}
+        />
+        <Tab.Screen
+          name="Create"
+          component={CreateScreen}
+          options={{
+            tabBarLabel: '',
+          }}
+        />
+        <Tab.Screen
+          name="Pantry"
+          component={PantryScreen}
+          options={{
+            tabBarLabel: '',
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarLabel: '',
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}

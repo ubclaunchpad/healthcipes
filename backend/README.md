@@ -16,7 +16,7 @@ installer, which should comes included in Python installations since Python3.4+.
 ## Setup
 
 For the steps below, we will assume the reader has freshly cloned the repo, has
-Python3.6+ installed and configured to run, and is at the root of `healthcipes/`
+Python3.6+ installed and configured to run, and is at the root of `umami/`
 
 To start, run the following command in your terminal to create the virtual 
 environment:
@@ -59,7 +59,7 @@ terminal. The next command prompt should no longer have `(env)` at the end.
 
 ## Running the server
 
-While at `healthcipes/backend/app/` with the virtual environment active, we can 
+While at `umami/backend/app/` with the virtual environment active, we can 
 start up our server in a hot refresh mode with the following command:
 
 `uvicorn app.main:app --reload`
@@ -92,16 +92,16 @@ everyone can benefit from an up-to-date README.
 
 Inside of the backend folder run the following command to build your docker image.
 
-`docker build -t healthcipes-backend .`
+`docker build -t umami-backend .`
 
-This will create an image with the name healthcipes-backend
+This will create an image with the name umami-backend
 
 ### Running container
 
 Inside of the backend folder run the following command to run your docker container 
 from the image you built from the previous command.
 
-`docker run -d --name healthcipes-backend-container -p 8080:80 healthcipes-backend`
+`docker run -d --name umami-backend-container -p 8080:80 umami-backend`
 
 - `-d` will the run the container in the background
 - `--name` Assigns a name to your container

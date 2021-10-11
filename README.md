@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h3 align="center">Healthcipes</h3>
+  <h3 align="center">Umami</h3>
 </p>
 
 
@@ -32,7 +32,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Healthcipes has many recipes
+Umami has many recipes
 
 
 ### Built With

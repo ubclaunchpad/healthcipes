@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "565774812432",
+    "project_id": "umami-2021",
+    "storage_bucket": "umami-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:565774812432:android:788c7db8d87cf47678d195",
+        "android_client_info": {
+          "package_name": "com.umami"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "565774812432-j3oa5tl9b2n908k58v0cphaqpt570cc0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSPk5bUYTjaA97BA0A32U5Yq0sfJBDCmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "565774812432-j3oa5tl9b2n908k58v0cphaqpt570cc0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "565774812432-8idrfg7tep2ug9dj6inlp7mfanhu7a9i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.launchpad.umami"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

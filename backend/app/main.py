@@ -7,10 +7,6 @@ app = FastAPI()
 async def root():
     return {"message": "An example GET"}
 
-@app.get("/getname")
-async def root():
-    return {"name": "Martin T."}
-
 @app.post("/")
 async def root():
     return {"message": "An example POST"}

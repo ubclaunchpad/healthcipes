@@ -3,7 +3,7 @@ import json
 
 #sample code to learn
 """
-recipe = {
+recipes = {
 
     "example": {
         "title": scraper.title(),

@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(www.umami.launchpad.com umami.launchpad.com)
+domains=(umami.ubclaunchpad.com)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="kobenkao@gmail.com" # Adding a valid address is strongly recommended

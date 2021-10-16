@@ -6,8 +6,7 @@
 
 
 <!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <h2 style="display: inline-block">Table of Contents</h2>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -22,10 +21,9 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Deployment</a></li>
+    <li><a href="#deployment">Deployment</a></li>
     <li><a href="#contributing">Contributing</a></li>
   </ol>
-</details>
 
 
 
@@ -37,9 +35,12 @@ Umami has many recipes
 
 ### Built With
 
-* React Native
-* FastAPI
-* MySQL
+* React Native - Frontend
+* FastAPI - Backend
+* MySQL - Database
+* Docker Compose - Build/Deployment
+* Python - Scraping
+* GCP Compute Engine - Hosting
 
 
 <!-- GETTING STARTED -->
@@ -50,26 +51,38 @@ To get a local copy up and running follow these simple steps.
 ### Prerequisites
 
 * yarn
-  ```sh
-  npm install --global yarn
-  ```
-
-### Docker
-
-```sh
-docker compose up
-```
-Backend is exposed on port 8080
-MySQL is exposed on port 3306
+* docker
+* docker-compose
 
 ### Installation
+#### Docker Backend
 
-1. 
+1. `cd` into root folder
+2. run `docker-compose up --build -d`
 
-<!-- DEPLOYMENT EXAMPLES -->
+Backend will be exposed on port 8080
+MySQL will be exposed on port 3306
+
+#### React Native Frontend
+
+1. `cd` into umami/frontend
+2. start server with `npx react-native start`
+3. open a new cli window in the same folder
+
+##### iOS:
+
+4. `cd` into ios and run `pod install`
+5. run `npx react-native run-ios`
+
+##### Android: 
+
+4. run `npx react-native run-android`
+
+<!-- DEPLOYMENT -->
 ## Deployment
 
-
+1. Clone repo to VM
+2. run `docker-compose up --build -d`
 
 <!-- CONTRIBUTING -->
 ## Contributing

@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import color from '../styles/color';
 
-export default function LoginButton(text, action) {
+export default function GoButton(text, action) {
   return (
     <TouchableOpacity
       style={{

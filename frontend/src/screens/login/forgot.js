@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import LoginButton from '../../components/loginButton';
+import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
 
@@ -81,7 +81,9 @@ export default function Forgot({navigation}) {
                 ref={emailInput}
               />
               <View style={{marginTop: 80}}>
-                {LoginButton("Let's go!", submitForm(email))}
+                {GoButton("Let's go!", () => {
+                  submitForm(email);
+                })}
               </View>
             </View>
           </View>

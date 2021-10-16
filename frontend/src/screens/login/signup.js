@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import LoginButton from '../../components/loginButton';
+import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
 
@@ -155,10 +155,9 @@ export default function SignUp({navigation}) {
               />
             </View>
             <View style={{flex: 1, justifyContent: 'center'}}>
-              {LoginButton(
-                'Sign Up',
-                submitForm(username, email, password, confirmPassword),
-              )}
+              {GoButton('Sign Up', () => {
+                submitForm(username, email, password, confirmPassword);
+              })}
             </View>
             <View style={{flex: 1}}>
               <TouchableOpacity

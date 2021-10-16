@@ -4,7 +4,7 @@ services:
     build: ./backend
     # <Port exposed>: <FastAPI port running inside backend container>
     ports:
-      - "8080:8080"
+      - "80:80"
   db:
     build: ./database
     restart: always

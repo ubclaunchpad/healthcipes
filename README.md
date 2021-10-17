@@ -58,7 +58,7 @@ To get a local copy up and running follow these simple steps.
 #### Docker Backend
 
 1. `cd` into root folder
-2. run `docker-compose up --build -d`
+2. run `docker-compose -f docker-compose.dev.yml up --build -d`
 
 Backend will be exposed on port 8080
 MySQL will be exposed on port 3306

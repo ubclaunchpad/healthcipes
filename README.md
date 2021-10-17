@@ -82,9 +82,10 @@ MySQL will be exposed on port 3306
 ## Deployment
 
 1. Clone repo to VM
-2. run chmod +x init-letsencrypt.sh
-3. run sudo ./init-letsencrypt.sh
-4. run `docker-compose up --build -d`
+2. run `docker-compose up --build -d`
+3. run chmod +x init-letsencrypt.sh
+4. run sudo ./init-letsencrypt.sh
+5. run `docker-compose up --build -d` for further change deployments
 
 <!-- CONTRIBUTING -->
 ## Contributing

@@ -15,10 +15,10 @@ CREATE TABLE `users_table` (
   `user_id` INT NOT NULL auto_increment,
   `first_name` VARCHAR(50),
   `last_name` VARCHAR(50),
-  `email` VARCHAR(50),
+  `email` VARCHAR(50) NOT NULL,
   `location` VARCHAR(50),
   `profile_picture` MEDIUMBLOB,
-  `recipe_driven` BOOLEAN,
+  `recipe_driven` BOOLEAN DEFAULT 1,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

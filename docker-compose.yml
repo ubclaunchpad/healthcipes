@@ -5,11 +5,13 @@ services:
     # <Port exposed>: <FastAPI port running inside backend container>
     ports:
       - "8080:8080"
+    depends_on: 
+      - db
   db:
     build: ./database
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
+      MYSQL_DATABASE: 'umami_db'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
@@ -17,6 +19,9 @@ services:
       - '3306:3306'
     expose:
       - '3306'
+    volumes: 
+      - ./database/data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/~init.sql
   nginx:
     build: ./nginx
     restart: always

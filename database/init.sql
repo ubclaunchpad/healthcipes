@@ -1,3 +1,4 @@
+# Initialize_Tables
 CALL umami_db.createUsersTable;
 CALL umami_db.createRecipesTable;
 CALL umami_db.createIngredientsInfoTable;

@@ -15,7 +15,7 @@ CREATE TABLE `recipes_table` (
   `recipe_id` INT NOT NULL auto_increment,
   `name` VARCHAR(50),
   `created_time` DATETIME,
-  `user_id` INT NOT NULL,
+  `user_id` VARCHAR(50) NOT NULL,
   `protein` INT,
   `carbs` INT,
   `calories` INT,

@@ -16,7 +16,7 @@ CREATE TABLE `images_table` (
   `recipe_id` INT NOT NULL,
   `image` MEDIUMBLOB,
   `date` DATETIME,
-  `user_id` INT NOT NULL,
+  `user_id` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`image_id`),
   CONSTRAINT fk_user_image FOREIGN KEY (`user_id`)
   REFERENCES `users_table`(`user_id`),

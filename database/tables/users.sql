@@ -12,12 +12,13 @@ CREATE PROCEDURE `createUsersTable` ()
 BEGIN
 
 CREATE TABLE `users_table` (
-  `user_id` INT NOT NULL auto_increment,
+  `user_id` VARCHAR(50) NOT NULL,
+  `username` VARCHAR(50),
   `first_name` VARCHAR(50),
   `last_name` VARCHAR(50),
   `email` VARCHAR(50),
   `location` VARCHAR(50),
-  `profile_picture` MEDIUMBLOB,
+  `profile_picture` VARCHAR(50),
   `recipe_driven` BOOLEAN,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

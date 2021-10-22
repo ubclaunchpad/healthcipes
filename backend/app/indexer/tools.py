@@ -15,3 +15,8 @@ def connect_mysql():
     except Exception as e:
         print("MYSQL ERROR: connect failed")
         logging.error(e)
+
+def init_conn():
+    conn = connect_mysql()
+    cursor = conn.cursor()
+    return conn, cursor

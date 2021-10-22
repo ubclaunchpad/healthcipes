@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import logging
-from indexer.tools import init_conn
+from app.indexer.tools import init_conn
 
 defaultRecipe = {}
 

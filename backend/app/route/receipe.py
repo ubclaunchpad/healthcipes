@@ -9,6 +9,7 @@ defaultRecipe = {
     "recipe_id": 0,
     "name": "testRecipeId",
     "created_time": datetime.today().strftime('%Y-%m-%d'),
+    # NOTE: need to create default user befault default recipe can be made
     "user_id": "testID",
     "protein": 1,
     "carbs": 2,

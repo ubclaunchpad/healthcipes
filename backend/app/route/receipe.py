@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe
 from datetime import datetime
 
 defaultRecipe = {
@@ -55,11 +55,12 @@ async def read_all_recipes():
 
 
 @router.post("/")
-async def create_recipe(user: dict = defaultRecipe):
+async def create_recipe(recipe: dict = defaultRecipe):
     try:
         conn, cursor = init_conn()
-        return "TODO", 200
-
+        res = post_recipe(conn, cursor, recipe)
+        return res, 200
+    # captures all exceptions from helper methods currently
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400

@@ -25,7 +25,6 @@ router = APIRouter(
 
 @router.get("/")
 async def read_recipe(keyword: str = "", filter: str = None):
-    print("key word is {}".format(keyword))
     if keyword:
         return await recipe_by_keyword(keyword)
     else:

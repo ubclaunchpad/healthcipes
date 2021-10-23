@@ -1,20 +1,25 @@
 import logging
+from pprint import pprint
 
 def get_recipe_by_keyword(cursor, keyword):
-    sql = 'getRecipeKeywordSearch'
+    sql_proc = 'getRecipeKeywordSearch'
     try:
-        cursor.callproc(sql, (keyword, ))
+        cursor.callproc(sql_proc, (keyword, ))
         return cursor.fetchall()
     except Exception as e:
-        print("MYSQL ERROR:", sql)
+        print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
 
 def get_all_recipes(cursor):
-    sql = 'getAllRecipes'
+    sql_proc = 'getAllRecipes'
     try:
-        cursor.callproc(sql)
+        cursor.execute("SHOW PROCEDURE STATUS WHERE Db = 'umami_db';")
+        # pprint("CURSOR STUFF")
+        # pprint(cursor)
+        # pprint(dir(cursor))
+        # cursor.callproc(sql_proc)
         return cursor.fetchall()
     except Exception as e:
-        print("MYSQL ERROR:", sql)
+        print("MYSQL ERROR:", sql_proc)
         logging.error(e)

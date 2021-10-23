@@ -4,7 +4,7 @@ DROP procedure IF EXISTS `getAllRecipes`;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `getAllRecipes` 
+CREATE PROCEDURE `getAllRecipes` ()
 BEGIN
 
 SELECT * FROM `recipes_table`;

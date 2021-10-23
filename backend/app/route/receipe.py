@@ -5,9 +5,9 @@ from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes
 from datetime import datetime
 
 defaultRecipe = {
-    "name": "testID",
+    "name": "testRecipeId",
     "created_time": datetime.today().strftime('%Y-%m-%d'),
-    "user_id": None,
+    "user_id": "testID",
     "protein": 1,
     "carbs": 2,
     "calories": 3,

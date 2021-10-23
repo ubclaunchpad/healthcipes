@@ -6,11 +6,38 @@ DROP procedure IF EXISTS `getUser`;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `postUser` (IN `_user_id` VARCHAR(50), IN `_username` VARCHAR(50), IN `_first_name` VARCHAR(50), IN `_last_name` VARCHAR(50), IN `_email` VARCHAR(50), IN `_location` VARCHAR(50), IN `_profile_picture` VARCHAR(50), IN `_recipe_driven` BOOLEAN)
+CREATE PROCEDURE `postUser` (
+    IN `_user_id` VARCHAR(50),
+    IN `_username` VARCHAR(50),
+    IN `_first_name` VARCHAR(50),
+    IN `_last_name` VARCHAR(50),
+    IN `_email` VARCHAR(50),
+    IN `_location` VARCHAR(50),
+    IN `_profile_picture` VARCHAR(50),
+    IN `_recipe_driven` BOOLEAN
+)
 BEGIN
 
-REPLACE INTO `users_table` (`user_id`, `username`, `first_name`, `last_name`, `email`, `location`, `profile_picture`, `recipe_driven`)
-VALUES (`_user_id`, `_username`, `_first_name`, `_last_name`, `_email`, `_location`, `_profile_picture`, `_recipe_driven`);
+REPLACE INTO `users_table` (
+    `user_id`,
+    `username`,
+    `first_name`,
+    `last_name`,
+    `email`,
+    `location`,
+    `profile_picture`,
+    `recipe_driven`
+)
+VALUES (
+    `_user_id`,
+    `_username`,
+    `_first_name`,
+    `_last_name`,
+    `_email`,
+    `_location`,
+    `_profile_picture`,
+    `_recipe_driven`
+);
 
 END$$
 

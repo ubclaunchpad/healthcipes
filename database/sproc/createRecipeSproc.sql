@@ -43,7 +43,8 @@ VALUES (
     `_servings`,
     `_vegetarian`,
     `_vegan`,
-    `_cooking_time`)
+    `_cooking_time`
+);
 
 END$$
 

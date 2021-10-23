@@ -5,6 +5,8 @@ from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_rec
 from datetime import datetime
 
 defaultRecipe = {
+    # TODO: id is required due to the nature of the query, should just auto increment if given null id
+    "recipe_id": 0,
     "name": "testRecipeId",
     "created_time": datetime.today().strftime('%Y-%m-%d'),
     "user_id": "testID",

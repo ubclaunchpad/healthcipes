@@ -53,6 +53,8 @@ def post_recipe(conn, cursor, recipe):
             cooking_time,
         ))
         conn.commit()
+        print("HERE")
+        print(recipe)
         return recipe
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)

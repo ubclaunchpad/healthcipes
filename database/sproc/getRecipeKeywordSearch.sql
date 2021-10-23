@@ -11,3 +11,5 @@ BEGIN
 SELECT * FROM `recipes_table` WHERE name LIKE _keyword;
 
 END$$
+
+DELIMITER ;

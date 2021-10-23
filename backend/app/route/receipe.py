@@ -25,10 +25,11 @@ router = APIRouter(
 
 @router.get("/")
 async def read_recipe(keyword: str = "", filter: str = None):
+    print("key word is {}".format(keyword))
     if keyword:
-        return recipe_by_keyword(keyword)
+        return await recipe_by_keyword(keyword)
     else:
-        return read_all_recipes()
+        return await read_all_recipes()
 
 # Seems natural to merge the below with the / path and then conditional 
 # statement on the keyword being empty or not?

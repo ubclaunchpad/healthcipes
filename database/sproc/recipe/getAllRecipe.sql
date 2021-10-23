@@ -4,9 +4,11 @@ DROP procedure IF EXISTS `getAllRecipes`;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `getRecipeKeywordSearch` 
+CREATE PROCEDURE `getAllRecipes` 
 BEGIN
 
 SELECT * FROM `recipes_table`;
 
 END$$
+
+DELIMITER ;

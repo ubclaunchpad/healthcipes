@@ -33,9 +33,15 @@ async def read_recipe(keyword: str = "", filter: str = None):
 # Seems natural to merge the below with the / path and then conditional 
 # statement on the keyword being empty or not?
 async def recipe_by_keyword(keyword: str = ""):
-    _, cursor = init_conn()
-    res = get_recipe_by_keyword(cursor, keyword)
-    return res, 200
+    try:
+        _, cursor = init_conn()
+        res = get_recipe_by_keyword(cursor, keyword)
+        return res, 200
+    # captures all exceptions from helper methods currently
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
 
 async def read_all_recipes():
     try:

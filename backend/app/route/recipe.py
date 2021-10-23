@@ -1,7 +1,9 @@
 from fastapi import APIRouter
+from typing import List, Optional, Union
+from pydantic import BaseModel
 import logging
-from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe
+from app.indexer.tools import init_conn, connect_mysql
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe
 from datetime import datetime
 
 defaultRecipe = {
@@ -18,6 +20,34 @@ defaultRecipe = {
     "vegan": True,
     "cooking_time": 10
 }
+
+class RecipeStep(BaseModel):
+    step_id: int
+    description: str
+    time: Optional[int] = None
+
+class RecipeIngredient(BaseModel):
+    ingredient_id: int
+    ingredient_name: str
+    category: str
+
+class RecipeDetails(BaseModel):
+    recipe_id: int
+    name: str
+    user_id: str
+    protein: int
+    carbs: int
+    calories: int
+    servings: int
+    vegetarian: bool
+    vegan: bool
+    cooking_time: Optional[int] = None
+    steps: List[RecipeStep]
+    ingredients: List[RecipeIngredient]
+
+class RecipeDetailsOut(BaseModel):
+    data: Union[RecipeDetails, str]
+    status_code: int
 
 router = APIRouter(
     prefix="/recipe",
@@ -63,3 +93,21 @@ async def create_recipe(recipe: dict = defaultRecipe):
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
+
+@router.get("/{recipe_id}", response_model=RecipeDetailsOut)
+async def read_recipe(recipe_id: int):
+    '''get recipe info, steps, and ingredients'''
+    try:
+        _, cursor = init_conn()
+        res = get_recipe(cursor, recipe_id)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }

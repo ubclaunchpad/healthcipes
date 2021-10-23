@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.recipes import getRecipeKeywordSearch
+from app.indexer.recipes import get_recipe_by_keyword
 
 defaultRecipe = {}
 
@@ -27,7 +27,7 @@ async def read_recipe(userID: str = ""):
 async def read_recipe_keyword(keyword: str = ""):
     try:
         _, cursor = init_conn()
-        res = getRecipeKeywordSearch(cursor, keyword)
+        res = get_recipe_by_keyword(cursor, keyword)
         return res, 200
 
     except Exception as e:

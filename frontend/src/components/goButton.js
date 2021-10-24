@@ -6,7 +6,7 @@ export default function GoButton(text, action) {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: color.black,
+        backgroundColor: color.appPrimary,
         width: '80%',
         alignSelf: 'center',
         height: 50,

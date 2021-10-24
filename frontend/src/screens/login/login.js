@@ -71,6 +71,7 @@ export default function Login({navigation}) {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
+                  color: color.appPrimary,
                 }}>
                 Login
               </Text>

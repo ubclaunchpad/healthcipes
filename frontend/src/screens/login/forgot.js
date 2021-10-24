@@ -67,6 +67,7 @@ export default function Forgot({navigation}) {
                   fontWeight: 'bold',
                   width: '70%',
                   marginBottom: 30,
+                  color: color.appPrimary,
                 }}>
                 Forgot Password?
               </Text>

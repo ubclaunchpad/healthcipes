@@ -11,12 +11,15 @@ import {
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
-import LoginButton from '../../components/loginButton';
+import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
+import {SIGN_UP} from '../../actions/accountActions';
 
 export default function SignUp({navigation}) {
+  const dispatch = useDispatch();
   const [username, onUsernameChange] = useState('');
   const [email, onEmailChange] = useState('');
   const [password, onPasswordChange] = useState('');
@@ -46,6 +49,19 @@ export default function SignUp({navigation}) {
                 .createUserWithEmailAndPassword(newEmail, newPassword)
                 .then(result => {
                   console.log(result);
+
+                  result.user.updateProfile({
+                    displayName: usernameLower,
+                  });
+
+                  dispatch({
+                    type: SIGN_UP,
+                    payload: {
+                      userID: result.user.uid,
+                      username: usernameLower,
+                      email: newEmail,
+                    },
+                  });
                 });
             } else {
               console.log('Invalid Username');
@@ -100,6 +116,7 @@ export default function SignUp({navigation}) {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
+                  color: color.appPrimary,
                 }}>
                 Register
               </Text>
@@ -155,10 +172,9 @@ export default function SignUp({navigation}) {
               />
             </View>
             <View style={{flex: 1, justifyContent: 'center'}}>
-              {LoginButton(
-                'Sign Up',
-                submitForm(username, email, password, confirmPassword),
-              )}
+              {GoButton('Sign Up', () => {
+                submitForm(username, email, password, confirmPassword);
+              })}
             </View>
             <View style={{flex: 1}}>
               <TouchableOpacity

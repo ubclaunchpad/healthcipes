@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
-import {Text, View} from 'react-native';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -10,31 +9,22 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/screens/login/signup';
 import Login from './src/screens/login/login';
 import Forgot from './src/screens/login/forgot';
-import LoginButton from './src/components/loginButton';
+import ShoppingStyle from './src/screens/onboarding/shopping-style';
+import AboutYou from './src/screens/onboarding/about-you';
+import Feed from './src/screens/tab1/feed';
 
 enableScreens();
 
-function HomeScreen() {
+const FeedStack = createNativeStackNavigator();
+function FeedScreen() {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-      {LoginButton('Logout', () => {
-        auth().signOut();
-      })}
-    </View>
-  );
-}
-
-const HomeStack = createNativeStackNavigator();
-function Home() {
-  return (
-    <HomeStack.Navigator
-      initialRouteName="Home"
+    <FeedStack.Navigator
+      initialRouteName="Feed"
       screenOptions={{
         headerShown: false,
       }}>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-    </HomeStack.Navigator>
+      <FeedStack.Screen name="Feed" component={Feed} />
+    </FeedStack.Navigator>
   );
 }
 
@@ -46,7 +36,7 @@ function NotificationScreen() {
       screenOptions={{
         headerShown: false,
       }}>
-      <NotificationStack.Screen name="Notification" component={HomeScreen} />
+      <NotificationStack.Screen name="Notification" component={Feed} />
     </NotificationStack.Navigator>
   );
 }
@@ -59,7 +49,7 @@ function CreateScreen() {
       screenOptions={{
         headerShown: false,
       }}>
-      <CreateStack.Screen name="Create" component={HomeScreen} />
+      <CreateStack.Screen name="Create" component={Feed} />
     </CreateStack.Navigator>
   );
 }
@@ -72,7 +62,7 @@ function PantryScreen() {
       screenOptions={{
         headerShown: false,
       }}>
-      <PantryStack.Screen name="Pantry" component={HomeScreen} />
+      <PantryStack.Screen name="Pantry" component={Feed} />
     </PantryStack.Navigator>
   );
 }
@@ -85,14 +75,59 @@ function Profile() {
       screenOptions={{
         headerShown: false,
       }}>
-      <ProfileStack.Screen name="Profile" component={HomeScreen} />
+      <ProfileStack.Screen name="Profile" component={Feed} />
     </ProfileStack.Navigator>
   );
 }
 
-const SignUpLoginStack = createNativeStackNavigator();
-
 const Tab = createBottomTabNavigator();
+function TabScreen() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Tab.Screen
+        name="FeedTab"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: '',
+        }}
+      />
+      <Tab.Screen
+        name="NotificationTab"
+        component={NotificationScreen}
+        options={{
+          tabBarLabel: '',
+        }}
+      />
+      <Tab.Screen
+        name="CreateTab"
+        component={CreateScreen}
+        options={{
+          tabBarLabel: '',
+        }}
+      />
+      <Tab.Screen
+        name="PantryTab"
+        component={PantryScreen}
+        options={{
+          tabBarLabel: '',
+        }}
+      />
+      <Tab.Screen
+        name="ProfileTab"
+        component={Profile}
+        options={{
+          tabBarLabel: '',
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+const SignUpLoginStack = createNativeStackNavigator();
+const MasterStack = createNativeStackNavigator();
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -131,43 +166,15 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarLabel: '',
-          }}
-        />
-        <Tab.Screen
-          name="Notification"
-          component={NotificationScreen}
-          options={{
-            tabBarLabel: '',
-          }}
-        />
-        <Tab.Screen
-          name="Create"
-          component={CreateScreen}
-          options={{
-            tabBarLabel: '',
-          }}
-        />
-        <Tab.Screen
-          name="Pantry"
-          component={PantryScreen}
-          options={{
-            tabBarLabel: '',
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarLabel: '',
-          }}
-        />
-      </Tab.Navigator>
+      <MasterStack.Navigator
+        initialRouteName="MainTabs"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <MasterStack.Screen name="MainTabs" component={TabScreen} />
+        <MasterStack.Screen name="ShoppingStyle" component={ShoppingStyle} />
+        <MasterStack.Screen name="AboutYou" component={AboutYou} />
+      </MasterStack.Navigator>
     </NavigationContainer>
   );
 }

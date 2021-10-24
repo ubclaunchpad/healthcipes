@@ -9,6 +9,32 @@ def get_user(cursor, userID):
         print("MYSQL ERROR:", sql)
         logging.error(e)
 
+        
+def update_user(conn, cursor, user):
+    sql = 'updateUser'
+
+    userID = user['userID']
+    firstName = user.get('firstName', "")
+    lastName = user.get('lastName', "")
+    location = user.get('location', "")
+    profilePicture = user.get('profilePicture', "")
+    recipeDriven = user.get('recipeDriven', True)
+
+    try:
+        cursor.callproc(sql, (
+            userID,
+            firstName, 
+            lastName,
+            location,
+            profilePicture,
+            recipeDriven
+             ))
+        conn.commit()
+        return user
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)
+
 
 def post_user(conn, cursor, user):
     sql = 'postUser'
@@ -20,7 +46,7 @@ def post_user(conn, cursor, user):
     email = user['email']
     location = user.get('location', "")
     profilePicture = user.get('profilePicture', "")
-    recipeDrive = user.get('recipeDrive', True)
+    recipeDriven = user.get('recipeDriven', True)
 
     try:
         cursor.callproc(sql, (
@@ -31,7 +57,7 @@ def post_user(conn, cursor, user):
             email,
             location,
             profilePicture,
-            recipeDrive
+            recipeDriven
              ))
         conn.commit()
         return user

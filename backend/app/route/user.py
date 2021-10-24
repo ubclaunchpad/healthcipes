@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.users import post_user, get_user
+from app.indexer.users import post_user, get_user, update_user
 
 defaultUser = {
     "userID": "testID",
@@ -27,6 +27,18 @@ async def read_user(userID: str = ""):
         return "Error with {}".format(e), 400
 
 
+@router.put("/")
+async def update_user(user: dict = defaultUser):
+    try:
+        _, cursor = init_conn()
+        res = update_user(cursor, user)
+        return res, 200
+
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+      
 @router.post("/")
 async def create_user(user: dict = defaultUser):
     try:

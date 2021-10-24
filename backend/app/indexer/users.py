@@ -9,7 +9,7 @@ def get_user(cursor, userID):
         print("MYSQL ERROR:", sql)
         logging.error(e)
 
-
+        
 def update_user(conn, cursor, user):
     sql = 'updateUser'
 

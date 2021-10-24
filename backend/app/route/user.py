@@ -38,7 +38,7 @@ async def update_user(user: dict = defaultUser):
         logging.error(e)
         return "Error with {}".format(e), 400
 
-
+      
 @router.post("/")
 async def create_user(user: dict = defaultUser):
     try:

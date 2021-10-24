@@ -1,7 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
+from starlette.middleware.cors import CORSMiddleware
+from app.route import user, receipe
 
+router = APIRouter()
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"])
+
+
+app.include_router(user.router)
+app.include_router(receipe.router)
 
 @app.get("/")
 async def root():
@@ -18,3 +31,4 @@ async def root():
 @app.delete("/")
 async def root():
     return {"message": "An example DELETE"}
+

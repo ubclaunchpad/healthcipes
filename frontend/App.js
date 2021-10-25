@@ -12,6 +12,7 @@ import Forgot from './src/screens/login/forgot';
 import ShoppingStyle from './src/screens/onboarding/shopping-style';
 import AboutYou from './src/screens/onboarding/about-you';
 import Feed from './src/screens/tab1/feed';
+import Diet from './src/screens/onboarding/diet';
 
 enableScreens();
 
@@ -173,6 +174,7 @@ export default function App() {
         }}>
         <MasterStack.Screen name="MainTabs" component={TabScreen} />
         <MasterStack.Screen name="ShoppingStyle" component={ShoppingStyle} />
+        <MasterStack.Screen name="Diet" component={Diet} />
         <MasterStack.Screen name="AboutYou" component={AboutYou} />
       </MasterStack.Navigator>
     </NavigationContainer>

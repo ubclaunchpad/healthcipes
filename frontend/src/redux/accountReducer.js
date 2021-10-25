@@ -15,9 +15,7 @@ const defaultUser = {
 const userInfoReducer = (state = defaultUser, action) => {
   switch (action.type) {
     case USER_INFO:
-      return {
-        userInfo: action.payload,
-      };
+      return action.payload;
     default:
       return state;
   }

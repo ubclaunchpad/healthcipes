@@ -17,6 +17,7 @@ import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
 import {SIGN_UP} from '../../actions/accountActions';
+import { SET_ONBOARDING } from '../../actions/globalActions';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -45,10 +46,11 @@ export default function SignUp({navigation}) {
               !usernameLower.includes('/') &&
               usernameLower.length >= 1
             ) {
+              dispatch({type: SET_ONBOARDING, onboarded: false});
               await auth()
                 .createUserWithEmailAndPassword(newEmail, newPassword)
                 .then(result => {
-                  console.log(result);
+                  // console.log(result);
 
                   result.user.updateProfile({
                     displayName: usernameLower,

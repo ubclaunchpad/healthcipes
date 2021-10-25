@@ -10,25 +10,27 @@ import {
   Image,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import {useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 
-let onboard = false;
-
 export default function Feed({navigation}) {
-  if (!onboard) {
-    onboard = true;
+  const onboarded = useSelector(state => state.globalReducer.onboardReducer);
+
+  if (!onboarded) {
     navigation.replace('ShoppingStyle');
+  } else {
+    return (
+      <SafeAreaView style={{flex: 1}}>
+        <Text>HomeScreen</Text>
+        {GoButton('Logout', () => {
+          auth().signOut();
+        })}
+        {GoButton('Onboard (DEV)', () => {
+          navigation.replace('ShoppingStyle');
+        })}
+      </SafeAreaView>
+    );
   }
 
-  return (
-    <SafeAreaView style={{flex: 1}}>
-      <Text>HomeScreen</Text>
-      {GoButton('Logout', () => {
-        auth().signOut();
-      })}
-      {GoButton('Onboard (DEV)', () => {
-        navigation.replace('ShoppingStyle');
-      })}
-    </SafeAreaView>
-  );
+  return null;
 }

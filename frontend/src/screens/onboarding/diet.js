@@ -9,18 +9,25 @@ import {
   View,
   Image,
 } from 'react-native';
-import Slider from '@react-native-community/slider';
+import {Chip} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {SET_ONBOARDING} from '../../actions/globalActions';
-import color from '../../styles/color';
 import onboardingStyles from './onboardingStyles';
+import color from '../../styles/color';
 
-export default function AboutYou({navigation}) {
+export default function Diet({navigation}) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.accountReducer.userInfoReducer);
-
-  console.log(user);
+  const dietList = [
+    'Vegetarian',
+    'Gluten-free',
+    'Vegan',
+    'Keto',
+    'Paleo',
+    'Pescatarian',
+    'Dairy-free',
+  ];
 
   return (
     <View
@@ -34,31 +41,28 @@ export default function AboutYou({navigation}) {
       <Text style={[onboardingStyles.onboardingTitle, {width: '100%'}]}>
         Tell us about yourself
       </Text>
-      <View style={{flex: 3, marginVertical: 30}}>
+      <View style={{flex: 3, marginVertical: 30, justifyContent: 'flex-start'}}>
         <Text style={onboardingStyles.promptText}>
-          What do you care most about when cooking?
+          Do you have any dietary requirements?
         </Text>
-        <Slider
-          style={{width: 200, height: 40}}
-          minimumValue={0}
-          maximumValue={1}
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#000000"
-        />
-        <Text style={onboardingStyles.promptText}>
-          How experienced are you in the kitchen?
-        </Text>
-        <Slider
-          style={{width: 200, height: 40}}
-          minimumValue={0}
-          maximumValue={1}
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#000000"
-        />
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 3}}>
+          {dietList.map(item => {
+            return (
+              <Chip
+                key={item}
+                onPress={() => console.log(item)}
+                selectedColor={color.appPrimary}
+                style={onboardingStyles.chipStyle}
+                textStyle={onboardingStyles.chipTextStyle}>
+                {item}
+              </Chip>
+            );
+          })}
+        </View>
       </View>
-      {GoButton("Let's Cook!", () => {
+      {GoButton('Continue', () => {
         dispatch({type: SET_ONBOARDING, onboarded: true});
-        navigation.replace('MainTabs');
+        navigation.push('AboutYou');
       })}
     </View>
   );

@@ -7,7 +7,6 @@ USE `umami_db`$$
 CREATE PROCEDURE `createRecipe` (
     IN `_recipe_id` INT,
     IN `_name` VARCHAR(50),
-    IN `_created_time` DATETIME,
     IN `_user_id` VARCHAR(50),
     IN `_protein` INT,
     IN `_carbs` INT,
@@ -35,7 +34,7 @@ REPLACE INTO `recipes_table` (
 VALUES (
     `_recipe_id`,
     `_name`,
-    `_created_time`,
+    NOW(),
     `_user_id`,
     `_protein`,
     `_carbs`,

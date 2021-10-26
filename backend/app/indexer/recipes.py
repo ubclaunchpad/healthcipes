@@ -26,7 +26,6 @@ def post_recipe(conn, cursor, recipe):
 
     recipe_id = recipe['recipe_id']
     name = recipe['name']
-    created_time = recipe['created_time']
     user_id = recipe['user_id']
     protein = recipe['protein']
     carbs = recipe['carbs']
@@ -37,10 +36,9 @@ def post_recipe(conn, cursor, recipe):
     cooking_time = recipe['cooking_time']
 
     try:
-        cursor.callproc(sql_proc, (
+        hello = cursor.callproc(sql_proc, (
             recipe_id,
             name,
-            created_time,
             user_id,
             protein,
             carbs,
@@ -51,7 +49,7 @@ def post_recipe(conn, cursor, recipe):
             cooking_time,
         ))
         conn.commit()
-        return recipe
+        return hello
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)

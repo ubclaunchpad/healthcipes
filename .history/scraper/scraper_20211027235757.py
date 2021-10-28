@@ -11,7 +11,6 @@ urls = ["https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burger
         "https://tasty.co/recipe/pumpkin-chai-glazed-donuts",
         "https://www.allrecipes.com/recipe/12974/butternut-squash-soup/",
         "https://www.allrecipes.com/recipe/242052/chopped-brussels-sprout-salad/",
-        "https://tasty.co/recipe/lasagna-soup"
         ]
 
 # dictionary of recipe
@@ -33,7 +32,7 @@ recipe = {
 
 nutrients = {}
 ingredients = []
-meats = ['Chicken', 'Beef', 'Turkey', 'Sausage', 'Bacon', 'Lamb']
+meats = ['Chicken', 'Beef', 'Turket', 'Sausage', 'Bacon', 'Lamb']
 vegetarian = True
 vegan = False
 

@@ -11,7 +11,6 @@ urls = ["https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burger
         "https://tasty.co/recipe/pumpkin-chai-glazed-donuts",
         "https://www.allrecipes.com/recipe/12974/butternut-squash-soup/",
         "https://www.allrecipes.com/recipe/242052/chopped-brussels-sprout-salad/",
-        "https://tasty.co/recipe/lasagna-soup"
         ]
 
 # dictionary of recipe
@@ -33,7 +32,7 @@ recipe = {
 
 nutrients = {}
 ingredients = []
-meats = ['Chicken', 'Beef', 'Turkey', 'Sausage', 'Bacon', 'Lamb']
+meats = ["Chicken", "Beef", "Turket", "Sausage", "Bacon", "Lamb"]
 vegetarian = True
 vegan = False
 
@@ -44,7 +43,7 @@ for x in urls:
     nutrients.update(scraper.nutrients())
     ingredients.append(scraper.ingredients())
 
-    if 'Vegan' in recipename:
+    if "Vegan" in recipename:
         vegetarian = True
         vegan = True
     else:
@@ -62,21 +61,10 @@ for x in urls:
                 vegan = False
 
     try:
-        protein = float(re.findall("\d+\.\d+", nutrients["proteinContent"])[0])
+        protein = re.findall("\d+\.\d+", nutrients["proteinContent"])[0]
     except:
-        protein = None
-    try:
-        carbs = float(re.findall("\d+\.\d+", nutrients["carbohydrateContent"])[0])
-    except:
-        carbs = None
-    try:
-        cal = float(re.findall("\d+\.\d+", nutrients["calories"])[0])
-    except:
-        cal = None
-    try:
-        servings = int(re.findall("\d+", scraper.yields())[0])
-    except:
-        servings = None
+        protein = 0
+
 
     recipe.update({recipename: {
         'recipe_id': None,
@@ -86,7 +74,7 @@ for x in urls:
         "carbs": carbs,
         "protein": protein,
         "calories": cal,
-        "servings": servings,
+        "servings": scraper.yields(),
         "vegetarian": vegetarian,
         "vegan": vegan,
         "cooking_time": scraper.total_time()}})

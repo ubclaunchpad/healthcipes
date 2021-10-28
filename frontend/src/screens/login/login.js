@@ -9,12 +9,16 @@ import {
   View,
   Image,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
-import LoginButton from '../../components/loginButton';
+import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
+import {SET_ONBOARDING} from '../../actions/globalActions';
+import {GET_USER} from '../../actions/accountActions';
 
 export default function Login({navigation}) {
+  const dispatch = useDispatch();
   const [email, onEmailChange] = useState('');
   const [password, onPasswordChange] = useState('');
   const emailInput = useRef(null);
@@ -27,7 +31,9 @@ export default function Login({navigation}) {
         await auth()
           .signInWithEmailAndPassword(loginEmail, loginPassword)
           .then(res => {
-            console.log(res);
+            // console.log(res);
+            dispatch({type: GET_USER, userID: res.user.uid});
+            dispatch({type: SET_ONBOARDING, onboarded: true});
           });
       } else {
         console.log('Password Cannot Be Empty');
@@ -71,6 +77,7 @@ export default function Login({navigation}) {
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
+                  color: color.appPrimary,
                 }}>
                 Login
               </Text>
@@ -99,7 +106,9 @@ export default function Login({navigation}) {
                 ref={passwordInput}
               />
               <View style={{marginTop: 80}}>
-                {LoginButton("Let's go!", submitForm(email, password))}
+                {GoButton("Let's go!", () => {
+                  submitForm(email, password);
+                })}
               </View>
               <TouchableOpacity
                 style={{alignSelf: 'center', marginTop: 30}}

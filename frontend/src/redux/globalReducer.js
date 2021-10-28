@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {SET_ONBOARDING} from '../actions/globalActions';
 
-const defaultOnboardState = false;
+const defaultOnboardState = true;
 
 const onboardReducer = (state = defaultOnboardState, action) => {
   switch (action.type) {

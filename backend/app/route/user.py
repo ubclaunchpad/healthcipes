@@ -4,7 +4,7 @@ from app.indexer.tools import init_conn
 from app.indexer.users import post_user, get_user, update_user
 
 defaultUser = {
-    "userID": "testID",
+    "user_id": "testID",
     "username": "Test",
     "email": "test@test.com",
 }
@@ -28,10 +28,10 @@ async def read_user(userID: str = ""):
 
 
 @router.put("/")
-async def update_user(user: dict = defaultUser):
+async def put_user(user: dict = defaultUser):
     try:
-        _, cursor = init_conn()
-        res = update_user(cursor, user)
+        conn, cursor = init_conn()
+        res = update_user(conn, cursor, user)
         return res, 200
 
     except Exception as e:

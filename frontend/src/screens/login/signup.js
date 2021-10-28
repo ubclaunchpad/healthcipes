@@ -16,8 +16,8 @@ import auth from '@react-native-firebase/auth';
 import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
-import {SIGN_UP} from '../../actions/accountActions';
-import { SET_ONBOARDING } from '../../actions/globalActions';
+import {POST_USER} from '../../actions/accountActions';
+import {SET_ONBOARDING} from '../../actions/globalActions';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ export default function SignUp({navigation}) {
                   });
 
                   dispatch({
-                    type: SIGN_UP,
+                    type: POST_USER,
                     payload: {
                       userID: result.user.uid,
                       username: usernameLower,

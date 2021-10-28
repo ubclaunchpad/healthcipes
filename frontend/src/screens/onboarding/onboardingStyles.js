@@ -20,11 +20,16 @@ export default StyleSheet.create({
     fontSize: 18,
   },
   chipStyle: {
-    marginRight: 5,
-    marginBottom: 5,
-    padding: 10,
+    marginRight: 10,
+    marginBottom: 15,
+    borderRadius: 50,
   },
   chipTextStyle: {
     fontSize: 18,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  sliderText: {
+    color: color.textGray,
   },
 });

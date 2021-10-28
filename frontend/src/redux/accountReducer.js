@@ -10,6 +10,15 @@ const defaultUser = {
   profile_picture: '',
   location: '',
   recipe_driven: true,
+  vegetarian: false,
+  vegan: false,
+  pescatarian: false,
+  gluten_free: false,
+  dairy_free: false,
+  keto: false,
+  paleo: false,
+  style: 'ANY',
+  experience: 0.5,
 };
 
 const userInfoReducer = (state = defaultUser, action) => {

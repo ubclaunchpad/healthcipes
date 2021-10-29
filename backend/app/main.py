@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
-from app.route import user, receipe
+from app.route import user, recipe
 
 router = APIRouter()
 app = FastAPI()
@@ -14,7 +14,7 @@ app.add_middleware(
 
 
 app.include_router(user.router)
-app.include_router(receipe.router)
+app.include_router(recipe.router)
 
 @app.get("/")
 async def root():

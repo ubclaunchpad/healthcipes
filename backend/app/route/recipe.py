@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, filter_recipes
 from datetime import datetime
 from functools import reduce
 
@@ -43,8 +43,13 @@ async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatari
     if reduce(lambda x, y: x or y, filters):
         return await read_all_recipes()
     else: 
-        # get filters we're using 
-        filters = filter(lambda x: x, filters)
+        try:
+            filters = filter(lambda x: x, filters)
+            _, cursor = init_conn()
+            res = filter_recipes(curosr, filters**) 
+        except Exception as e:
+            logging.error(e)
+            return "Error with {}".format(e), 400
 
 
 # Seems natural to merge the below with the / path and then conditional 

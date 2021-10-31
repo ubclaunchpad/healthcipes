@@ -56,8 +56,9 @@ def post_recipe(conn, cursor, recipe):
 
 
 def is_missing_macros(recipe_details):
-    '''Returns False if we do not have any macro information
-        from the recipe details. Otherwise returns True
+    '''
+    Returns False if we do not have any macro information
+    from the recipe details. Otherwise returns True
     '''
     return not (
         recipe_details["protein"] or
@@ -97,7 +98,7 @@ def get_ingredient_macros(conn, cursor, ingredients):
     new_cursor.close()
     return ingredient_macros
 
-def get_recipe(conn, cursor, recipe_id):
+def get_recipe_by_id(conn, cursor, recipe_id):
     '''
     Returns the available recipe details given a recipe_id
     Note: macros may still be empty if they were not added

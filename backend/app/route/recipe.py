@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
 from app.indexer.tools import init_conn, connect_mysql
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id
 from datetime import datetime
 
 defaultRecipe = {
@@ -97,11 +97,11 @@ async def create_recipe(recipe: dict = defaultRecipe):
         return "Error with {}".format(e), 400
 
 @router.get("/{recipe_id}", response_model=RecipeDetailsOut)
-async def read_recipe(recipe_id: int):
-    '''get recipe info, steps, and ingredients'''
+async def read_recipe_by_id(recipe_id: int):
+    '''get recipe info, macros, steps, and ingredients'''
     try:
         conn, cursor = init_conn()
-        res = get_recipe(conn, cursor, recipe_id)
+        res = get_recipe_by_id(conn, cursor, recipe_id)
         return {
             "data": res,
             "status_code": 200

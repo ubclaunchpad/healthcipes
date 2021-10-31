@@ -3,8 +3,9 @@ from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes
 from datetime import datetime
+from functools import reduce
 
 defaultRecipe = {
     # TODO: id is required due to the nature of the query, should just auto increment if given null id
@@ -17,7 +18,7 @@ defaultRecipe = {
     "calories": 3,
     "servings": 4,
     "vegetarian": True,
-    "vegan": True,
+    "vegan": False,
     "cooking_time": 10
 }
 
@@ -58,11 +59,30 @@ router = APIRouter(
 )
 
 @router.get("/")
-async def read_recipe(keyword: str = "", filter: str = None):
+async def read_recipe(keyword: str = ""):
     if keyword:
         return await recipe_by_keyword(keyword)
     else:
         return await read_all_recipes()
+
+
+# TODO: merge filter route with the one above if possible sql statements with default values?
+@router.get("/filter")
+async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatarian: bool = False, gluten_free: bool = False, dairy_free: bool = False, keto: bool = False, paleo: bool = False):
+    filters = {"vegetarian": vegetarian, "vegan": vegan}
+    # NOTE: currently only doing vegetarian and vegan 
+    # unused_filters = [pescatarian,gluten_free, dairy_free, dairy_free, paleo]
+    if not reduce(lambda x, y: x or y, filters.values()):
+        return await read_all_recipes()
+    else: 
+        try:
+            _, cursor = init_conn()
+            res = filter_recipes(cursor, **filters) 
+            return res, 200
+        except Exception as e:
+            logging.error(e)
+            return "Error with {}".format(e), 400
+
 
 # Seems natural to merge the below with the / path and then conditional 
 # statement on the keyword being empty or not?

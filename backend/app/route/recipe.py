@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
-from app.indexer.tools import init_conn, connect_mysql
+from app.indexer.tools import init_conn
 from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id
 from datetime import datetime
 

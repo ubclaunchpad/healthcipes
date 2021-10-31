@@ -50,7 +50,7 @@ export default function SignUp({navigation}) {
               await auth()
                 .createUserWithEmailAndPassword(newEmail, newPassword)
                 .then(result => {
-                  // console.log(result);
+                  console.log(result);
 
                   result.user.updateProfile({
                     displayName: usernameLower,
@@ -59,7 +59,7 @@ export default function SignUp({navigation}) {
                   dispatch({
                     type: POST_USER,
                     payload: {
-                      userID: result.user.uid,
+                      user_id: result.user.uid,
                       username: usernameLower,
                       email: newEmail,
                     },

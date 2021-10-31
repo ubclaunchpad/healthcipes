@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
 
-export default function Feed({navigation}) {
+export default function Pantry({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
 
@@ -27,13 +27,7 @@ export default function Feed({navigation}) {
   } else {
     return (
       <SafeAreaView style={{flex: 1}}>
-        <Text>Test</Text>
-        {GoButton('Logout', () => {
-          auth().signOut();
-        })}
-        {GoButton('Onboard (DEV)', () => {
-          navigation.replace('ShoppingStyle');
-        })}
+        <Text>Pantry</Text>
       </SafeAreaView>
     );
   }

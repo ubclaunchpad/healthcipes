@@ -18,6 +18,8 @@ CREATE TABLE `ingredients_info_table` (
   `category` VARCHAR(50),
   `protein` INT,
   `carbs` INT,
+  `fat` INT,
+  `fiber` INT,
   `calories` INT,
   PRIMARY KEY (`ingredient_id`),
   CONSTRAINT fk_recipe_ingredient_info FOREIGN KEY (`recipe_id`)

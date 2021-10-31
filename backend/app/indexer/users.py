@@ -46,7 +46,7 @@ def update_user(conn, cursor, user):
             paleo,
             style,
             experience
-             ))
+            ))
         conn.commit()
         return user
     except Exception as e:
@@ -94,7 +94,7 @@ def post_user(conn, cursor, user):
             paleo,
             style,
             experience
-             ))
+            ))
         conn.commit()
         return user
     except Exception as e:

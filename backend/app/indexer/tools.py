@@ -10,7 +10,14 @@ MYSQL_DB = os.getenv("MYSQL_DB", "umami_db")
 
 def connect_mysql():
     try:
-        conn = MySQLdb.connect(host=MYSQL_HOST,user=MYSQL_USER,port=MYSQL_PORT,password=MYSQL_PWD,database=MYSQL_DB, local_infile=True)
+        conn = MySQLdb.connect(
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            port=MYSQL_PORT,
+            password=MYSQL_PWD,
+            database=MYSQL_DB,
+            local_infile=True
+        )
         return conn
     except Exception as e:
         print("MYSQL ERROR: connect failed")

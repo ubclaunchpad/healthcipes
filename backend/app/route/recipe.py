@@ -37,6 +37,8 @@ class RecipeDetails(BaseModel):
     user_id: str
     protein: int
     carbs: int
+    fat: int
+    fiber: int
     calories: int
     servings: int
     vegetarian: bool
@@ -98,8 +100,8 @@ async def create_recipe(recipe: dict = defaultRecipe):
 async def read_recipe(recipe_id: int):
     '''get recipe info, steps, and ingredients'''
     try:
-        _, cursor = init_conn()
-        res = get_recipe(cursor, recipe_id)
+        conn, cursor = init_conn()
+        res = get_recipe(conn, cursor, recipe_id)
         return {
             "data": res,
             "status_code": 200

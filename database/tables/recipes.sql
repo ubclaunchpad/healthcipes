@@ -18,6 +18,8 @@ CREATE TABLE `recipes_table` (
   `user_id` VARCHAR(50) NOT NULL,
   `protein` INT,
   `carbs` INT,
+  `fat` INT,
+  `fiber` INT,
   `calories` INT,
   `servings` INT,
   `vegetarian` BOOLEAN,

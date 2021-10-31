@@ -110,3 +110,25 @@ from the image you built from the previous command.
     - access through localhost:8080
     - [Learn more](https://docs.docker.com/config/containers/container-networking/)
 
+### How To Test Endpoints
+1. Delete the `database/data/` folder
+
+2. Run the `docker-compose up` command to build for the `dev` environment
+
+3. Run the following commands either in MySQL Workbench or by connecting to the database on the command line:
+```
+USE UMAMI_DB;
+CALL addMockUser();
+CALL addMockMissingMacroRecipe();
+CALL addMockSteps();
+CALL addMockIngredients();
+CALL addMockIngredientsInfo();
+```
+**Expected Result:** The commands above should run without any errors. If you encounter an error, you may need to remove the Docker containers and/or images manually. In this case, repeat the previous steps.
+
+4. Go to `localhost:8080/docs/`
+
+5. Expand the GET `/recipe/{recipe_id}` endpoint. Click the "Try it out" button and enter the value `1` into the `recipe_id` field.
+**Expected Result:** You should receive a response with the form shown by the example value for a 200 response. If all the previous steps worked, this should also work.
+
+6. Repeat step 5. We should get the same result as we did in step 5. This seems redundant but we are actually testing a different pathway in the code. Since we added a recipe with missing macro values, the first call in step 5 handles the case where these macro values are not present in the `recipes_table` and updates the `recipes_table` with the macro values obtained by querying the `ingredients_info_table`. The second time we call the endpoint only needs to query the `recipes_table` since we now have the macro values.

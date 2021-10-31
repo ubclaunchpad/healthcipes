@@ -20,6 +20,53 @@ def get_all_recipes(cursor):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
+def filter_recipes(cursor, vegetarian: bool = False, vegan: bool = False):
+    vegetarian_result = []
+    vegan_result = []
+    try:
+        # returns tuples
+        if vegetarian:
+            vegetarian_result = list(_filter_vegetarian(cursor))
+        if vegan:
+            vegan_result = list(_filter_vegan(cursor))
+
+        # assume id is first
+        return _filter_duplicates(vegetarian_result + vegan_result, 0)
+
+    except Exception as e:
+        print("MYSQL ERROR:")
+        logging.error(e)
+
+def _filter_duplicates(lst, index):
+    seen = set()
+    ans = []
+    for element in lst:
+        value = element[index]
+        if not value in seen:
+            # if we haven't seen this unique identifier we add it to our answer
+            # and add it to our set of seen identifiers to not add again
+            seen.add(value)
+            ans.append(element)
+    return ans
+
+
+def _abstract_recipe_filter(cursor, sql_proc):
+    try:
+        cursor.callproc(sql_proc, (1,))
+        return cursor.fetchall()
+
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+        return []
+
+def _filter_vegetarian(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeVegetarian')
+    
+def _filter_vegan(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeVegan')
+    
+
 
 def post_recipe(conn, cursor, recipe):
     sql_proc = 'createRecipe'

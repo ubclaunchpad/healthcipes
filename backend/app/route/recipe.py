@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import logging
 from app.indexer.tools import init_conn
 from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes
+from scraper.scraper import scraper
 from datetime import datetime
 from functools import reduce
 
@@ -107,9 +108,10 @@ async def read_all_recipes():
 
 
 @router.post("/")
-async def create_recipe(recipe: dict = defaultRecipe):
+async def create_recipe(url: str = "", recipe: dict = defaultRecipe):
     try:
         conn, cursor = init_conn()
+        recipe = scraper(url)
         res = post_recipe(conn, cursor, recipe)
         return res, 200
     except Exception as e:

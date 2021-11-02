@@ -28,6 +28,12 @@ export default function Notification({navigation}) {
     return (
       <SafeAreaView style={{flex: 1}}>
         <Text>Notification</Text>
+        {GoButton('Logout', () => {
+          auth().signOut();
+        })}
+        {GoButton('Onboard (DEV)', () => {
+          navigation.replace('ShoppingStyle');
+        })}
       </SafeAreaView>
     );
   }

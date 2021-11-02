@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React, {useState, useEffect, useRef, useMemo} from 'react';
-import {Image} from 'react-native';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -18,8 +17,6 @@ import Post from './src/screens/tab3/post';
 import Notification from './src/screens/tab4/notification';
 import Profile from './src/screens/tab5/profile';
 import Diet from './src/screens/onboarding/diet';
-import color from './src/styles/color';
-import globalStyles from './src/styles/globalStyles';
 import TabsUI from './TabsUI';
 
 enableScreens();

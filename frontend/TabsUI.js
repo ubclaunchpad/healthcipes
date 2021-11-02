@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useMemo} from 'react';
 import {Svg, Path} from 'react-native-svg';
 import {
@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import {line, curveBasis} from 'd3-shape';
 import globalStyles from './src/styles/globalStyles';
+import color from './src/styles/color';
 
 const {width: wWidth} = Dimensions.get('window');
 
 export default function TabsUI({tabs}) {
+  const [currentTab, setCurrentTab] = useState('FeedTab');
   const tabWidth = useMemo(() => wWidth / tabs.length, [tabs.length]);
   const NAVIGATION_BOTTOM_TABS_HEIGHT = 80;
 
@@ -52,7 +54,13 @@ export default function TabsUI({tabs}) {
         return (
           <Image
             source={require('./src/assets/Feed.png')}
-            style={globalStyles.tabIcon}
+            style={[
+              globalStyles.tabIcon,
+              {
+                tintColor:
+                  currentTab === 'FeedTab' ? color.appPrimary : color.gray,
+              },
+            ]}
           />
         );
       }
@@ -60,7 +68,13 @@ export default function TabsUI({tabs}) {
         return (
           <Image
             source={require('./src/assets/Pantry.png')}
-            style={globalStyles.tabIcon}
+            style={[
+              globalStyles.tabIcon,
+              {
+                tintColor:
+                  currentTab === 'PantryTab' ? color.appPrimary : color.gray,
+              },
+            ]}
           />
         );
       }
@@ -68,7 +82,15 @@ export default function TabsUI({tabs}) {
         return (
           <Image
             source={require('./src/assets/Notification.png')}
-            style={globalStyles.tabIcon}
+            style={[
+              globalStyles.tabIcon,
+              {
+                tintColor:
+                  currentTab === 'NotificationTab'
+                    ? color.appPrimary
+                    : color.gray,
+              },
+            ]}
           />
         );
       }
@@ -76,7 +98,13 @@ export default function TabsUI({tabs}) {
         return (
           <Image
             source={require('./src/assets/Profile.png')}
-            style={globalStyles.tabIcon}
+            style={[
+              globalStyles.tabIcon,
+              {
+                tintColor:
+                  currentTab === 'ProfileTab' ? color.appPrimary : color.gray,
+              },
+            ]}
           />
         );
       }
@@ -108,6 +136,9 @@ export default function TabsUI({tabs}) {
                   height={NAVIGATION_BOTTOM_TABS_HEIGHT}>
                   <TouchableOpacity
                     onPress={tab.action}
+                    onPressIn={() => {
+                      setCurrentTab(tab.name);
+                    }}
                     position="absolute"
                     style={{top: -NAVIGATION_BOTTOM_TABS_HEIGHT / 2}}>
                     <Image
@@ -120,7 +151,12 @@ export default function TabsUI({tabs}) {
             }
 
             return (
-              <TouchableOpacity {...{key}} onPress={tab.action}>
+              <TouchableOpacity
+                {...{key}}
+                onPress={tab.action}
+                onPressIn={() => {
+                  setCurrentTab(tab.name);
+                }}>
                 <View
                   width={tabWidth}
                   alignItems="center"

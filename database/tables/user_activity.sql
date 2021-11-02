@@ -1,5 +1,5 @@
 USE `umami_db`;
-DROP procedure IF EXISTS `createUserActivity`;
+DROP procedure IF EXISTS `createUserActivityTable`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `user_activity_table`;
@@ -8,7 +8,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 DELIMITER $$
 
 USE `umami_db`$$
-CREATE PROCEDURE `user_activity_table` ()
+CREATE PROCEDURE `createUserActivityTable` ()
 BEGIN
 
 CREATE TABLE `user_activity_table` (

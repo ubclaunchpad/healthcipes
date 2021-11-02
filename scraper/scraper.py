@@ -1,49 +1,66 @@
 from recipe_scrapers import scrape_me
 import json
+import re
 
-#sample code to learn
-"""
-recipes = {
+def scraper (url):
+    scraper = scrape_me(url)
+    recipename = scraper.title()
 
-    "example": {
-        "title": scraper.title(),
-    },
-    "recipe2": {
-        "title": "carrots",
-    }
-}
-json.dump(recipe, outfile, indent = 6)
-recipe.update({'recipe3': {'title': 23, 'shirt': 34}})
-"""
+    recipe = {}
+    nutrients = {}
+    ingredients = []
+    meats = ['Chicken', 'Beef', 'Turkey', 'Sausage', 'Bacon', 'Lamb', "Pork"]
+    vegetarian = True
+    vegan = False
 
-# website receipe link
-scraper = scrape_me('https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/')
+    nutrients.update(scraper.nutrients())
+    ingredients.append(scraper.ingredients())
 
-# json file where the output will be sorted
-outfile = open("scraper.json", "w")
+    if 'Vegan' in recipename:
+        vegetarian = True
+        vegan = True
+    else:
+        for meat in meats:
+            if meat in recipename:
+                vegetarian = False
+                vegan = False
+                break
+            elif meat in ingredients:
+                vegetarian = False
+                vegan = False
+                break
+            else:
+                vegetarian = True
+                vegan = False
 
-# array of urls of recipes
-urls = ["https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/",
-        "https://tasty.co/recipe/pumpkin-chai-glazed-donuts",
-        "https://www.allrecipes.com/recipe/12974/butternut-squash-soup/",
-        "https://www.allrecipes.com/recipe/242052/chopped-brussels-sprout-salad/",
-        ]
+    try:
+        protein = float(re.findall("\d+\.\d+", nutrients["proteinContent"])[0])
+    except:
+        protein = None
+    try:
+        carbs = float(re.findall("\d+\.\d+", nutrients["carbohydrateContent"])[0])
+    except:
+        carbs = None
+    try:
+        cal = float(re.findall("\d+\.\d+", nutrients["calories"])[0])
+    except:
+        cal = None
+    try:
+        servings = int(re.findall("\d+", scraper.yields())[0])
+    except:
+        servings = None
 
-# dictionary of recipe
-recipe = {
-    "layout": {
-        "recipename": "recipename",
-        "totaltime": "totaltime",
-        "ingredients": "ingredients",
-        "instructions": "instructions",
-        "nutrients": "nutrients",
-    },
-}
+    recipe= {
+        'recipe_id': None,
+        "name": recipename,
+        "created_time": None,
+        "user_id": None,
+        "carbs": carbs,
+        "protein": protein,
+        "calories": cal,
+        "servings": servings,
+        "vegetarian": vegetarian,
+        "vegan": vegan,
+        "cooking_time": scraper.total_time()}
 
-for x in urls:
-    scraper = scrape_me(x)
-    recipe.update({scraper.title(): {'recipename': scraper.title(), 'totaltime': scraper.total_time(), 'ingredients': scraper.ingredients(), "instructions": scraper.instructions(), "nutrients": scraper.nutrients()}})
-
-json.dump(recipe, outfile, indent = 6)
-
-outfile.close()
+    return recipe

@@ -14,7 +14,7 @@ BEGIN
 CREATE TABLE `images_table` (
   `image_id` INT NOT NULL auto_increment,
   `recipe_id` INT NOT NULL,
-  `image` MEDIUMBLOB,
+  `image` VARCHAR(50),
   `date` DATETIME,
   `user_id` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`image_id`),

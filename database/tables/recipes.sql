@@ -16,6 +16,7 @@ CREATE TABLE `recipes_table` (
   `name` VARCHAR(50),
   `created_time` DATETIME,
   `user_id` VARCHAR(50) NOT NULL,
+  `header_image` VARCHAR(255),
   `protein` INT,
   `carbs` INT,
   `fat` INT,

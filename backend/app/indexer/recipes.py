@@ -74,6 +74,7 @@ def post_recipe(conn, cursor, recipe):
     recipe_id = recipe['recipe_id']
     name = recipe['name']
     user_id = recipe['user_id']
+    header_image = recipe.get('header_image', '')
     protein = recipe['protein']
     carbs = recipe['carbs']
     calories = recipe['calories']
@@ -87,6 +88,7 @@ def post_recipe(conn, cursor, recipe):
             recipe_id,
             name,
             user_id,
+            header_image,
             protein,
             carbs,
             calories,

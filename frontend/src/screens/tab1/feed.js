@@ -14,6 +14,7 @@ import auth from '@react-native-firebase/auth';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
 import {GET_USER, PUT_USER} from '../../actions/accountActions';
+import {GET_FEED} from '../../actions/feedActions';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import FilterChips from '../../components/filterChips';
@@ -24,6 +25,12 @@ export default function Feed({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
+  const featuredFeed = useSelector(
+    state => state.recipeReducer.featureFeedReducer,
+  );
+  const forYouFeed = useSelector(
+    state => state.recipeReducer.forYouFeedReducer,
+  );
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
   const snapPoints = useMemo(() => ['70%'], []);
@@ -32,8 +39,9 @@ export default function Feed({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  const features = ['1', '2', '3'];
-  const forYou = ['4', '5', '6', '7'];
+  useEffect(() => {
+    dispatch({type: GET_FEED, user: user});
+  }, [dispatch, user]);
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -42,10 +50,10 @@ export default function Feed({navigation}) {
       <SafeAreaView style={{flex: 1}}>
         <FlatList
           ref={flatListRef}
-          data={forYou}
+          data={forYouFeed}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <View>
+            <View style={{marginBottom: -80}}>
               {search === '' && (
                 <Image
                   source={require('../../assets/Logo.png')}
@@ -59,7 +67,6 @@ export default function Feed({navigation}) {
               )}
               <View
                 style={{
-                  flex: 1,
                   marginHorizontal: '5%',
                   width: '90%',
                   marginVertical: 15,
@@ -112,7 +119,7 @@ export default function Feed({navigation}) {
                 <View>
                   <Text style={feedStyle.feedTitle}>Featured</Text>
                   <FlatList
-                    data={features}
+                    data={featuredFeed}
                     style={{flex: 1, marginBottom: 30}}
                     contentContainerStyle={{paddingLeft: '5%'}}
                     showsHorizontalScrollIndicator={false}
@@ -127,7 +134,7 @@ export default function Feed({navigation}) {
                             marginRight: 10,
                           }}>
                           <ImageBackground
-                            source={require('../../assets/Logo.png')}
+                            source={{uri: item.header_image}}
                             resizeMode="cover"
                             borderRadius={20}
                             style={{
@@ -141,7 +148,7 @@ export default function Feed({navigation}) {
                                 height: '20%',
                                 paddingHorizontal: '3%',
                                 paddingVertical: 10,
-                                opacity: 0.7,
+                                opacity: 1,
                                 borderBottomRightRadius: 20,
                                 borderBottomLeftRadius: 20,
                               }}>
@@ -151,14 +158,14 @@ export default function Feed({navigation}) {
                                   fontWeight: 'bold',
                                   fontSize: 16,
                                 }}>
-                                {item}
+                                {item.name}
                               </Text>
                             </View>
                           </ImageBackground>
                         </TouchableOpacity>
                       );
                     }}
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.recipe_id}
                   />
                 </View>
               )}
@@ -185,7 +192,7 @@ export default function Feed({navigation}) {
                   marginRight: index % 2 === 0 ? 0 : '5%',
                 }}>
                 <ImageBackground
-                  source={require('../../assets/Logo.png')}
+                  source={{uri: item.header_image}}
                   resizeMode="cover"
                   borderRadius={20}
                   style={{
@@ -209,14 +216,14 @@ export default function Feed({navigation}) {
                         fontWeight: 'bold',
                         fontSize: 16,
                       }}>
-                      {item}
+                      {item.name}
                     </Text>
                   </View>
                 </ImageBackground>
               </TouchableOpacity>
             );
           }}
-          keyExtractor={item => item}
+          keyExtractor={item => item.recipe_id}
         />
         <BottomSheet
           ref={bottomSheetRef}

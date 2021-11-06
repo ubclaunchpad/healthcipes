@@ -4,3 +4,4 @@ mysqlclient
 sqlalchemy
 requests
 pandas
+recipe-scrapers

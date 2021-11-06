@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import logging
 from app.indexer.tools import init_conn
 from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes
-from scraper.scraper import scraper
+from app.scraper.scraper import scraper
 from datetime import datetime
 from functools import reduce
 
@@ -16,6 +16,8 @@ defaultRecipe = {
     "user_id": "testID",
     "protein": 1,
     "carbs": 2,
+    "fat": 2,
+    "fiber": 2,
     "calories": 3,
     "servings": 4,
     "vegetarian": True,
@@ -59,32 +61,6 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/")
-async def read_recipe(keyword: str = ""):
-    if keyword:
-        return await recipe_by_keyword(keyword)
-    else:
-        return await read_all_recipes()
-
-
-# TODO: merge filter route with the one above if possible sql statements with default values?
-@router.get("/filter")
-async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatarian: bool = False, gluten_free: bool = False, dairy_free: bool = False, keto: bool = False, paleo: bool = False):
-    filters = {"vegetarian": vegetarian, "vegan": vegan}
-    # NOTE: currently only doing vegetarian and vegan 
-    # unused_filters = [pescatarian,gluten_free, dairy_free, dairy_free, paleo]
-    if not reduce(lambda x, y: x or y, filters.values()):
-        return await read_all_recipes()
-    else: 
-        try:
-            _, cursor = init_conn()
-            res = filter_recipes(cursor, **filters) 
-            return res, 200
-        except Exception as e:
-            logging.error(e)
-            return "Error with {}".format(e), 400
-
-
 # Seems natural to merge the below with the / path and then conditional 
 # statement on the keyword being empty or not?
 async def recipe_by_keyword(keyword: str = ""):
@@ -106,6 +82,47 @@ async def read_all_recipes():
         logging.error(e)
         return "Error with {}".format(e), 400
 
+#TODO
+async def read_featured_recipes():
+    try:
+        _, cursor = init_conn()
+        res = get_all_recipes(cursor)
+        return res, 200
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+######### ENDPOINTS START #########
+
+@router.get("/")
+async def read_recipe(keyword: str = ""):
+    if keyword:
+        return await recipe_by_keyword(keyword)
+    else:
+        return await read_all_recipes()
+
+@router.get("/featured")
+async def read_featured_recipe():
+    return await read_featured_recipes()
+
+
+# TODO: merge filter route with the one above if possible sql statements with default values?
+@router.get("/filter")
+async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatarian: bool = False, gluten_free: bool = False, dairy_free: bool = False, keto: bool = False, paleo: bool = False):
+    filters = {"vegetarian": vegetarian, "vegan": vegan}
+    # NOTE: currently only doing vegetarian and vegan 
+    # unused_filters = [pescatarian,gluten_free, dairy_free, dairy_free, paleo]
+    if not reduce(lambda x, y: x or y, filters.values()):
+        return await read_all_recipes()
+    else: 
+        try:
+            _, cursor = init_conn()
+            res = filter_recipes(cursor, **filters) 
+            return res, 200
+        except Exception as e:
+            logging.error(e)
+            return "Error with {}".format(e), 400
+
 
 @router.post("/")
 async def create_recipe(url: str = "", recipe: dict = defaultRecipe):
@@ -117,6 +134,7 @@ async def create_recipe(url: str = "", recipe: dict = defaultRecipe):
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
+
 
 @router.get("/{recipe_id}", response_model=RecipeDetailsOut)
 async def read_recipe_by_id(recipe_id: int):

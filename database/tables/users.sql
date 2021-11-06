@@ -18,7 +18,7 @@ CREATE TABLE `users_table` (
   `last_name` VARCHAR(50),
   `email` VARCHAR(50),
   `location` VARCHAR(50),
-  `profile_picture` VARCHAR(50),
+  `profile_picture` VARCHAR(255),
   `recipe_driven` BOOLEAN,
   `vegetarian` BOOLEAN,
   `vegan` BOOLEAN,

@@ -1,0 +1,1 @@
+alias restart_docker='rm -rf database/data && dcp down && docker-compose -f docker-compose.dev.yml up --build -d'

@@ -12,7 +12,7 @@ CREATE PROCEDURE `createPantryTable` ()
 BEGIN
 
 CREATE TABLE `pantry_table` (
-    `pantry_id` INT NOT NULL,
+    `pantry_id` INT NOT NULL auto_increment,
     `user_id` VARCHAR(50) NOT NULL,
     `ingredient_id` INT NOT NULL,
     PRIMARY KEY (`pantry_id`),

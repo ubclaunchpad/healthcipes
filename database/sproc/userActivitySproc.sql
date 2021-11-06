@@ -9,7 +9,7 @@ BEGIN
 
 SELECT * 
 FROM `user_activity_table` ua
-WHERE ua.user_id = _user_id`
+WHERE ua.user_id = _user_id
 ;
 
 END$$

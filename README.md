@@ -87,8 +87,8 @@ MySQL will be exposed on port 3306
 4. run sudo ./init-letsencrypt.sh
 
 ## Further deployment changes 
-Inide of Production machine
-1. sudo rm -rf ./data
+Inide of Production machine from root umami folder
+1. sudo rm -rf ./database/data
 2. sudo ./init-letsencrypt.sh
 3. run `docker-compose up --build -d` 
 

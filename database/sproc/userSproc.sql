@@ -28,7 +28,7 @@ CREATE PROCEDURE `postUser` (
     IN `_experience` DECIMAL(10, 5)
 ) BEGIN REPLACE INTO `users_table` (
     `user_id`,
-    `usrname`,
+    `username`,
     `first_name`,
     `last_name`,
     `email`,

@@ -6,15 +6,15 @@ DELIMITER $$
 
 CREATE PROCEDURE `postPantry` (
     IN `_user_id` VARCHAR(50),
-    IN `_username` VARCHAR(50),
+    IN `_ingredient_id` INT NOT NULL,
 ) BEGIN REPLACE INTO `pantry_table` (
     `user_id`,
-    `username`,
+    `ingredient_id`,
 )
 VALUES
     (
         `_user_id`,
-        `_username`,
+        `_ingredient_id`,
     );
 
 END $$

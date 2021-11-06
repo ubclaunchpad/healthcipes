@@ -5,7 +5,7 @@ from app.indexer.pantries import post_pantry
 
 defaultPantry = {
     "user_id": "testID",
-    "username": "Test",
+    "ingredient_id": 1,
 }
 
 router = APIRouter(
@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 @router.post("/")
-async def create_user(pantry: dict = defaultPantry):
+async def add_to_pantry(pantry: dict = defaultPantry):
     try:
         conn, cursor = init_conn()
         res = post_pantry(conn, cursor, pantry)

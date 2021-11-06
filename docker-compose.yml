@@ -23,6 +23,7 @@ services:
     volumes: 
       - ./database/data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/~init.sql
+      - ./database/mock.sql:/docker-entrypoint-initdb.d/~mock.sql
   nginx:
     build: ./nginx
     restart: always

@@ -1,5 +1,6 @@
 # Mock_Data
-CALL umami_db.postUser('abc', 'testUser', 'Test', 'User', 'testUser@test.com', 'Vancouver', '', 0, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.5);
+CALL umami_db.postUser('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'Harin', 'Wu', 'harinwu99@gmail.com', 'Vancouver', '', 1, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.5);
+CALL umami_db.postUser('G7YXRqIBU1QKLCXQnox8Wxwl2VN2', 'kayett', 'Kaye', 'T', 'kaye.thinh.to@gmail.com', 'Vancouver', '', 1, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.5);
 
 CALL umami_db.createRecipe(1, 'Butter Chicken', 'abc', 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
 CALL umami_db.createRecipe(2, 'Teriyaki Chicken', 'abc', 'gs://umami-2021.appspot.com/Recipes/Teriyaki Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);

@@ -4,7 +4,7 @@ from app.indexer.tools import init_conn
 from app.indexer.pantries import post_pantry
 
 defaultPantry = {
-    "user_id": "testID",
+    "user_id": "abc",
     "ingredient_id": 1,
 }
 
@@ -20,8 +20,14 @@ async def add_to_pantry(pantry: dict = defaultPantry):
     try:
         conn, cursor = init_conn()
         res = post_pantry(conn, cursor, pantry)
-        return res, 200
+        return {
+            "data": res,
+            "status_code": 200
+        }
 
     except Exception as e:
         logging.error(e)
-        return "Error with {}".format(e), 400
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }

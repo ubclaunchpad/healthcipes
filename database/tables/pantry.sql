@@ -19,7 +19,7 @@ CREATE TABLE `pantry_table` (
     CONSTRAINT fk_user_id FOREIGN KEY (`user_id`)
     REFERENCES `users_table`(`user_id`),
     CONSTRAINT fk_ingredient_id FOREIGN KEY (`ingredient_id`)
-    REFERENCES `ingredients_info_table`(`ingredient_id`),
+    REFERENCES `ingredients_info_table`(`ingredient_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 END$$

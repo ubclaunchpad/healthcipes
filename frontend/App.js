@@ -18,6 +18,8 @@ import Notification from './src/screens/tab4/notification';
 import Profile from './src/screens/tab5/profile';
 import Diet from './src/screens/onboarding/diet';
 import TabsUI from './TabsUI';
+import Search from './src/screens/tab1/search';
+import Recipe from './src/screens/tab1/recipe';
 
 enableScreens();
 
@@ -30,6 +32,8 @@ function FeedScreen() {
         headerShown: false,
       }}>
       <FeedStack.Screen name="Feed" component={Feed} />
+      <FeedStack.Screen name="Search" component={Search} />
+      <FeedStack.Screen name="Recipe" component={Recipe} />
     </FeedStack.Navigator>
   );
 }

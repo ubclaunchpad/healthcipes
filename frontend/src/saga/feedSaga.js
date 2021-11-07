@@ -4,18 +4,76 @@ import {API_URL} from '@env';
 import storage from '@react-native-firebase/storage';
 import {
   FEATURED_FEED,
-  FILTER_FEED,
   FORYOU_FEED,
   GET_FEED,
   SEARCH_FEED,
+  SEARCH_RESULT,
 } from '../actions/feedActions';
 
 function* searchFeedCall(param) {
-  console.log('searching');
-}
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/recipe?keyword=${param.keyword}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-function* filterFeedCall(param) {
-  console.log('filter');
+    const response = yield call(axios, apiConfig);
+    const resultsArray = response.data[0];
+    console.log(
+      '[INFO]: SEARCH FEED API: Recipe obtained = ' +
+        resultsArray.length.toString(),
+    );
+    const recipeArray = [];
+    for (const results of resultsArray) {
+      yield storage()
+        .refFromURL(results[4])
+        .getDownloadURL()
+        .then(res => {
+          const vegetarian = param.user.vegetarian ? results[11] === 1 : true;
+          const vegan = param.user.vegan ? results[12] === 1 : true;
+          const pescatarian = param.user.pescatarian ? true : true;
+          const gluten_free = param.user.gluten_free ? true : true;
+          const dairy_free = param.user.dairy_free ? true : true;
+          const keto = param.user.keto ? results[7] > 30 : true;
+          const paleo = param.user.paleo ? true : true;
+          if (
+            vegetarian &&
+            vegan &&
+            pescatarian &&
+            gluten_free &&
+            dairy_free &&
+            keto &&
+            paleo
+          ) {
+            const recipeObj = {
+              recipe_id: results[0],
+              name: results[1],
+              created_time: results[2],
+              user_id: results[3],
+              header_image: res,
+              protein: results[5],
+              carbs: results[6],
+              fat: results[7],
+              fiber: results[8],
+              calories: results[9],
+              servings: results[10],
+              vegetarian: results[11],
+              vegan: results[12],
+              cooking_time: results[13],
+            };
+            recipeArray.push(recipeObj);
+          }
+        });
+    }
+
+    // console.log(recipeArray);
+    yield put({type: SEARCH_RESULT, payload: recipeArray});
+  } catch (e) {
+    console.log('Get Feed Failed');
+  }
 }
 
 function* getFeedCall(param) {
@@ -40,27 +98,44 @@ function* getFeedCall(param) {
         .refFromURL(results[4])
         .getDownloadURL()
         .then(res => {
-          const recipeObj = {
-            recipe_id: results[0],
-            name: results[1],
-            created_time: results[2],
-            user_id: results[3],
-            header_image: res,
-            protein: results[5],
-            carbs: results[6],
-            fat: results[7],
-            fiber: results[8],
-            calories: results[9],
-            servings: results[10],
-            vegetarian: results[11],
-            vegan: results[12],
-            cooking_time: results[13],
-          };
-          recipeArray.push(recipeObj);
+          const vegetarian = param.user.vegetarian ? results[11] === 1 : true;
+          const vegan = param.user.vegan ? results[12] === 1 : true;
+          const pescatarian = param.user.pescatarian ? true : true;
+          const gluten_free = param.user.gluten_free ? true : true;
+          const dairy_free = param.user.dairy_free ? true : true;
+          const keto = param.user.keto ? results[7] > 30 : true;
+          const paleo = param.user.paleo ? true : true;
+          if (
+            vegetarian &&
+            vegan &&
+            pescatarian &&
+            gluten_free &&
+            dairy_free &&
+            keto &&
+            paleo
+          ) {
+            const recipeObj = {
+              recipe_id: results[0],
+              name: results[1],
+              created_time: results[2],
+              user_id: results[3],
+              header_image: res,
+              protein: results[5],
+              carbs: results[6],
+              fat: results[7],
+              fiber: results[8],
+              calories: results[9],
+              servings: results[10],
+              vegetarian: results[11],
+              vegan: results[12],
+              cooking_time: results[13],
+            };
+            recipeArray.push(recipeObj);
+          }
         });
     }
 
-    console.log(recipeArray);
+    // console.log(recipeArray);
     yield put({type: FEATURED_FEED, payload: recipeArray});
     yield put({type: FORYOU_FEED, payload: recipeArray});
   } catch (e) {
@@ -70,10 +145,6 @@ function* getFeedCall(param) {
 
 export function* getFeed() {
   yield takeLatest(GET_FEED, getFeedCall);
-}
-
-export function* filterFeed() {
-  yield takeLatest(FILTER_FEED, filterFeedCall);
 }
 
 export function* searchFeed() {

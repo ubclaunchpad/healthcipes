@@ -1,5 +1,9 @@
 import {combineReducers} from 'redux';
-import {FEATURED_FEED, FORYOU_FEED} from '../actions/feedActions';
+import {
+  FEATURED_FEED,
+  FORYOU_FEED,
+  SEARCH_RESULT,
+} from '../actions/feedActions';
 
 const defaultRecipe = {
   recipe_id: 0,
@@ -36,7 +40,17 @@ const forYouFeedReducer = (state = [], action) => {
   }
 };
 
+const searchResultReducer = (state = [], action) => {
+  switch (action.type) {
+    case SEARCH_RESULT:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
+  searchResultReducer,
 });

@@ -65,4 +65,5 @@ export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
   searchResultReducer,
+  recipeReducer,
 });

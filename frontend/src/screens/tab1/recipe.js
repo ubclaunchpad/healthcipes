@@ -6,11 +6,10 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
 import moment from 'moment';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
-import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
@@ -21,24 +20,35 @@ export default function Recipe({navigation, route}) {
   const {recipe} = route.params;
   const dispatch = useDispatch();
   const [page, setPage] = useState('Info');
+  const [image, setImage] = useState(
+    require('../../assets/defaultProfile.png'),
+  );
+  const [ingredients, setIngredients] = useState([]);
+  const [steps, setSteps] = useState([]);
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
 
   useEffect(() => {
-    dispatch({type: GET_USER, userID: auth().currentUser.uid});
-  }, [dispatch]);
+    storage()
+      .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
+      .getDownloadURL()
+      .then(res => {
+        setImage({uri: res});
+      })
+      .catch(e => {
+        console.log('No User Image: ' + e);
+      });
+  }, [recipe]);
 
   useEffect(() => {
     dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
   }, [dispatch, recipe]);
 
-  const ingredients = ['2 tsp olive oil', '1 brown onion', '2 garlic cloves'];
-  const steps = [
-    'Melt the butter in a large saucepan over medium-high heat until foaming. Add the flour and cook, stirring, for 1-2 minutes or until mixture bubbles and begins to come away from the side of the pan. Remove from heat.',
-    'Heat the butter in a large saucepan over medium-high heat until foaming. Add the flour and cook, stirring, for 1-2 minutes or until mixture bubbles and begins to come away from the side of the pan. Remove from heat.',
-    'Stir the butter in a large saucepan over medium-high heat until foaming. Add the flour and cook, stirring, for 1-2 minutes or until mixture bubbles and begins to come away from the side of the pan. Remove from heat.',
-  ];
+  useEffect(() => {
+    setIngredients(recipeInfo.ingredients);
+    setSteps(recipeInfo.steps);
+  }, [recipeInfo]);
 
   function recipeTab(tab) {
     return (
@@ -153,12 +163,13 @@ export default function Recipe({navigation, route}) {
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
-              source={require('../../assets/defaultProfile.png')}
+              source={image}
               style={{
                 width: 36,
                 height: 36,
-                resizeMode: 'contain',
+                resizeMode: 'cover',
                 marginRight: 5,
+                borderRadius: 36,
               }}
             />
             <View style={{flexDirection: 'column'}}>
@@ -215,7 +226,7 @@ export default function Recipe({navigation, route}) {
       <BottomSheetFlatList
         contentContainerStyle={{paddingTop: 20}}
         data={ingredients}
-        keyExtractor={i => i}
+        keyExtractor={item => item.ingredient_id}
         renderItem={({item}) => {
           return (
             <View
@@ -233,7 +244,7 @@ export default function Recipe({navigation, route}) {
                   marginRight: 10,
                 }}
               />
-              <Text style={{fontSize: 18}}>{item}</Text>
+              <Text style={{fontSize: 18}}>{item.ingredient_name}</Text>
             </View>
           );
         }}
@@ -246,7 +257,7 @@ export default function Recipe({navigation, route}) {
       <BottomSheetFlatList
         contentContainerStyle={{paddingTop: 20, paddingBottom: '30%'}}
         data={steps}
-        keyExtractor={index => index}
+        keyExtractor={item => item.step_id}
         renderItem={({item, index}) => {
           return (
             <View
@@ -258,7 +269,7 @@ export default function Recipe({navigation, route}) {
                 marginBottom: 20,
               }}>
               <AccordionItem title={`Step ${index + 1}`}>
-                <Text>{item}</Text>
+                <Text>{item.description}</Text>
               </AccordionItem>
             </View>
           );

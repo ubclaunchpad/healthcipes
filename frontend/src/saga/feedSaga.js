@@ -139,7 +139,7 @@ function* getFeedCall(param) {
     yield put({type: FEATURED_FEED, payload: recipeArray});
     yield put({type: FORYOU_FEED, payload: recipeArray});
   } catch (e) {
-    console.log('Get Feed Failed');
+    console.log('Get Feed Failed: ' + e);
   }
 }
 

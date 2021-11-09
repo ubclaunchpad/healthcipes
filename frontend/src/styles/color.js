@@ -6,4 +6,7 @@ export default {
   gray: '#A3A3A3',
   textGray: '#747474',
   lightGray: '#EAEAEA',
+  lightGreen: '#B5C853',
+  orange: '#CD9341',
+  red: '#B35461',
 };

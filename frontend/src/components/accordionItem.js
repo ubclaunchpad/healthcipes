@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 
 const AccordionItem = ({title, children}) => {
-  const [open, setOpen] = useState(false);
-  const animatedController = useRef(new Animated.Value(0)).current;
+  const [open, setOpen] = useState(true);
+  const animatedController = useRef(new Animated.Value(1)).current;
   const [bodySectionHeight, setBodySectionHeight] = useState(0);
 
   const bodyHeight = animatedController.interpolate({
@@ -30,12 +30,14 @@ const AccordionItem = ({title, children}) => {
         duration: 300,
         toValue: 0,
         easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+        useNativeDriver: false,
       }).start();
     } else {
       Animated.timing(animatedController, {
         duration: 300,
         toValue: 1,
         easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+        useNativeDriver: false,
       }).start();
     }
     setOpen(!open);

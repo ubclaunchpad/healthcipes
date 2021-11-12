@@ -17,4 +17,11 @@ export default StyleSheet.create({
     alignSelf: 'center',
     color: color.textGray,
   },
+  recipeTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginVertical: 20,
+    marginBottom: 30,
+    color: color.black,
+  },
 });

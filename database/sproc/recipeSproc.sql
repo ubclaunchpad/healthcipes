@@ -100,6 +100,8 @@ BEGIN
 INSERT INTO `recipes_table` (
     `name`,
     `user_id`,
+    `created_time`,
+    `header_image`,
     `protein`,
     `carbs`,
     `fat`,
@@ -112,6 +114,8 @@ INSERT INTO `recipes_table` (
 ) VALUES(
     'scrambled eggs',
     'abc',
+    now(),
+    'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg',
     10,
     1,
     5,

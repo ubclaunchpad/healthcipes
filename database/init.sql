@@ -6,3 +6,4 @@ CALL umami_db.createIngredientsTable;
 CALL umami_db.createRecipeStepsTable;
 CALL umami_db.createImagesTable;
 CALL umami_db.createUserActivityTable;
+CALL umami_db.createPantryTable;

@@ -1,6 +1,7 @@
 import {all, fork} from 'redux-saga/effects';
 import {getUser, signUp, updateUser} from './accountSaga';
-import {filterFeed, getFeed, searchFeed} from './feedSaga';
+import {getFeed, searchFeed} from './feedSaga';
+import {getRecipe} from './recipeSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -9,6 +10,6 @@ export default function* rootSaga() {
     fork(updateUser),
     fork(getFeed),
     fork(searchFeed),
-    fork(filterFeed),
+    fork(getRecipe),
   ]);
 }

@@ -1,7 +1,6 @@
-import React, {useEffect, useRef, useMemo, useState} from 'react';
+import React, {useEffect, useRef, useMemo} from 'react';
 import {
   Text,
-  TextInput,
   SafeAreaView,
   TouchableOpacity,
   View,
@@ -21,7 +20,6 @@ import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 
 export default function Feed({navigation}) {
-  const [search, setSearch] = useState('');
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
@@ -33,7 +31,7 @@ export default function Feed({navigation}) {
   );
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
-  const snapPoints = useMemo(() => ['70%'], []);
+  const snapPoints = useMemo(() => ['80%'], []);
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
@@ -47,24 +45,22 @@ export default function Feed({navigation}) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <FlatList
           ref={flatListRef}
           data={forYouFeed}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <View style={{marginBottom: -80}}>
-              {search === '' && (
-                <Image
-                  source={require('../../assets/Logo.png')}
-                  style={{
-                    width: '35%',
-                    resizeMode: 'contain',
-                    marginHorizontal: '5%',
-                    height: '10%',
-                  }}
-                />
-              )}
+            <View>
+              <Image
+                source={require('../../assets/Logo.png')}
+                style={{
+                  width: '35%',
+                  resizeMode: 'contain',
+                  marginHorizontal: '5%',
+                  height: 50,
+                }}
+              />
               <View
                 style={{
                   marginHorizontal: '5%',
@@ -74,7 +70,7 @@ export default function Feed({navigation}) {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <View
+                <TouchableOpacity
                   style={{
                     backgroundColor: color.lightGray,
                     height: 40,
@@ -83,6 +79,9 @@ export default function Feed({navigation}) {
                     paddingHorizontal: '5%',
                     alignItems: 'center',
                     flexDirection: 'row',
+                  }}
+                  onPress={() => {
+                    navigation.push('Search');
                   }}>
                   <Image
                     source={require('../../assets/Search.png')}
@@ -92,15 +91,7 @@ export default function Feed({navigation}) {
                       resizeMode: 'contain',
                     }}
                   />
-                  <TextInput
-                    style={{
-                      height: 40,
-                      paddingHorizontal: '5%',
-                    }}
-                    value={search}
-                    onChangeText={text => setSearch(text)}
-                  />
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     bottomSheetRef.current.snapToIndex(0);
@@ -115,74 +106,75 @@ export default function Feed({navigation}) {
                   />
                 </TouchableOpacity>
               </View>
-              {search === '' && (
-                <View>
-                  <Text style={feedStyle.feedTitle}>Featured</Text>
-                  <FlatList
-                    data={featuredFeed}
-                    style={{flex: 1, marginBottom: 30}}
-                    contentContainerStyle={{paddingLeft: '5%'}}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    renderItem={({item}) => {
-                      return (
-                        <TouchableOpacity
+              <View>
+                <Text style={feedStyle.feedTitle}>Featured</Text>
+                <FlatList
+                  data={featuredFeed}
+                  style={{flex: 1, marginBottom: 30}}
+                  contentContainerStyle={{paddingLeft: '5%'}}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}
+                  renderItem={({item}) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.push('Recipe', {recipe: item});
+                        }}
+                        style={{
+                          width: Dimensions.get('screen').width * 0.8,
+                          height: 250,
+                          borderRadius: 20,
+                          marginRight: 10,
+                        }}>
+                        <ImageBackground
+                          source={{uri: item.header_image}}
+                          resizeMode="cover"
+                          borderRadius={20}
                           style={{
-                            width: Dimensions.get('screen').width * 0.8,
-                            height: 250,
-                            borderRadius: 20,
-                            marginRight: 10,
+                            width: '100%',
+                            height: '100%',
+                            justifyContent: 'flex-end',
                           }}>
-                          <ImageBackground
-                            source={{uri: item.header_image}}
-                            resizeMode="cover"
-                            borderRadius={20}
+                          <View
                             style={{
-                              width: '100%',
-                              height: '100%',
-                              justifyContent: 'flex-end',
+                              backgroundColor: 'rgba(0,0,0,0.5)',
+                              height: '20%',
+                              paddingHorizontal: '3%',
+                              paddingVertical: 10,
+                              borderBottomRightRadius: 20,
+                              borderBottomLeftRadius: 20,
                             }}>
-                            <View
+                            <Text
                               style={{
-                                backgroundColor: color.black,
-                                height: '20%',
-                                paddingHorizontal: '3%',
-                                paddingVertical: 10,
-                                opacity: 1,
-                                borderBottomRightRadius: 20,
-                                borderBottomLeftRadius: 20,
+                                color: color.white,
+                                fontWeight: 'bold',
+                                fontSize: 16,
                               }}>
-                              <Text
-                                style={{
-                                  color: color.white,
-                                  fontWeight: 'bold',
-                                  fontSize: 16,
-                                }}>
-                                {item.name}
-                              </Text>
-                            </View>
-                          </ImageBackground>
-                        </TouchableOpacity>
-                      );
-                    }}
-                    keyExtractor={item => item.recipe_id}
-                  />
-                </View>
-              )}
-              <Text style={feedStyle.feedTitle}>
-                {search === '' ? 'For You' : 'Search Results'}
-              </Text>
+                              {item.name}
+                            </Text>
+                          </View>
+                        </ImageBackground>
+                      </TouchableOpacity>
+                    );
+                  }}
+                  keyExtractor={item => item.recipe_id}
+                />
+              </View>
+              <Text style={feedStyle.feedTitle}>For You</Text>
             </View>
           }
           onResponderEnd={() => {
             bottomSheetRef.current.close();
           }}
           numColumns={2}
-          contentContainerStyle={{paddingBottom: '40%'}}
+          contentContainerStyle={{paddingBottom: '15%'}}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
+                onPress={() => {
+                  navigation.push('Recipe', {recipe: item});
+                }}
                 style={{
                   width: '44%',
                   aspectRatio: 1,
@@ -202,11 +194,10 @@ export default function Feed({navigation}) {
                   }}>
                   <View
                     style={{
-                      backgroundColor: color.black,
+                      backgroundColor: 'rgba(0,0,0,0.5)',
                       height: '30%',
                       paddingHorizontal: '3%',
                       paddingVertical: 10,
-                      opacity: 0.7,
                       borderBottomRightRadius: 20,
                       borderBottomLeftRadius: 20,
                     }}>

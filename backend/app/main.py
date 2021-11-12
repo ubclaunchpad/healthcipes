@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
-from app.route import user, recipe, user_activity
+from app.route import user, recipe, user_activity, pantry
 
 router = APIRouter()
 app = FastAPI()

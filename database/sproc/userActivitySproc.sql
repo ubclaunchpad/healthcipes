@@ -39,8 +39,6 @@ DELIMITER ;
 
 
 DELIMITER $$
-USE `umami_db`$$
-
 
 CREATE PROCEDURE `postUserActivity` (
     IN `_user_id` VARCHAR(50),
@@ -60,7 +58,7 @@ VALUES (
     `_activity_type`,
     `_user_follow_id`,
     `_recipe_like_id`,
-    `_recipe_view_id`,
+    `_recipe_view_id`
 );
 
 

@@ -49,6 +49,7 @@ CREATE PROCEDURE `postUserActivity` (
 ) BEGIN REPLACE INTO `user_activity_table` (
     `user_id`,
     `activity_type`,
+    `date_created`,
     `user_follow_id`,
     `recipe_like_id`,
     `recipe_view_id`
@@ -56,6 +57,7 @@ CREATE PROCEDURE `postUserActivity` (
 VALUES (
     `_user_id`,
     `_activity_type`,
+    DATE(),
     `_user_follow_id`,
     `_recipe_like_id`,
     `_recipe_view_id`

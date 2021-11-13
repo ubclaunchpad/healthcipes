@@ -32,7 +32,7 @@ async def read_user_activity(userID: str = ""):
 
 
 @router.get("/rank")
-async def read_user_activity(activity_type: str = user_activity.RECIPE_VIEW):
+async def rank_recipes(activity_type: str = user_activity.RECIPE_VIEW):
     try:
         _, cursor = init_conn()
         res = user_activity.get_ranked_recipes(cursor, activity_type)

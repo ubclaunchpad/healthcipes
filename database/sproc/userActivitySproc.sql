@@ -76,10 +76,11 @@ USE `umami_db`$$
 CREATE PROCEDURE `rankRecipeByLike` ()
 BEGIN
 
-SELECT * 
-FROM `user_activity_table` ua 
-WHERE ua.activity_type = 'RECIPE_LIKE'
-;
+SELECT COUNT(recipe_view_id), recipe_view_id
+FROM `user_activity_table` 
+WHERE activity_type = 'RECIPE_LIKE'
+GROUP BY recipe_view_id
+ORDER BY COUNT(recipe_view_id) DESC;
 
 END$$
 
@@ -92,12 +93,11 @@ USE `umami_db`$$
 CREATE PROCEDURE `rankRecipeByView` ()
 BEGIN
 
-SELECT COUNT(*), recipe_view_id
-FROM `user_activity_table` ua 
-WHERE ua.activity_type = 'RECIPE_VIEW'
-GROUP BY ua.recipe_view_id
-ORDER BY COUNT(ua.recipe_view_id) DESC
-;
+SELECT COUNT(recipe_view_id), recipe_view_id
+FROM `user_activity_table` 
+WHERE activity_type = 'RECIPE_VIEW'
+GROUP BY recipe_view_id
+ORDER BY COUNT(recipe_view_id) DESC;
 
 END$$
 

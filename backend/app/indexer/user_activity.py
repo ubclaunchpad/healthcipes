@@ -69,11 +69,11 @@ def post_user_activity(conn, cursor, user_activity):
 def get_ranked_recipes(cursor, activity_type):
     _validate_user_activity(activity_type)
     if activity_type == USER_FOLLOW:
-        raise "{} is not avaliable for rank".format(USER_FOLLOW)
+        raise Exception("{} is not avaliable for rank".format(USER_FOLLOW))
 
     sql = 'rankRecipeByView'
-    if RECIPE_LIKE:
-        sql = ""
+    if activity_type == RECIPE_LIKE:
+        sql = "rankRecipeByLike"
 
     try:
         cursor.callproc(sql) 
@@ -84,10 +84,6 @@ def get_ranked_recipes(cursor, activity_type):
 
 
 
-
-RECIPE_LIKE = 'RECIPE_LIKE'
-USER_FOLLOW = 'USER_FOLLOW'
-RECIPE_VIEW = 'RECIPE_VIEW'
 
 
 def _validate_user_activity(activity_type):

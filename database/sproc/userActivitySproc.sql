@@ -30,7 +30,7 @@ CREATE PROCEDURE `getAllUserActivity` ()
 BEGIN
 
 SELECT * 
-FROM `user_activity_table` ua
+FROM `user_activity_table`
 ;
 
 END$$

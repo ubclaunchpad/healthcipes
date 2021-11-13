@@ -3,7 +3,8 @@ USE `umami_db`;
 DROP procedure IF EXISTS `getUsersUserActivity`;
 DROP procedure IF EXISTS `getAllUserActivity`;
 DROP procedure IF EXISTS `postUserActivity`;
-DROP procedure IF EXISTS `rankRecipe`;
+DROP procedure IF EXISTS `rankRecipeByLike`;
+DROP procedure IF EXISTS `rankRecipeByView`;
 
 
 
@@ -57,7 +58,7 @@ CREATE PROCEDURE `postUserActivity` (
 VALUES (
     `_user_id`,
     `_activity_type`,
-    DATE(),
+    NOW(),
     `_user_follow_id`,
     `_recipe_like_id`,
     `_recipe_view_id`
@@ -72,12 +73,12 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `rankRecipe` (IN `_activity_type` VARCHAR(50))
+CREATE PROCEDURE `rankRecipeByLike` ()
 BEGIN
 
 SELECT * 
 FROM `user_activity_table` ua 
-WHERE ua.activity_type = _activity_type
+WHERE ua.activity_type = 'RECIPE_LIKE'
 ;
 
 END$$
@@ -85,4 +86,20 @@ END$$
 DELIMITER ;
 
 
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `rankRecipeByView` ()
+BEGIN
+
+SELECT COUNT(*), *
+FROM `user_activity_table` ua 
+WHERE ua.activity_type = 'RECIPE_VIEW'
+GROUP BY ua.recipe_view_id
+ORDER BY COUNT(ua.recipe_view_id) DESC
+;
+
+END$$
+
+DELIMITER ;
 

@@ -5,7 +5,7 @@ from app.indexer import user_activity
 
 default_user_activity = {
     "user_id": "testID",
-    "activity_type": user_activity.recipe_view,
+    "activity_type": user_activity.RECIPE_VIEW,
     "recipe_view_id": 0,
 }
 

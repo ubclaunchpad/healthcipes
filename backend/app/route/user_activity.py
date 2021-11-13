@@ -31,6 +31,18 @@ async def read_user_activity(userID: str = ""):
         return "Error with {}".format(e), 400
 
 
+@router.get("/rank")
+async def read_user_activity(activity_type: str = user_activity.RECIPE_VIEW):
+    try:
+        _, cursor = init_conn()
+        res = user_activity.get_ranked_recipes(cursor, activity_type)
+        return res, 200
+
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+
 @router.post("/")
 async def add_user_activity(user_activity_obj: dict = default_user_activity):
     try:

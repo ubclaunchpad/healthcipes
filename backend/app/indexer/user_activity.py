@@ -34,9 +34,8 @@ def post_user_activity(conn, cursor, user_activity):
 
     user_id = user_activity.get('user_id')
     activity_type = user_activity.get('activity_type')
-    # NOTE: raise issue if user activity not part of enum
-    if activity_type not in user_activity_type_constants:
-        raise Exception("user activity {} doesn't exist".format(activity_type))
+    _validate_user_activity(activity_type)
+
     user_follow_id = user_activity.get('user_follow_id')
     recipe_like_id = user_activity.get('recipe_like_id')
     recipe_view_id = user_activity.get('recipe_view_id')
@@ -66,6 +65,26 @@ def post_user_activity(conn, cursor, user_activity):
         print("MYSQL ERROR:", sql)
         logging.error(e)
 
+
+def get_ranked_recipes(cursor, activity_type):
+    _validate_user_activity(activity_type)
+    sql = 'rankRecipe'
+    try:
+        cursor.callproc(sql) 
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)
+
+
+
+
+
+
+def _validate_user_activity(activity_type):
+    # NOTE: raise issue if user activity not part of enum
+    if activity_type not in user_activity_type_constants:
+        raise Exception("user activity {} doesn't exist".format(activity_type))
 
 
 

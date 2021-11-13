@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.pantries import post_pantry, get_pantry
+from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user
 
 defaultPantry = {
     "user_id": "abc",
@@ -16,10 +16,15 @@ router = APIRouter(
 
 
 @router.get("/")
-async def read_pantry(pantry_id: str):
+async def get_pantry_by_id(pantry_id: str, user_id: str):
+    # user_id takes presidence over pantry_id if both are sent
     try:
-        _, cursor = init_conn()
-        res = get_pantry(cursor, pantry_id)
+        if user_id:
+            _, cursor = init_conn()
+            res = get_pantry_by_user(cursor, user_id)
+        else:
+            _, cursor = init_conn()
+            res = get_pantry(cursor, pantry_id)
         return {
             "data": res,
             "status_code": 200

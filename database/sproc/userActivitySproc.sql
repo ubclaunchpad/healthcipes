@@ -92,7 +92,7 @@ USE `umami_db`$$
 CREATE PROCEDURE `rankRecipeByView` ()
 BEGIN
 
-SELECT COUNT(*), *
+SELECT COUNT(*), recipe_view_id
 FROM `user_activity_table` ua 
 WHERE ua.activity_type = 'RECIPE_VIEW'
 GROUP BY ua.recipe_view_id

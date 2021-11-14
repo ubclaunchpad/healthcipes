@@ -13,6 +13,17 @@ def get_pantry(cursor, pantryId):
         logging.error(e)
 
 
+def get_pantry_by_user(cursor, userId):
+    sql = 'getPantryByUser'
+
+    try:
+        cursor.callproc(sql, userId)
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)
+
+
 def post_pantry(conn, cursor, pantry):
     sql = 'postPantry'
 

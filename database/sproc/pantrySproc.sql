@@ -2,6 +2,7 @@ USE `umami_db`;
 
 DROP procedure IF EXISTS `postPantry`;
 DROP procedure IF EXISTS `getPantry`;
+DROP procedure IF EXISTS `getPantryByUser`;
 
 DELIMITER $$ 
 
@@ -30,6 +31,20 @@ CREATE PROCEDURE `getPantry` (
 
 SELECT * FROM `pantry_table` 
 WHERE `pantry_id` = `_pantry_id`;
+
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$ 
+
+CREATE PROCEDURE `getPantryByUser` (
+    IN `_user_id` VARCHAR(50)
+) BEGIN 
+
+SELECT * FROM `pantry_table` 
+WHERE `user_id` = `_user_id`;
 
 END $$
 

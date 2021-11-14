@@ -20,6 +20,15 @@ def get_all_recipes(cursor):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
+def get_featured_recipes(cursor):
+    sql_proc = 'getFeaturedRecipes'
+    try:
+        cursor.callproc(sql_proc)
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
 def filter_recipes(cursor, vegetarian: bool = False, vegan: bool = False):
     vegetarian_result = []
     vegan_result = []

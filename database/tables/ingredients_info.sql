@@ -13,17 +13,15 @@ BEGIN
 
 CREATE TABLE `ingredients_info_table` (
   `ingredient_id` INT NOT NULL auto_increment,
-  `recipe_id` INT NOT NULL,
-  `ingredient_name` VARCHAR(50),
-  `category` VARCHAR(50),
+  `ingredient_name` VARCHAR(255),
+  `category` VARCHAR(255),
+  `image` VARCHAR(255),
   `protein` INT,
   `carbs` INT,
   `fat` INT,
   `fiber` INT,
   `calories` INT,
-  PRIMARY KEY (`ingredient_id`),
-  CONSTRAINT fk_recipe_ingredient_info FOREIGN KEY (`recipe_id`)
-  REFERENCES `recipes_table`(`recipe_id`)
+  PRIMARY KEY (`ingredient_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 END$$

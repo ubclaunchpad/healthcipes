@@ -9,14 +9,9 @@ DELIMITER $$
 CREATE PROCEDURE `postPantry` (
     IN `_user_id` VARCHAR(50),
     IN `_ingredient_id` INT
-) BEGIN REPLACE INTO `pantry_table` (
-    `user_id`,
-    `ingredient_id`
-)
-VALUES (
-    `_user_id`,
-    `_ingredient_id`
-);
+) BEGIN 
+REPLACE INTO `pantry_table` (`user_id`,`ingredient_id`)
+VALUES (`_user_id`,`_ingredient_id`);
 
 END $$
 
@@ -43,8 +38,11 @@ CREATE PROCEDURE `getPantryByUser` (
     IN `_user_id` VARCHAR(50)
 ) BEGIN 
 
-SELECT * FROM `pantry_table` 
-WHERE `user_id` = `_user_id`;
+SELECT info.*, pantry.pantry_id FROM `ingredients_info_table` as info
+INNER JOIN
+(SELECT * FROM `pantry_table` 
+WHERE `user_id` = `_user_id`) as pantry
+ON info.ingredient_id = pantry.ingredient_id;
 
 END $$
 

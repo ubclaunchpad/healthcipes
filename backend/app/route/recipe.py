@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
 from datetime import datetime
 from functools import reduce
@@ -86,7 +86,7 @@ async def read_all_recipes():
 async def read_featured_recipes():
     try:
         _, cursor = init_conn()
-        res = get_all_recipes(cursor)
+        res = get_featured_recipes(cursor)
         return res, 200
     except Exception as e:
         logging.error(e)

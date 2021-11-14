@@ -17,7 +17,7 @@ def get_pantry_by_user(cursor, userId):
     sql = 'getPantryByUser'
 
     try:
-        cursor.callproc(sql, userId)
+        cursor.callproc(sql, (userId, ))
         return cursor.fetchall()
     except Exception as e:
         print("MYSQL ERROR:", sql)

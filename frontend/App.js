@@ -20,6 +20,7 @@ import Diet from './src/screens/onboarding/diet';
 import TabsUI from './TabsUI';
 import Search from './src/screens/tab1/search';
 import Recipe from './src/screens/tab1/recipe';
+import EditPantry from './src/screens/tab2/editPantry';
 
 enableScreens();
 
@@ -73,6 +74,7 @@ function PantryScreen() {
         headerShown: false,
       }}>
       <PantryStack.Screen name="Pantry" component={Pantry} />
+      <PantryStack.Screen name="EditPantry" component={EditPantry} />
     </PantryStack.Navigator>
   );
 }

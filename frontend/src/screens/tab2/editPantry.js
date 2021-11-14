@@ -11,15 +11,38 @@ import auth from '@react-native-firebase/auth';
 import {Chip} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
-import {GET_PANTRY} from '../../actions/pantryActions';
+import {GET_USER} from '../../actions/accountActions';
 
-export default function Pantry({navigation}) {
+export default function EditPantry({navigation}) {
   const dispatch = useDispatch();
   const pantry = useSelector(state => state.pantryReducer.pantryReducer);
 
   useEffect(() => {
-    dispatch({type: GET_PANTRY, userID: auth().currentUser.uid});
+    dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
+
+  const sections = [
+    {
+      title: 'Dairy',
+      data: ['Skimmed Milk', 'Eggs', 'Cheese'],
+      chipColor: color.red,
+    },
+    {
+      title: 'Fruits and Vegetables',
+      data: ['Strawberries', 'Broccoli', 'Lemons'],
+      chipColor: color.orange,
+    },
+    {
+      title: 'Meat and Fish',
+      data: ['Chicken', 'Ground Beef', 'Salmon'],
+      chipColor: color.lightGreen,
+    },
+    {
+      title: 'Seasoning',
+      data: ['Soy Sauce', 'Peppers', 'Salt'],
+      chipColor: color.yellow,
+    },
+  ];
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -54,9 +77,6 @@ export default function Pantry({navigation}) {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-          }}
-          onPress={() => {
-            navigation.push('EditPantry');
           }}>
           <Text
             style={{
@@ -79,7 +99,7 @@ export default function Pantry({navigation}) {
       </View>
       <View style={{flex: 12, marginHorizontal: '5%', paddingBottom: 45}}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {pantry.map(({title, data, chipColor}) => {
+          {sections.map(({title, data, chipColor}) => {
             return (
               <View style={{flex: 10}} key={title}>
                 <Text

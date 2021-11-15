@@ -20,3 +20,13 @@ VALUES (`_ingredient_name`,`_category`,`_image`,`_protein`,`_carbs`,`_fat`,`_fib
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `getAllIngredients` ()
+BEGIN 
+SELECT * FROM `ingredients_info_table`; 
+
+END$$
+
+DELIMITER ;

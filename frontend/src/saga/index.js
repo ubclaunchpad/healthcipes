@@ -1,7 +1,12 @@
 import {all, fork} from 'redux-saga/effects';
 import {getUser, signUp, updateUser} from './accountSaga';
 import {getFeed, searchFeed} from './feedSaga';
-import {getPantry} from './pantrySaga';
+import {
+  addIngredient,
+  getAllIngredients,
+  getPantry,
+  removeIngredient,
+} from './pantrySaga';
 import {getRecipe} from './recipeSaga';
 
 export default function* rootSaga() {
@@ -13,5 +18,8 @@ export default function* rootSaga() {
     fork(searchFeed),
     fork(getRecipe),
     fork(getPantry),
+    fork(getAllIngredients),
+    fork(addIngredient),
+    fork(removeIngredient),
   ]);
 }

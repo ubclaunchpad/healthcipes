@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user
+from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user, get_ingredients, delete_pantry
 
 defaultPantry = {
     "user_id": "abc",
@@ -42,6 +42,41 @@ async def add_to_pantry(pantry: dict = defaultPantry):
     try:
         conn, cursor = init_conn()
         res = post_pantry(conn, cursor, pantry)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+@router.delete("/")
+async def delete_from_pantry(pantry: dict = defaultPantry):
+    try:
+        conn, cursor = init_conn()
+        res = delete_pantry(conn, cursor, pantry)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+@router.get("/ingredients")
+async def get_all_ingredients():
+    # user_id takes presidence over pantry_id if both are sent
+    try:
+        _, cursor = init_conn()
+        res = get_ingredients(cursor)
         return {
             "data": res,
             "status_code": 200

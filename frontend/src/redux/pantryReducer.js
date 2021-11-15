@@ -1,5 +1,10 @@
 import {combineReducers} from 'redux';
-import {PANTRY, PANTRY_ADD} from '../actions/pantryActions';
+import {
+  INGREDIENTS,
+  PANTRY,
+  PANTRY_ADD,
+  PANTRY_REMOVE,
+} from '../actions/pantryActions';
 import color from '../styles/color';
 
 const defaultPantry = [
@@ -28,13 +33,22 @@ const defaultPantry = [
 const pantryReducer = (state = defaultPantry, action) => {
   switch (action.type) {
     case PANTRY:
-      return action.payload;
+      return state;
     case PANTRY_ADD:
       state.map(({title, data}) => {
-        if (title === action.payload.title) {
-          if (!data.includes(action.payload.item)) {
-            data.push(action.payload.item);
+        if (title === action.payload.category) {
+          if (data.every(item => item.name !== action.payload.name)) {
+            data.push(action.payload);
           }
+        }
+      });
+      return [...state];
+    case PANTRY_REMOVE:
+      state.map(item => {
+        if (item.title === action.payload.category) {
+          item.data = item.data.filter(
+            gone => gone.name !== action.payload.name,
+          );
         }
       });
       return [...state];
@@ -43,6 +57,16 @@ const pantryReducer = (state = defaultPantry, action) => {
   }
 };
 
+const ingredientReducer = (state = [], action) => {
+  switch (action.type) {
+    case INGREDIENTS:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   pantryReducer,
+  ingredientReducer,
 });

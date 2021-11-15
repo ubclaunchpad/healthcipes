@@ -100,7 +100,7 @@ export default function Pantry({navigation}) {
                   {data.map(chip => {
                     return (
                       <Chip
-                        key={chip}
+                        key={chip.id}
                         style={[
                           {
                             backgroundColor: chipColor,
@@ -117,7 +117,7 @@ export default function Pantry({navigation}) {
                             paddingVertical: 5,
                           },
                         ]}>
-                        {chip}
+                        {chip.name}
                       </Chip>
                     );
                   })}

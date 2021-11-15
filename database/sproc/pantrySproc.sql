@@ -1,6 +1,7 @@
 USE `umami_db`;
 
 DROP procedure IF EXISTS `postPantry`;
+DROP procedure IF EXISTS `deletePantry`;
 DROP procedure IF EXISTS `getPantry`;
 DROP procedure IF EXISTS `getPantryByUser`;
 
@@ -12,6 +13,19 @@ CREATE PROCEDURE `postPantry` (
 ) BEGIN 
 REPLACE INTO `pantry_table` (`user_id`,`ingredient_id`)
 VALUES (`_user_id`,`_ingredient_id`);
+
+END $$
+
+DELIMITER ;
+
+DELIMITER $$ 
+
+CREATE PROCEDURE `deletePantry` (
+    IN `_user_id` VARCHAR(50),
+    IN `_ingredient_id` INT
+) BEGIN 
+DELETE FROM `pantry_table`
+WHERE `_user_id`=`user_id` AND `_ingredient_id`=`ingredient_id`;
 
 END $$
 

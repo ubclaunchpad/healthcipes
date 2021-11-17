@@ -41,6 +41,7 @@ export default function EditProfile({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
+  //test
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {

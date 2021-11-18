@@ -87,7 +87,7 @@ export default function SignUp({navigation}) {
             "Password Does Not Match"
             ); 
         }
-      } else {2
+      } else {
         console.log('Password Cannot Be Empty');
         Alert.alert(
           "Error",

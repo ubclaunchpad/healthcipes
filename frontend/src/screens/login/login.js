@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
   Image,
+  Alert,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
@@ -37,9 +38,17 @@ export default function Login({navigation}) {
           });
       } else {
         console.log('Password Cannot Be Empty');
+        Alert.alert(
+          "Error",
+          "Password Cannot Be Empty"
+          ); 
       }
     } else {
       console.log('Email Cannot Be Empty');
+      Alert.alert(
+        "Error",
+        "Email Cannot Be Empty"
+        ); 
     }
   }
 

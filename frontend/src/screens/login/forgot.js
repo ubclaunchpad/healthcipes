@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
   Image,
+  Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import GoButton from '../../components/goButton';
@@ -28,6 +29,10 @@ export default function Forgot({navigation}) {
         });
     } else {
       console.log('Email Cannot Be Empty');
+      Alert.alert(
+        "Error",
+        "Email Cannot Be Empty"
+        ); 
     }
   }
 

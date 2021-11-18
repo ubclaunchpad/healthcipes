@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
@@ -67,21 +68,41 @@ export default function SignUp({navigation}) {
                 });
             } else {
               console.log('Invalid Username');
+              Alert.alert(
+                "Error",
+                "Invalid Username"
+                ); 
             }
           } else {
             console.log('Invalid Password');
+            Alert.alert(
+              "Invalid Password",
+              "Your password needs to be at least 6 digits long"
+              ); 
           }
         } else {
           console.log('Password Does Not Match');
+          Alert.alert(
+            "Error",
+            "Password Does Not Match"
+            ); 
         }
-      } else {
+      } else {2
         console.log('Password Cannot Be Empty');
+        Alert.alert(
+          "Error",
+          "Password Cannot Be Empty"
+          ); 
       }
     } else {
       console.log('Email Cannot Be Empty');
+      Alert.alert(
+        "Error",
+        "Email Cannot Be Empty"
+        ); 
     }
   }
-
+  
   // Function to Pass
   const submitForm = (
     newUsername,
@@ -113,6 +134,7 @@ export default function SignUp({navigation}) {
                 flex: 1.5,
               }}
             />
+
             <View style={{flex: 2.5}}>
               <Text
                 style={{

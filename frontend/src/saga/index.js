@@ -7,7 +7,7 @@ import {
   getPantry,
   removeIngredient,
 } from './pantrySaga';
-import {getRecipe} from './recipeSaga';
+import {getRecipe, postRecipeLike} from './recipeSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -17,6 +17,7 @@ export default function* rootSaga() {
     fork(getFeed),
     fork(searchFeed),
     fork(getRecipe),
+    fork(postRecipeLike),
     fork(getPantry),
     fork(getAllIngredients),
     fork(addIngredient),

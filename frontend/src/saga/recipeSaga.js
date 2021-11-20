@@ -46,7 +46,7 @@ function* postRecipeLike(data) {
     // console.log(results);
     // yield put({type: RECIPE, payload: results.data});
   } catch (e) {
-    console.log('Get Feed Failed: ' + e);
+    console.log('Registering like failed: ' + e);
   }
 }
 

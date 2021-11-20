@@ -12,8 +12,10 @@ defaultRecipe = {
     # TODO: id is required due to the nature of the query, should just auto increment if given null id
     "recipe_id": 0,
     "name": "testRecipeId",
+    "recipe_description": "A delicious vegan tofu scramble to beat the Mondays",
     # NOTE: need to create default user before default recipe can be made
     "user_id": "testID",
+    "creator_username": "VeganDaddy",
     "protein": 1,
     "carbs": 2,
     "fat": 2,
@@ -38,7 +40,9 @@ class RecipeIngredient(BaseModel):
 class RecipeDetails(BaseModel):
     recipe_id: int
     name: str
+    recipe_description: str
     user_id: str
+    creator_username: str
     protein: int
     carbs: int
     fat: int

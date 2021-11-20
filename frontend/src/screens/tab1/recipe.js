@@ -152,7 +152,7 @@ export default function Recipe({navigation, route}) {
               marginBottom: 5,
             }}
           >
-            <TouchableOpacity activeOpacity={0.5} onPress={this.callFun}>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.Func}>
               <Image
                 source={require('../../assets/Like.png')}
                 style={{

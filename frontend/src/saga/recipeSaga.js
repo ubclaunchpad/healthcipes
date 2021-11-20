@@ -24,7 +24,7 @@ function* getRecipeCall(param) {
   }
 }
 
-function* postRecipeLike(data) {
+function* postRecipeLikeCall(data) {
   try {
     const apiConfig = {
       method: 'post',
@@ -55,5 +55,5 @@ export function* getRecipe() {
 }
 
 export function* postRecipeLike() {
-  yield takeLatest(POST_RECIPE_LIKE, postRecipeLike);
+  yield takeLatest(POST_RECIPE_LIKE, postRecipeLikeCall);
 }

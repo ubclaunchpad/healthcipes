@@ -88,6 +88,7 @@ function ProfileScreen() {
         headerShown: false,
       }}>
       <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="EditProfile" component = {EditProfile} />
     </ProfileStack.Navigator>
   );
 }

@@ -155,7 +155,66 @@ function likedTab() {
 
 function myRecipes() {
   return (
-    <Text style={{alignSelf: 'center',}}> My Recipes</Text>
+    <View>
+      <FlatList
+        ref={flatListRef}
+        data={forYouFeed}
+        showsVerticalScrollIndicator={false}
+        onResponderEnd={() => {
+            bottomSheetRef.current.close();
+          }}
+        numColumns={2}
+        contentContainerStyle={{paddingBottom: '15%'}}
+        columnWrapperStyle={{justifyContent: 'space-between'}}
+        style={{marginTop: 20,}}
+        renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push('Recipe', {recipe: item});
+                  }}
+                  style={{
+                    width: '48%',
+                    aspectRatio: 0.95,
+                    borderRadius: 20,
+                    marginBottom: 10,
+                    mariginTop: 10,
+                    marginRight: index % 2 == 0 ? 10 : 0,
+                  }}>
+                  <ImageBackground
+                    source={{uri: item.header_image}}
+                    resizeMode="cover"
+                    borderRadius={20}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      justifyContent: 'flex-end',
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        height: '30%',
+                        paddingHorizontal: '10%',
+                        paddingVertical: 10,
+                        borderBottomRightRadius: 20,
+                        borderBottomLeftRadius: 20,
+                      }}>
+                      <Text
+                        style={{
+                          color: color.white,
+                          fontWeight: 'bold',
+                          fontSize: 16,
+                        }}>
+                        {item.name}
+                      </Text>
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={item => item.recipe_id}
+      />
+    </View>
   )
 }
 if (!onboarded) {
@@ -204,18 +263,6 @@ if (!onboarded) {
         <Text style={profileStyle.userTitle}>Name Lastname</Text>
         <Text style={profileStyle.userName}>@username</Text>
       </View>
-      <View
-      /*
-        style={{
-          flex: 1,
-          backgroundColor: 'white',
-          borderWidth: 1,
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
-          marginBottom: 20,
-        }}
-      */
-      />
       <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
         <View style={{flex: 1, paddingHorizontal: '3%'}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8,}}>

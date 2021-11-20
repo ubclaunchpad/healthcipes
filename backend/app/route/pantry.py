@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user, get_ingredients, delete_pantry
+from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user, get_ingredients, delete_pantry, get_ingredients_by_keyword
 
 defaultPantry = {
     "user_id": "abc",
@@ -72,12 +72,12 @@ async def delete_from_pantry(pantry: dict = defaultPantry):
         }
 
 @router.get("/ingredient")
-async def get_all_ingredients(keyword_search: str):
+async def get_all_ingredients(keyword_search: str = None):
     # user_id takes presidence over pantry_id if both are sent
     try:
         if keyword_search: 
             _, cursor = init_conn()
-            res = get_ingredients_by_keyword(cursor)
+            res = get_ingredients_by_keyword(cursor, keyword_search)
         else:
             _, cursor = init_conn()
             res = get_ingredients(cursor)

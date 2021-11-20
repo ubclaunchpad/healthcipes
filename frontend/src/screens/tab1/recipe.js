@@ -24,6 +24,7 @@ export default function Recipe({navigation, route}) {
     require('../../assets/defaultProfile.png'),
   );
   const [ingredients, setIngredients] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
   const [steps, setSteps] = useState([]);
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);

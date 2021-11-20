@@ -32,13 +32,11 @@ END$$
 
 DELIMITER ;
 
-
 DELIMITER $$
-USE `umami_db`$$
 CREATE PROCEDURE `getIngredientsKeyWordSearch` (IN `_keyword` VARCHAR(50))
-SELECT * FROM `ingredients_info_table` WHERE ingredient_name LIKE CONCAT('%', _keyword , '%') ;
 BEGIN 
 
+SELECT * FROM `ingredients_info_table` WHERE ingredient_name LIKE CONCAT('%', _keyword , '%') ;
 
 END$$
 

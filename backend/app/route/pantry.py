@@ -72,12 +72,12 @@ async def delete_from_pantry(pantry: dict = defaultPantry):
         }
 
 @router.get("/ingredient")
-async def get_all_ingredients(keyword_search: str = None):
+async def get_all_ingredients(keyword: str = None):
     # user_id takes presidence over pantry_id if both are sent
     try:
-        if keyword_search: 
+        if keyword: 
             _, cursor = init_conn()
-            res = get_ingredients_by_keyword(cursor, keyword_search)
+            res = get_ingredients_by_keyword(cursor, keyword)
         else:
             _, cursor = init_conn()
             res = get_ingredients(cursor)

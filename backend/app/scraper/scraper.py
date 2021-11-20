@@ -21,17 +21,10 @@ def scraper (url):
         vegan = True
     else:
         for meat in meats:
-            if meat in recipename:
+            if meat in recipename or meat in ingredients:
                 vegetarian = False
                 vegan = False
                 break
-            elif meat in ingredients:
-                vegetarian = False
-                vegan = False
-                break
-            else:
-                vegetarian = True
-                vegan = False
 
     try:
         protein = float(re.findall("\d+\.\d+", nutrients["proteinContent"])[0])
@@ -50,17 +43,20 @@ def scraper (url):
     except:
         servings = None
 
-    recipe= {
+    recipe = {
         'recipe_id': None,
         "name": recipename,
+        "recipe_description": "",
         "created_time": None,
         "user_id": None,
+        "creator_username": None,
         "carbs": carbs,
         "protein": protein,
         "calories": cal,
         "servings": servings,
         "vegetarian": vegetarian,
         "vegan": vegan,
-        "cooking_time": scraper.total_time()}
+        "cooking_time": scraper.total_time()
+    }
 
     return recipe

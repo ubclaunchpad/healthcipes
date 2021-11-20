@@ -1,0 +1,6 @@
+POST /user_activity/
+{
+    "user_id": "testID",
+    "activity_type": RECIPE_LIKE,
+    "recipe_like_id": 1,
+}

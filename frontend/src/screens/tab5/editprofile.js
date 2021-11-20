@@ -26,22 +26,21 @@ export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
+  const bottomSheetRef = useRef(null);
+  const flatListRef = useRef(null);
+  const snapPoints = useMemo(() => ['70%'], []);
   const featuredFeed = useSelector(
     state => state.recipeReducer.featureFeedReducer,
   );
   const forYouFeed = useSelector(
     state => state.recipeReducer.forYouFeedReducer,
   );
-  const [page, setPage] = useState('Liked');
-  const bottomSheetRef = useRef(null);
-  const flatListRef = useRef(null);
-  const snapPoints = useMemo(() => ['70%'], []);
+
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  //test
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {

@@ -1,6 +1,7 @@
 USE `umami_db`;
 
 DROP procedure IF EXISTS `createIngredientInfo`;
+DROP procedure IF EXISTS `getIngredientsKeyWordSearch`;
 
 DELIMITER $$
 USE `umami_db`$$
@@ -26,6 +27,16 @@ USE `umami_db`$$
 CREATE PROCEDURE `getAllIngredients` ()
 BEGIN 
 SELECT * FROM `ingredients_info_table`; 
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `getIngredientsKeyWordSearch` (IN `_keyword` VARCHAR(50))
+BEGIN 
+
+SELECT * FROM `ingredients_info_table` WHERE ingredient_name LIKE CONCAT('%', _keyword , '%') ;
 
 END$$
 

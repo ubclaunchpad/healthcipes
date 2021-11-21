@@ -67,3 +67,14 @@ def get_ingredients(cursor):
     except Exception as e:
         print("MYSQL ERROR:", sql)
         logging.error(e)
+
+
+def get_ingredients_by_keyword(cursor, keyword):
+    sql = 'getIngredientsKeyWordSearch'
+
+    try:
+        cursor.callproc(sql, (keyword,))
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)

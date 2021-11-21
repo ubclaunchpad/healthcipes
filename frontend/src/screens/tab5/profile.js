@@ -18,13 +18,14 @@ import profileStyle from './profileStyle';
 import color from '../../styles/color';
 import {GET_USER} from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
+import { GET_LIKEDRECIPES } from '../../actions/profileActions';
 
 export default function Profile({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
-  const featuredFeed = useSelector(
-    state => state.recipeReducer.featureFeedReducer,
+  const likedFeed = useSelector(
+    state => state.profileReducer.likedRecipeReducer,
   );
   const forYouFeed = useSelector(
     state => state.recipeReducer.forYouFeedReducer,
@@ -36,6 +37,10 @@ export default function Profile({navigation}) {
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch({type: GET_LIKEDRECIPES, userID: auth().currentUser.uid});
   }, [dispatch]);
 
 function profileTab(tab) {
@@ -93,7 +98,7 @@ function likedTab() {
     <View>
       <FlatList
         ref={flatListRef}
-        data={forYouFeed}
+        data={likedFeed}
         showsVerticalScrollIndicator={false}
         onResponderEnd={() => {
             bottomSheetRef.current.close();

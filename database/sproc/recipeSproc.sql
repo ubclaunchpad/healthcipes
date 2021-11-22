@@ -53,7 +53,7 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `getIngredientInfo` (IN `_ingredient_id` INT)
+CREATE PROCEDURE `getIngredientInfo` (IN `_ingredient_id` VARCHAR(255))
 BEGIN
 
 SELECT * FROM `ingredients_info_table`
@@ -197,17 +197,17 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockIngredients` ()
 BEGIN
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, '2 eggs', 'Dairy');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaaa', 1, '2 eggs', 'Dairy');
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, 'pinch of salt', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaab', 1, 'pinch of salt', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, 'pinch of pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaac', 1, 'pinch of pepper', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, 'pinch of crushed red pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaad', 1, 'pinch of crushed red pepper', 'Seasoning');
 
 END$$
 
@@ -218,17 +218,17 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockIngredientsInfo` ()
 BEGIN
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('2 eggs', 'Dairy', 10, 0, 5, 0, 300);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaaa', '2 eggs', 'Dairy', 10, 0, 5, 0, 300);
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('pinch of salt', 'Seasoning', 0, 0, 0, 0, 0);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaab', 'pinch of salt', 'Seasoning', 0, 0, 0, 0, 0);
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('pinch of pepper', 'Seasoning', 0, 0, 0, 0, 0);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaac', 'pinch of pepper', 'Seasoning', 0, 0, 0, 0, 0);
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('pinch of crushed red pepper', 'Seasoning', 0, 0, 0, 0, 2);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaad', 'pinch of crushed red pepper', 'Seasoning', 0, 0, 0, 0, 2);
 
 END$$
 

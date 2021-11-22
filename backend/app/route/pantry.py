@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 import logging
+import uuid
 import requests
 from app.indexer.tools import init_conn
 from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user, get_ingredients, delete_pantry, get_ingredients_by_keyword, post_ingredient, post_ingredient_array
 
 defaultPantry = {
     "user_id": "abc",
-    "ingredient_id": 1,
+    "ingredient_id": "abc",
 }
 
 defaultIngredient = {
@@ -103,7 +104,7 @@ async def get_all_ingredients(keyword: str = None):
                 if (len(resultObject) == 0):
                     for i in range(0, len(result["hints"])):
                         parsedResult = [
-                            hintObject[i]["food"].get("foodId", ""),
+                            hintObject[i]["food"].get("foodId", uuid.uuid4()),
                             hintObject[i]["food"].get("label", ""),
                             "Other",
                             hintObject[i]["food"].get("image", ""),
@@ -113,10 +114,12 @@ async def get_all_ingredients(keyword: str = None):
                             hintObject[i]["food"]["nutrients"].get("FIBTG", 0),
                             hintObject[i]["food"]["nutrients"].get("ENERC_KCAL", 0),
                         ]
+                        _ = post_ingredient_array(conn, cursor, parsedResult)
+                        cursor.nextset()
                         res.append(parsedResult)
                 else:
                     parsedResult = [
-                        resultObject[0]["food"].get("foodId", ""),
+                        resultObject[0]["food"].get("foodId", uuid.uuid4()),
                         resultObject[0]["food"].get("label", ""),
                         "Other",
                         resultObject[0]["food"].get("image", ""),
@@ -126,7 +129,7 @@ async def get_all_ingredients(keyword: str = None):
                         resultObject[0]["food"]["nutrients"].get("FIBTG", 0),
                         resultObject[0]["food"]["nutrients"].get("ENERC_KCAL", 0),
                     ]
-                    added = post_ingredient_array(conn, cursor, parsedResult)
+                    _ = post_ingredient_array(conn, cursor, parsedResult)
                     res.append(parsedResult)
         else:
             _, cursor = init_conn()

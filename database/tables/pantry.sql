@@ -14,7 +14,7 @@ BEGIN
 CREATE TABLE `pantry_table` (
     `pantry_id` INT NOT NULL auto_increment,
     `user_id` VARCHAR(50) NOT NULL,
-    `ingredient_id` INT NOT NULL,
+    `ingredient_id` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`pantry_id`),
     CONSTRAINT fk_user_id FOREIGN KEY (`user_id`)
     REFERENCES `users_table`(`user_id`),

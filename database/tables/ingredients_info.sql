@@ -12,7 +12,7 @@ CREATE PROCEDURE `createIngredientsInfoTable` ()
 BEGIN
 
 CREATE TABLE `ingredients_info_table` (
-  `ingredient_id` INT NOT NULL auto_increment,
+  `ingredient_id` VARCHAR(255) NOT NULL,
   `ingredient_name` VARCHAR(255),
   `category` VARCHAR(255),
   `image` VARCHAR(255),

@@ -5,7 +5,6 @@ import logging
 from app.indexer.tools import init_conn
 from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
-from datetime import datetime
 from functools import reduce
 
 defaultRecipe = {
@@ -33,7 +32,7 @@ class RecipeStep(BaseModel):
     time: Optional[int] = None
 
 class RecipeIngredient(BaseModel):
-    ingredient_id: int
+    ingredient_id: str
     ingredient_name: str
     category: str
 

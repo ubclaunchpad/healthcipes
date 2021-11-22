@@ -6,6 +6,7 @@ DROP procedure IF EXISTS `getIngredientsKeyWordSearch`;
 DELIMITER $$
 USE `umami_db`$$
 CREATE PROCEDURE `createIngredientInfo` (
+    IN `_ingredient_id` VARCHAR(255),
     IN `_ingredient_name` VARCHAR(255),
     IN `_category` VARCHAR(255),
     IN `_image` VARCHAR(255),
@@ -15,8 +16,8 @@ CREATE PROCEDURE `createIngredientInfo` (
     IN `_fiber` INT,
     IN `_calories` INT
 )
-BEGIN INSERT INTO `ingredients_info_table` (`ingredient_name`,`category`,`image`,`protein`,`carbs`,`fat`,`fiber`, `calories`)
-VALUES (`_ingredient_name`,`_category`,`_image`,`_protein`,`_carbs`,`_fat`,`_fiber`,`_calories`);
+BEGIN REPLACE INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`,`category`,`image`,`protein`,`carbs`,`fat`,`fiber`, `calories`)
+VALUES (`_ingredient_id`, `_ingredient_name`,`_category`,`_image`,`_protein`,`_carbs`,`_fat`,`_fiber`,`_calories`);
 
 END$$
 

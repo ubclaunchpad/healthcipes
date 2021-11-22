@@ -9,7 +9,7 @@ DELIMITER $$
 
 CREATE PROCEDURE `postPantry` (
     IN `_user_id` VARCHAR(50),
-    IN `_ingredient_id` INT
+    IN `_ingredient_id` VARCHAR(255)
 ) BEGIN 
 REPLACE INTO `pantry_table` (`user_id`,`ingredient_id`)
 VALUES (`_user_id`,`_ingredient_id`);

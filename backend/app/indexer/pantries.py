@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 def get_pantry(cursor, pantryId):
     sql = 'getPantry'
@@ -83,6 +84,8 @@ def get_ingredients_by_keyword(cursor, keyword):
 def post_ingredient(conn, cursor, ingredient):
     sql = 'createIngredientInfo'
 
+    id = uuid.uuid4()
+    ingredient['ingredient_id'] = id
     ingredient_name = ingredient['ingredient_name']
     category = ingredient['category']
     image = ingredient['image']
@@ -94,6 +97,7 @@ def post_ingredient(conn, cursor, ingredient):
 
     try:
         cursor.callproc(sql, (
+            id,
             ingredient_name,
             category,
             image,
@@ -112,6 +116,7 @@ def post_ingredient(conn, cursor, ingredient):
 def post_ingredient_array(conn, cursor, ingredient):
     sql = 'createIngredientInfo'
 
+    id = ingredient[0]
     ingredient_name = ingredient[1]
     category = ingredient[2]
     image = ingredient[3]
@@ -123,6 +128,7 @@ def post_ingredient_array(conn, cursor, ingredient):
 
     try:
         cursor.callproc(sql, (
+            id,
             ingredient_name,
             category,
             image,

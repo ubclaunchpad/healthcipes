@@ -26,7 +26,9 @@ DELIMITER $$
 USE `umami_db`$$
 CREATE PROCEDURE `getAllIngredients` ()
 BEGIN 
-SELECT * FROM `ingredients_info_table`; 
+SELECT * FROM `ingredients_info_table`
+ORDER BY RAND()
+LIMIT 10; 
 
 END$$
 

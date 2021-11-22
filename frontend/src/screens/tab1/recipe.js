@@ -211,9 +211,7 @@ export default function Recipe({navigation, route}) {
           <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
             About this Recipe
           </Text>
-          <Text>
-            {recipe.recipe_description}
-          </Text>
+          <Text>{recipe.recipe_description}</Text>
         </View>
       </View>
     );

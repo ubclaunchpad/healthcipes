@@ -6,6 +6,7 @@ import {
   getAllIngredients,
   getPantry,
   removeIngredient,
+  searchIngredients,
 } from './pantrySaga';
 import {getRecipe} from './recipeSaga';
 import {getLikedRecipes} from './profileSaga';
@@ -23,5 +24,6 @@ export default function* rootSaga() {
     fork(addIngredient),
     fork(removeIngredient),
     fork(getLikedRecipes),
+    fork(searchIngredients),
   ]);
 }

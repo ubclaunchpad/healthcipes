@@ -1,11 +1,23 @@
 from fastapi import APIRouter
 import logging
+import requests
 from app.indexer.tools import init_conn
-from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user, get_ingredients, delete_pantry, get_ingredients_by_keyword
+from app.indexer.pantries import post_pantry, get_pantry, get_pantry_by_user, get_ingredients, delete_pantry, get_ingredients_by_keyword, post_ingredient, post_ingredient_array
 
 defaultPantry = {
     "user_id": "abc",
     "ingredient_id": 1,
+}
+
+defaultIngredient = {
+    "ingredient_name": "abc",
+    "category": "",
+    "image": "",
+    "protein": 0,
+    "carbs": 0,
+    "fat": 0,
+    "fiber": 0,
+    "calories": 0,
 }
 
 router = APIRouter(
@@ -71,16 +83,71 @@ async def delete_from_pantry(pantry: dict = defaultPantry):
             "status_code": 400
         }
 
-@router.get("/ingredient")
+@router.get("/ingredients")
 async def get_all_ingredients(keyword: str = None):
-    # user_id takes presidence over pantry_id if both are sent
     try:
         if keyword: 
-            _, cursor = init_conn()
+            conn, cursor = init_conn()
             res = get_ingredients_by_keyword(cursor, keyword)
+            cursor.nextset()
+            if len(res) == 0:
+                # make API call to get ingredients
+                url = "https://api.edamam.com/api/food-database/v2/parser?app_id=b34748ae&app_key=d85606705b61f0edc18c96502bddb0b6&ingr=" + keyword + "&nutrition-type=logging"
+
+                response = requests.request("GET", url)
+
+                res = []
+                result = response.json()
+                resultObject = result["parsed"]
+                hintObject = result["hints"]
+                if (len(resultObject) == 0):
+                    for i in range(0, len(result["hints"])):
+                        parsedResult = [
+                            hintObject[i]["food"].get("foodId", ""),
+                            hintObject[i]["food"].get("label", ""),
+                            "Other",
+                            hintObject[i]["food"].get("image", ""),
+                            hintObject[i]["food"]["nutrients"].get("PROCNT", 0),
+                            hintObject[i]["food"]["nutrients"].get("CHOCDF", 0),
+                            hintObject[i]["food"]["nutrients"].get("FAT", 0),
+                            hintObject[i]["food"]["nutrients"].get("FIBTG", 0),
+                            hintObject[i]["food"]["nutrients"].get("ENERC_KCAL", 0),
+                        ]
+                        res.append(parsedResult)
+                else:
+                    parsedResult = [
+                        resultObject[0]["food"].get("foodId", ""),
+                        resultObject[0]["food"].get("label", ""),
+                        "Other",
+                        resultObject[0]["food"].get("image", ""),
+                        resultObject[0]["food"]["nutrients"].get("PROCNT", 0),
+                        resultObject[0]["food"]["nutrients"].get("CHOCDF", 0),
+                        resultObject[0]["food"]["nutrients"].get("FAT", 0),
+                        resultObject[0]["food"]["nutrients"].get("FIBTG", 0),
+                        resultObject[0]["food"]["nutrients"].get("ENERC_KCAL", 0),
+                    ]
+                    added = post_ingredient_array(conn, cursor, parsedResult)
+                    res.append(parsedResult)
         else:
             _, cursor = init_conn()
             res = get_ingredients(cursor)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+@router.post("/ingredients")
+async def post_new_ingredients(ingredient: dict = defaultIngredient):
+    try:
+        conn, cursor = init_conn()
+        res = post_ingredient(conn, cursor, ingredient)
         return {
             "data": res,
             "status_code": 200

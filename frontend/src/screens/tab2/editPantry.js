@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   SectionList,
+  TextInput,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Swipeable from 'react-native-swipeable';
@@ -17,11 +18,13 @@ import {
   ADD_INGREDIENT,
   GET_ALL_INGREDIENTS,
   REMOVE_INGREDIENT,
+  SEARCH_INGREDIENTS,
 } from '../../actions/pantryActions';
 
 export default function EditPantry({navigation}) {
   const dispatch = useDispatch();
   const [addState, setAddState] = useState(true);
+  const [search, setSearch] = useState('');
   const pantry = useSelector(state => state.pantryReducer.pantryReducer);
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
@@ -77,34 +80,48 @@ export default function EditPantry({navigation}) {
           <FlatList
             style={{paddingHorizontal: '5%'}}
             data={ingredients}
-            ListHeaderComponent={() => {
-              return (
-                <TouchableOpacity
+            ListHeaderComponent={
+              <View
+                style={{
+                  backgroundColor: color.lightGray,
+                  height: 40,
+                  width: '100%',
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  paddingHorizontal: '5%',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                }}>
+                <Image
+                  source={require('../../assets/Search.png')}
                   style={{
-                    backgroundColor: color.lightGray,
-                    height: 40,
-                    width: '100%',
-                    borderRadius: 20,
-                    marginBottom: 20,
-                    paddingHorizontal: '5%',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    flexDirection: 'row',
+                    height: 20,
+                    width: 20,
+                    resizeMode: 'contain',
                   }}
-                  onPress={() => {
-                    navigation.push('Search');
-                  }}>
-                  <Image
-                    source={require('../../assets/Search.png')}
-                    style={{
-                      height: 20,
-                      width: 20,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            }}
+                />
+                <TextInput
+                  style={{
+                    height: 40,
+                    paddingHorizontal: '5%',
+                    width: '100%',
+                  }}
+                  value={search}
+                  onChangeText={text => setSearch(text)}
+                  onSubmitEditing={() => {
+                    if (search !== '') {
+                      dispatch({
+                        type: SEARCH_INGREDIENTS,
+                        keyword: search,
+                      });
+                    } else {
+                      dispatch({type: GET_ALL_INGREDIENTS});
+                    }
+                  }}
+                />
+              </View>
+            }
             contentContainerStyle={{paddingBottom: '30%'}}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => {
@@ -163,34 +180,32 @@ export default function EditPantry({navigation}) {
                 />
               );
             }}
-            ListHeaderComponent={() => {
-              return (
-                <TouchableOpacity
+            ListHeaderComponent={
+              <TouchableOpacity
+                style={{
+                  backgroundColor: color.lightGray,
+                  height: 40,
+                  width: '100%',
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  paddingHorizontal: '5%',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                }}
+                onPress={() => {
+                  navigation.push('Search');
+                }}>
+                <Image
+                  source={require('../../assets/Search.png')}
                   style={{
-                    backgroundColor: color.lightGray,
-                    height: 40,
-                    width: '100%',
-                    borderRadius: 20,
-                    marginBottom: 20,
-                    paddingHorizontal: '5%',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    flexDirection: 'row',
+                    height: 20,
+                    width: 20,
+                    resizeMode: 'contain',
                   }}
-                  onPress={() => {
-                    navigation.push('Search');
-                  }}>
-                  <Image
-                    source={require('../../assets/Search.png')}
-                    style={{
-                      height: 20,
-                      width: 20,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            }}
+                />
+              </TouchableOpacity>
+            }
             renderItem={({item}) => {
               return (
                 <Swipeable

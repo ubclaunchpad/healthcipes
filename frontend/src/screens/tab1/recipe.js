@@ -156,7 +156,11 @@ export default function Recipe({navigation, route}) {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
+                dispatch({
+                  type: POST_RECIPE_LIKE,
+                  user_id: auth().currentUser.uid,
+                  recipe_like_id: recipe.recipe_id,
+                });
               }}
             >
               <Image

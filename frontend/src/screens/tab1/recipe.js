@@ -15,6 +15,7 @@ import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
 import recipeStyle from './recipeStyle';
 import {GET_RECIPE} from '../../actions/recipeActions';
+import auth from '@react-native-firebase/auth';
 
 export default function Recipe({navigation, route}) {
   const {recipe} = route.params;

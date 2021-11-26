@@ -13,6 +13,7 @@ export default StyleSheet.create({
     color: 'white',
     fontWeight: 'normal',
     alignSelf: 'center',
+    marginBottom: 80,
   },
   profilePicture: {
     width: 85,
@@ -29,8 +30,25 @@ export default StyleSheet.create({
     height: 85,
     borderRadius: 150 / 2,
     overflow: "hidden",
+    marginVertical: "4%",
+    marginBottom: "10%",
     marginHorizontal: "23%",
     resizeMode: 'contain',
     alignSelf: 'center',
+  },
+  textInput: {
+    height: 12,
+    marginLeft: 60,
+    marginRight: 60,
+    borderBottomWidth: 1,
+    borderColor: color.gray,
+    padding: 10,
+  },
+  inputTitle: {
+    fontSize: 16,
+    color: color.gray,
+    marginLeft: '15%',
+    marginTop: "5%",
+    marginBottom: "5%",
   }
 });

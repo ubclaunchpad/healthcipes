@@ -21,6 +21,9 @@ import {GET_USER} from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
 import { csvParseRows } from 'd3-dsv';
 import { randomWeibull } from 'd3-random';
+import { gray } from 'd3-color';
+import { blue100 } from 'react-native-paper/lib/typescript/styles/colors';
+import { applyMiddleware } from 'redux';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
@@ -35,7 +38,10 @@ export default function EditProfile({navigation}) {
   const forYouFeed = useSelector(
     state => state.recipeReducer.forYouFeedReducer,
   );
-
+  [firstname, onFirstNameChange] = useState('');
+  [lastname, onLastNameChange] = useState('');
+  [username, onUsernameChange] = useState('');
+  [email, onEmailChange] = useState('');
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
@@ -74,6 +80,7 @@ if (!onboarded) {
                 </TouchableOpacity>
                 <Text
                     style={{
+                      marginBottom: '5%',
                       marginTop: '9.5%',
                       fontSize: 30,
                       color: 'black',
@@ -89,6 +96,71 @@ if (!onboarded) {
                   source={require('../../assets/Profilepicture.png')}
                   style={profileStyle.editprofilePicture}
                 />
+              </View>
+              <View>
+                <Text style = {profileStyle.inputTitle}>
+                  First Name
+                </Text>
+                <TextInput
+                  textContentType="firstname"
+                  placeholder=""
+                  autoCorrect={false}
+                  onChangeText={text => onUsernameChange(text)}
+                  value={username}
+                  style={profileStyle.textInput}
+                  placeholderTextColor={color.gray}
+                  onSubmitEditing={() => {
+                    emailInput.current.focus();
+                  }}
+                />
+                <Text style = {profileStyle.inputTitle}>
+                  Last Name
+                </Text>
+                <TextInput
+                  textContentType="lastname"
+                  placeholder=""
+                  autoCorrect={false}
+                  onChangeText={text => onUsernameChange(text)}
+                  value={username}
+                  style={profileStyle.textInput}
+                  placeholderTextColor={color.gray}
+                  onSubmitEditing={() => {
+                    emailInput.current.focus();
+                  }}
+                />
+                <Text style = {profileStyle.inputTitle}>
+                  Username
+                </Text>
+                <TextInput
+                  textContentType="username"
+                  placeholder=""
+                  autoCorrect={false}
+                  onChangeText={text => onUsernameChange(text)}
+                  value={username}
+                  style={profileStyle.textInput}
+                  placeholderTextColor={color.gray}
+                  onSubmitEditing={() => {
+                    emailInput.current.focus();
+                  }}
+                />
+                <Text style = {profileStyle.inputTitle}>
+                  Email
+                </Text>
+                <TextInput
+                  textContentType="email"
+                  placeholder=""
+                  autoCorrect={false}
+                  onChangeText={text => onUsernameChange(text)}
+                  value={username}
+                  style={profileStyle.textInput}
+                  placeholderTextColor={color.gray}
+                  onSubmitEditing={() => {
+                    emailInput.current.focus();
+                  }}
+                />
+                <Text>
+                  Dietary Restriction 
+                </Text>
               </View>
           </View>
           }

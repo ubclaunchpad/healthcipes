@@ -42,12 +42,14 @@ export default function EditPantry({navigation}) {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <TouchableOpacity
           style={{flex: 1, marginLeft: 20}}
           onPress={() => {
             navigation.pop();
-          }}>
+          }}
+        >
           <Image
             source={require('../../assets/Back.png')}
             style={{
@@ -92,7 +94,8 @@ export default function EditPantry({navigation}) {
                   alignItems: 'center',
                   alignSelf: 'center',
                   flexDirection: 'row',
-                }}>
+                }}
+              >
                 <Image
                   source={require('../../assets/Search.png')}
                   style={{
@@ -142,7 +145,8 @@ export default function EditPantry({navigation}) {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     flex: 1,
-                  }}>
+                  }}
+                >
                   <Text style={{fontSize: 18}}>{item[1]}</Text>
                   <TouchableOpacity
                     onPress={() => {
@@ -150,16 +154,30 @@ export default function EditPantry({navigation}) {
                         type: ADD_INGREDIENT,
                         payload: {userID: auth().currentUser.uid, item: item},
                       });
-                    }}>
-                    <Image
-                      source={require('../../assets/Plus.png')}
-                      style={{
-                        width: 24,
-                        height: 24,
-                        resizeMode: 'contain',
-                        tintColor: color.gray,
-                      }}
-                    />
+                    }}
+                  >
+                    {true && (
+                      <Image
+                        source={require('../../assets/Plus.png')}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          resizeMode: 'contain',
+                          tintColor: color.gray,
+                        }}
+                      />
+                    )}
+
+                    {false && (
+                      <Image
+                        source={require('../../assets/check.png')}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    )}
                   </TouchableOpacity>
                 </View>
               );
@@ -195,7 +213,8 @@ export default function EditPantry({navigation}) {
                 }}
                 onPress={() => {
                   navigation.push('Search');
-                }}>
+                }}
+              >
                 <Image
                   source={require('../../assets/Search.png')}
                   style={{
@@ -221,7 +240,8 @@ export default function EditPantry({navigation}) {
                           type: REMOVE_INGREDIENT,
                           payload: {userID: auth().currentUser.uid, item},
                         });
-                      }}>
+                      }}
+                    >
                       <Image
                         source={require('../../assets/X.png')}
                         style={{
@@ -232,13 +252,15 @@ export default function EditPantry({navigation}) {
                         }}
                       />
                     </TouchableOpacity>,
-                  ]}>
+                  ]}
+                >
                   <Text
                     style={{
                       fontSize: 18,
                       marginVertical: 20,
                       marginLeft: 10,
-                    }}>
+                    }}
+                  >
                     {item.name}
                   </Text>
                 </Swipeable>

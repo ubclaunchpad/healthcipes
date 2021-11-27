@@ -42,7 +42,7 @@ export default StyleSheet.create({
     marginRight: 60,
     borderBottomWidth: 1,
     borderColor: color.gray,
-    padding: 10,
+    padding: 8,
   },
   inputTitle: {
     fontSize: 16,
@@ -50,5 +50,13 @@ export default StyleSheet.create({
     marginLeft: '15%',
     marginTop: "5%",
     marginBottom: "5%",
+  },
+  dietarybutton: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: color.gray,
+    padding: "2%",
+    paddingHorizontal: "8%",
+    marginRight: "2%",
   }
 });

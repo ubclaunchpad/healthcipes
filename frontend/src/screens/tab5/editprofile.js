@@ -22,8 +22,10 @@ import { FlatList } from 'react-native-gesture-handler';
 import { csvParseRows } from 'd3-dsv';
 import { randomWeibull } from 'd3-random';
 import { gray } from 'd3-color';
-import { blue100 } from 'react-native-paper/lib/typescript/styles/colors';
+import { blue100, white } from 'react-native-paper/lib/typescript/styles/colors';
 import { applyMiddleware } from 'redux';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import ProfileChips from '../../components/filterChips';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
@@ -46,6 +48,10 @@ export default function EditProfile({navigation}) {
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
+
+  state={
+
+  }
 
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -158,9 +164,21 @@ if (!onboarded) {
                     emailInput.current.focus();
                   }}
                 />
-                <Text>
-                  Dietary Restriction 
-                </Text>
+                <View style={{
+                  marginHorizontal: "8%",
+                  }}> 
+                  <Text style={{
+                    fontSize: 17,
+                    marginTop: "10%",
+                    fontWeight: "700",
+                    color: color.textGray,
+                    marginBottom: "5%",
+                    }}>
+                    Dietary Requirements
+                  </Text>
+                  {ProfileChips()}
+                </View>
+                
               </View>
           </View>
           }

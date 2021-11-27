@@ -16,8 +16,8 @@ USE `umami_db`$$
 CREATE PROCEDURE `getRecipe` (IN `_recipe_id` INT)
 BEGIN
 
-SELECT r.recipe_id, r.name, r.user_id, r.protein, r.carbs, r.fat, r.fiber,
-r.calories, r.servings, r.vegetarian, r.vegan, r.cooking_time,
+SELECT r.recipe_id, r.name, r.recipe_description, r.user_id, r.creator_username,
+r.protein, r.carbs, r.fat, r.fiber, r.calories, r.servings, r.vegetarian, r.vegan, r.cooking_time,
 rs.step_id, rs.description, rs.time,
 i.ingredient_id, i.ingredient_name, i.category
 FROM `recipes_table` r
@@ -53,7 +53,7 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `getIngredientInfo` (IN `_ingredient_id` INT)
+CREATE PROCEDURE `getIngredientInfo` (IN `_ingredient_id` VARCHAR(255))
 BEGIN
 
 SELECT * FROM `ingredients_info_table`
@@ -99,7 +99,9 @@ BEGIN
 
 INSERT INTO `recipes_table` (
     `name`,
+    `recipe_description`,
     `user_id`,
+    `creator_username`,
     `created_time`,
     `header_image`,
     `protein`,
@@ -113,7 +115,9 @@ INSERT INTO `recipes_table` (
     `cooking_time`
 ) VALUES(
     'scrambled eggs',
+    'scrambled eggs: timeless, simple, quick',
     'abc',
+    'thenotsohipmillenialchef',
     now(),
     'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg',
     10,
@@ -138,7 +142,9 @@ BEGIN
 
 INSERT INTO `recipes_table` (
     `name`,
+    `recipe_description`,
     `user_id`,
+    `creator_username`,
     `protein`,
     `carbs`,
     `fat`,
@@ -150,7 +156,9 @@ INSERT INTO `recipes_table` (
     `cooking_time`
 ) VALUES(
     'scrambled eggs',
+    'scrambled eggs: timeless, simple, quick',
     'abc',
+    'thenotsohipmillenialchef',
     NULL,
     NULL,
     NULL,
@@ -189,17 +197,17 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockIngredients` ()
 BEGIN
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, '2 eggs', 'Dairy');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaaa', 1, '2 eggs', 'Dairy');
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, 'pinch of salt', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaab', 1, 'pinch of salt', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, 'pinch of pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaac', 1, 'pinch of pepper', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`recipe_id`, `ingredient_name`, `category`)
-VALUES(1, 'pinch of crushed red pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES('aaad', 1, 'pinch of crushed red pepper', 'Seasoning');
 
 END$$
 
@@ -210,17 +218,17 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockIngredientsInfo` ()
 BEGIN
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('2 eggs', 'Dairy', 10, 0, 5, 0, 300);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaaa', '2 eggs', 'Dairy', 10, 0, 5, 0, 300);
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('pinch of salt', 'Seasoning', 0, 0, 0, 0, 0);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaab', 'pinch of salt', 'Seasoning', 0, 0, 0, 0, 0);
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('pinch of pepper', 'Seasoning', 0, 0, 0, 0, 0);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaac', 'pinch of pepper', 'Seasoning', 0, 0, 0, 0, 0);
 
-INSERT INTO `ingredients_info_table` (`ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
-VALUES('pinch of crushed red pepper', 'Seasoning', 0, 0, 0, 0, 2);
+INSERT INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`, `category`, `protein`, `carbs`, `fat`, `fiber`, `calories`)
+VALUES('aaad', 'pinch of crushed red pepper', 'Seasoning', 0, 0, 0, 0, 2);
 
 END$$
 
@@ -231,7 +239,9 @@ USE `umami_db`$$
 CREATE PROCEDURE `createRecipe` (
     IN `_recipe_id` INT,
     IN `_name` VARCHAR(50),
+    IN `_recipe_description` VARCHAR(255),
     IN `_user_id` VARCHAR(50),
+    IN `_creator_username` VARCHAR(50),
     IN `_header_image` VARCHAR(255),
     IN `_protein` INT,
     IN `_carbs` INT,
@@ -248,8 +258,10 @@ BEGIN
 REPLACE INTO `recipes_table` (
     `recipe_id`,
     `name`,
+    `recipe_description`,
     `created_time`,
     `user_id`,
+    `creator_username`,
     `header_image`,
     `protein`,
     `carbs`,
@@ -264,8 +276,10 @@ REPLACE INTO `recipes_table` (
 VALUES (
     `_recipe_id`,
     `_name`,
+    `_recipe_description`,
     NOW(),
     `_user_id`,
+    `_creator_username`,
     `_header_image`,
     `_protein`,
     `_carbs`,

@@ -9,8 +9,10 @@ import {RECIPE} from '../actions/recipeActions';
 const defaultRecipe = {
   recipe_id: 0,
   name: '',
+  recipe_description: '',
   created_time: new Date(),
   user_id: '',
+  creator_username: '',
   header_image: '',
   protein: 0,
   carbs: 0,

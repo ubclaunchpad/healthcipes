@@ -29,7 +29,7 @@ function* searchFeedCall(param) {
     const recipeArray = [];
     for (const results of resultsArray) {
       yield storage()
-        .refFromURL(results[4])
+        .refFromURL(results[6])
         .getDownloadURL()
         .then(res => {
           const vegetarian = param.user.vegetarian ? results[11] === 1 : true;
@@ -51,18 +51,20 @@ function* searchFeedCall(param) {
             const recipeObj = {
               recipe_id: results[0],
               name: results[1],
-              created_time: results[2],
-              user_id: results[3],
+              recipe_description: results[2],
+              created_time: results[3],
+              user_id: results[4],
+              creator_username: results[5],
               header_image: res,
-              protein: results[5],
-              carbs: results[6],
-              fat: results[7],
-              fiber: results[8],
-              calories: results[9],
-              servings: results[10],
-              vegetarian: results[11],
-              vegan: results[12],
-              cooking_time: results[13],
+              protein: results[7],
+              carbs: results[8],
+              fat: results[9],
+              fiber: results[10],
+              calories: results[11],
+              servings: results[12],
+              vegetarian: results[13],
+              vegan: results[14],
+              cooking_time: results[15],
             };
             recipeArray.push(recipeObj);
           }
@@ -100,7 +102,7 @@ function* getFeedCall(param) {
     const recipeArray = [];
     for (const results of resultsArray) {
       yield storage()
-        .refFromURL(results[4])
+        .refFromURL(results[6])
         .getDownloadURL()
         .then(res => {
           const vegetarian = param.user.vegetarian ? results[11] === 1 : true;
@@ -122,18 +124,20 @@ function* getFeedCall(param) {
             const recipeObj = {
               recipe_id: results[0],
               name: results[1],
-              created_time: results[2],
-              user_id: results[3],
+              recipe_description: results[2],
+              created_time: results[3],
+              user_id: results[4],
+              creator_username: results[5],
               header_image: res,
-              protein: results[5],
-              carbs: results[6],
-              fat: results[7],
-              fiber: results[8],
-              calories: results[9],
-              servings: results[10],
-              vegetarian: results[11],
-              vegan: results[12],
-              cooking_time: results[13],
+              protein: results[7],
+              carbs: results[8],
+              fat: results[9],
+              fiber: results[10],
+              calories: results[11],
+              servings: results[12],
+              vegetarian: results[13],
+              vegan: results[14],
+              cooking_time: results[15],
             };
             recipeArray.push(recipeObj);
           }
@@ -166,7 +170,7 @@ function* getFeaturedCall(param) {
     const recipeArray = [];
     for (const results of resultsArray) {
       yield storage()
-        .refFromURL(results[4])
+        .refFromURL(results[6])
         .getDownloadURL()
         .then(res => {
           const vegetarian = param.user.vegetarian ? results[11] === 1 : true;
@@ -188,18 +192,20 @@ function* getFeaturedCall(param) {
             const recipeObj = {
               recipe_id: results[0],
               name: results[1],
-              created_time: results[2],
-              user_id: results[3],
+              recipe_description: results[2],
+              created_time: results[3],
+              user_id: results[4],
+              creator_username: results[5],
               header_image: res,
-              protein: results[5],
-              carbs: results[6],
-              fat: results[7],
-              fiber: results[8],
-              calories: results[9],
-              servings: results[10],
-              vegetarian: results[11],
-              vegan: results[12],
-              cooking_time: results[13],
+              protein: results[7],
+              carbs: results[8],
+              fat: results[9],
+              fiber: results[10],
+              calories: results[11],
+              servings: results[12],
+              vegetarian: results[13],
+              vegan: results[14],
+              cooking_time: results[15],
             };
             recipeArray.push(recipeObj);
           }

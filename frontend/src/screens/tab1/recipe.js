@@ -197,7 +197,7 @@ export default function Recipe({navigation, route}) {
             />
             <View style={{flexDirection: 'column'}}>
               <Text numberOfLines={1} style={{width: 80}}>
-                {recipe.user_id}
+                {recipe.creator_username}
               </Text>
               <Text style={{fontSize: 10}}>
                 {moment(new Date(recipe.created_time)).format('D MMM YYYY')}
@@ -234,11 +234,7 @@ export default function Recipe({navigation, route}) {
           <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
             About this Recipe
           </Text>
-          <Text>
-            Homemade Lasagna is a classic that every cook should have in their
-            rotation. Tender sheets of pasta, a cheese filling, and a rich meaty
-            tomato sauce make the perfect dish!
-          </Text>
+          <Text>{recipe.recipe_description}</Text>
         </View>
       </View>
     );

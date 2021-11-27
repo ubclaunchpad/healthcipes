@@ -23,4 +23,14 @@ export default StyleSheet.create({
     borderColor: "#365E40",
     marginHorizontal: "23%",
   },
+  editprofilePicture: {
+    paddingTop: 10,
+    width: 85,
+    height: 85,
+    borderRadius: 150 / 2,
+    overflow: "hidden",
+    marginHorizontal: "23%",
+    resizeMode: 'contain',
+    alignSelf: 'center',
+  }
 });

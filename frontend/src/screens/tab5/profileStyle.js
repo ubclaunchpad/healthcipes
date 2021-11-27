@@ -24,17 +24,22 @@ export default StyleSheet.create({
     borderColor: "#365E40",
     marginHorizontal: "23%",
   },
-  editprofilePicture: {
-    paddingTop: 10,
-    width: 85,
-    height: 85,
-    borderRadius: 150 / 2,
-    overflow: "hidden",
-    marginVertical: "4%",
-    marginBottom: "10%",
-    marginHorizontal: "23%",
-    resizeMode: 'contain',
+  editprofilepictureContainer: {
     alignSelf: 'center',
+    height: '10%',
+    width: '25%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: '7%',
+  },
+  editprofilePicture: {
+    width: '90%',
+    height: '90%',
+    borderRadius: 50, /* Requires overwork: hidden*/
+  },
+  editprofilepicturebutton: {
+    marginTop: '80%',
+    marginLeft: '60%',
   },
   textInput: {
     height: 12,

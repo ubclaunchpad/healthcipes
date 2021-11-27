@@ -97,11 +97,18 @@ if (!onboarded) {
                     Edit Profile
                   </Text>
               </View>
-              <View>
-                <Image 
+              <View style={profileStyle.editprofilepictureContainer}>
+                <ImageBackground
                   source={require('../../assets/Profilepicture.png')}
                   style={profileStyle.editprofilePicture}
-                />
+                >
+                  <TouchableOpacity>
+                    <Image
+                      source={require('../../assets/Editprofilepicture.png')}
+                      style={profileStyle.editprofilepicturebutton}
+                    />
+                  </TouchableOpacity>
+                </ImageBackground>
               </View>
               <View>
                 <Text style = {profileStyle.inputTitle}>
@@ -164,7 +171,8 @@ if (!onboarded) {
                     emailInput.current.focus();
                   }}
                 />
-                <View style={{
+              </View> 
+              <View style={{
                   marginHorizontal: "8%",
                   }}> 
                   <Text style={{
@@ -178,9 +186,37 @@ if (!onboarded) {
                   </Text>
                   {ProfileChips()}
                 </View>
-                
-              </View>
-          </View>
+                <View style={{
+                    paddingTop: "10%",
+                    width: "60%",
+                    alignSelf: 'center',
+                    }}>
+                    {GoButton('Save', () => {
+                      dispatch({
+                        type: PUT_USER,
+                        payload: {
+                          ...user,
+                        },
+                      });
+                      bottomSheetRef.current.close();
+                    })}
+                <TouchableOpacity style={{
+                    /* Add on Press Action */
+                  }}>
+                  <Text
+                    style={{
+                      paddingTop: '20%',
+                      paddingBottom: '40%',
+                      color: color.black,
+                      alignSelf: 'center',
+                      fontSize: 16,
+                      fontWeight: '700',
+                    }}>
+                    Log Out
+                  </Text>
+                </TouchableOpacity>
+                </View>          
+            </View>
           }
       />
       </SafeAreaView>

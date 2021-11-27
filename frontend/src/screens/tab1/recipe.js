@@ -14,7 +14,11 @@ import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
 import recipeStyle from './recipeStyle';
-import {GET_RECIPE} from '../../actions/recipeActions';
+import {
+  GET_RECIPE,
+  POST_RECIPE_LIKE,
+  POST_RECIPE_VIEW,
+} from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 
 export default function Recipe({navigation, route}) {
@@ -45,6 +49,11 @@ export default function Recipe({navigation, route}) {
 
   useEffect(() => {
     dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
+    dispatch({
+      type: POST_RECIPE_VIEW,
+      user_id: auth().currentUser.uid,
+      recipe_id: recipe.recipe_id,
+    });
   }, [dispatch, recipe]);
 
   useEffect(() => {

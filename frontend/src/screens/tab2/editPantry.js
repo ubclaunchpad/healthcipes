@@ -25,6 +25,7 @@ export default function EditPantry({navigation}) {
   const dispatch = useDispatch();
   const [addState, setAddState] = useState(true);
   const [search, setSearch] = useState('');
+  const [ingredientIds, setingredientIds] = useState([]);
   const pantry = useSelector(state => state.pantryReducer.pantryReducer);
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
@@ -33,6 +34,21 @@ export default function EditPantry({navigation}) {
   useEffect(() => {
     dispatch({type: GET_ALL_INGREDIENTS});
   }, [dispatch]);
+
+  useEffect(() => {
+    const pantryIds = pantry.map(pantryItem => {
+      const data = pantryItem.data;
+      return data.map(ingredient => {
+        return ingredient.id;
+      });
+    });
+    setingredientIds(pantryIds.flat());
+  }, [pantry]);
+
+  const itemInPantry = item => {
+    const id = item[0];
+    return ingredientIds.includes(id);
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -156,7 +172,7 @@ export default function EditPantry({navigation}) {
                       });
                     }}
                   >
-                    {true && (
+                    {!itemInPantry(item) && (
                       <Image
                         source={require('../../assets/Plus.png')}
                         style={{
@@ -168,7 +184,7 @@ export default function EditPantry({navigation}) {
                       />
                     )}
 
-                    {false && (
+                    {itemInPantry(item) && (
                       <Image
                         source={require('../../assets/check.png')}
                         style={{

@@ -1,6 +1,7 @@
 # Mock_Data
 CALL umami_db.postUser('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'Harin', 'Wu', 'harinwu99@gmail.com', 'Vancouver', '', 1, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.5);
 CALL umami_db.postUser('G7YXRqIBU1QKLCXQnox8Wxwl2VN2', 'kayett', 'Kaye', 'T', 'kaye.thinh.to@gmail.com', 'Vancouver', '', 1, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.5);
+CALL umami_db.postUser('gNptOVCpuidg6plzj9ZaRi7brdj1', 'nick', 'Nick', 'K', 'kobenkao@gmail.com', 'Vancouver', '', 0, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.25);
 
 CALL umami_db.addMockUser();
 CALL umami_db.addMockRecipe();

@@ -5,15 +5,16 @@ import logging
 from app.indexer.tools import init_conn
 from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
-from datetime import datetime
 from functools import reduce
 
 defaultRecipe = {
     # TODO: id is required due to the nature of the query, should just auto increment if given null id
     "recipe_id": 0,
     "name": "testRecipeId",
+    "recipe_description": "A delicious vegan tofu scramble to beat the Mondays",
     # NOTE: need to create default user before default recipe can be made
     "user_id": "testID",
+    "creator_username": "VeganDaddy",
     "protein": 1,
     "carbs": 2,
     "fat": 2,
@@ -31,14 +32,16 @@ class RecipeStep(BaseModel):
     time: Optional[int] = None
 
 class RecipeIngredient(BaseModel):
-    ingredient_id: int
+    ingredient_id: str
     ingredient_name: str
     category: str
 
 class RecipeDetails(BaseModel):
     recipe_id: int
     name: str
+    recipe_description: str
     user_id: str
+    creator_username: str
     protein: int
     carbs: int
     fat: int

@@ -21,6 +21,7 @@ import TabsUI from './TabsUI';
 import Search from './src/screens/tab1/search';
 import Recipe from './src/screens/tab1/recipe';
 import EditPantry from './src/screens/tab2/editPantry';
+import EditProfile from './src/screens/tab5/editprofile';
 
 enableScreens();
 
@@ -88,6 +89,7 @@ function ProfileScreen() {
         headerShown: false,
       }}>
       <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="EditProfile" component = {EditProfile} />
     </ProfileStack.Navigator>
   );
 }

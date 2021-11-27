@@ -14,8 +14,10 @@ BEGIN
 CREATE TABLE `recipes_table` (
   `recipe_id` INT NOT NULL auto_increment,
   `name` VARCHAR(50),
+  `recipe_description` VARCHAR(255),
   `created_time` DATETIME,
   `user_id` VARCHAR(50) NOT NULL,
+  `creator_username` VARCHAR(50),
   `header_image` VARCHAR(255),
   `protein` INT,
   `carbs` INT,

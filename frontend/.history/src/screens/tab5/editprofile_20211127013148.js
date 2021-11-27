@@ -48,6 +48,7 @@ export default function EditProfile({navigation}) {
   const lastnameInput = useRef(null);
   const emailInput = useRef(null);
   const usernameInput = useRef(null);
+  const emailInput = useRef(null);
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});

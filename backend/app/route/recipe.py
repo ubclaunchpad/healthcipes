@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
+import requests
 from app.indexer.tools import init_conn
 from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
@@ -144,8 +145,18 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
 @router.get("/scrape")
 async def auto_scrape_recipe():
     try:
-        res = create_recipe(url="https://www.bbcgoodfood.com/recipes/easy-pancakes")
-        return res, 200
+        url = "https://www.themealdb.com/api/json/v1/1/random.php"
+        payload={}
+        headers = {}
+        response = requests.request("GET", url, headers=headers, data=payload)
+        # print(response.json()['meals'])
+        recipeURL = response.json()['meals'][0]['strSource']
+        print(recipeURL)
+        if (recipeURL):
+            res = create_recipe(url=recipeURL)
+            return res, 200
+        else:
+            return "Recipe isn't compatible today :(", 400
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400

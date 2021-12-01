@@ -78,9 +78,11 @@ def _filter_vegan(cursor):
 
 
 def post_recipe(conn, cursor, recipe):
-    sql_proc = 'createRecipe'
+    sql_proc = 'createRecipeAutoID'
 
     recipe_id = recipe['recipe_id']
+    if (recipe_id):
+        sql_proc = 'createRecipe'
     name = recipe['name']
     recipe_description = recipe['recipe_description']
     user_id = recipe['user_id']
@@ -88,6 +90,8 @@ def post_recipe(conn, cursor, recipe):
     header_image = recipe.get('header_image', '')
     protein = recipe['protein']
     carbs = recipe['carbs']
+    fat = recipe['fat']
+    fiber = recipe['fiber']
     calories = recipe['calories']
     servings = recipe['servings']
     vegetarian = recipe['vegetarian']
@@ -95,27 +99,85 @@ def post_recipe(conn, cursor, recipe):
     cooking_time = recipe['cooking_time']
 
     try:
-        hello = cursor.callproc(sql_proc, (
-            recipe_id,
-            name,
-            recipe_description,
-            user_id,
-            creator_username,
-            header_image,
-            protein,
-            carbs,
-            calories,
-            servings,
-            vegetarian,
-            vegan,
-            cooking_time,
-        ))
-        conn.commit()
-        return hello
+        if (recipe_id):
+            finalRecipe = cursor.callproc(sql_proc, (
+                recipe_id,
+                name,
+                recipe_description,
+                user_id,
+                creator_username,
+                header_image,
+                protein,
+                carbs,
+                fat,
+                fiber,
+                calories,
+                servings,
+                vegetarian,
+                vegan,
+                cooking_time,
+            ))
+            conn.commit()
+            return finalRecipe
+        else:
+            finalRecipe = cursor.callproc(sql_proc, (
+                name,
+                recipe_description,
+                user_id,
+                creator_username,
+                header_image,
+                protein,
+                carbs,
+                fat,
+                fiber,
+                calories,
+                servings,
+                vegetarian,
+                vegan,
+                cooking_time,
+            ))
+            conn.commit()
+            cursor.nextset()
+            cursor.execute("SELECT * FROM recipes_table ORDER BY created_time DESC LIMIT 1;")
+            return cursor.fetchone()
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
+def post_steps(conn, cursor, stepList, recipe):
+    sql_proc = 'addSteps'
+
+    try:
+        for step in stepList:
+            cursor.callproc(sql_proc, (
+                recipe,
+                step,
+                0
+            ))
+            conn.commit()
+            cursor.nextset()
+        return stepList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def post_ingredients(conn, cursor, ingredientList, recipe):
+    sql_proc = 'addIngredients'
+
+    try:
+        for ingredient in ingredientList:
+            cursor.callproc(sql_proc, (
+                "MagicID",
+                recipe,
+                ingredient,
+                "Other"
+            ))
+            conn.commit()
+            cursor.nextset()
+        return ingredientList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
 
 def is_missing_macros(recipe_details):
     '''

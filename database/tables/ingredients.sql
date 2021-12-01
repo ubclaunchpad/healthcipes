@@ -15,7 +15,7 @@ CREATE TABLE `ingredients_table` (
   `instance_id` INT NOT NULL auto_increment,
   `ingredient_id` VARCHAR(255) NOT NULL,
   `recipe_id` INT NOT NULL,
-  `ingredient_name` VARCHAR(50),
+  `ingredient_name` VARCHAR(255),
   `category` VARCHAR(50),
   PRIMARY KEY (`instance_id`),
   CONSTRAINT fk_recipe_ingredient FOREIGN KEY (`recipe_id`)

@@ -1,6 +1,9 @@
 USE `umami_db`;
 
 DROP procedure IF EXISTS `createRecipe`;
+DROP procedure IF EXISTS `createRecipeAutoID`;
+DROP procedure IF EXISTS `addSteps`;
+DROP procedure IF EXISTS `addIngredients`;
 DROP procedure IF EXISTS `getRecipe`;
 DROP procedure IF EXISTS `updateRecipeMacros`;
 DROP procedure IF EXISTS `getIngredientInfo`;
@@ -291,6 +294,89 @@ VALUES (
     `_vegan`,
     `_cooking_time`
 );
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `createRecipeAutoID` (
+    IN `_name` VARCHAR(50),
+    IN `_recipe_description` VARCHAR(255),
+    IN `_user_id` VARCHAR(50),
+    IN `_creator_username` VARCHAR(50),
+    IN `_header_image` VARCHAR(255),
+    IN `_protein` INT,
+    IN `_carbs` INT,
+    IN `_fat` INT,
+    IN `_fiber` INT,
+    IN `_calories` INT,
+    IN `_servings` INT,
+    IN `_vegetarian` BOOLEAN,
+    IN `_vegan` BOOLEAN,
+    IN `_cooking_time` INT
+)
+BEGIN
+
+INSERT INTO `recipes_table` (
+    `name`,
+    `recipe_description`,
+    `created_time`,
+    `user_id`,
+    `creator_username`,
+    `header_image`,
+    `protein`,
+    `carbs`,
+    `fat`,
+    `fiber`,
+    `calories`,
+    `servings`,
+    `vegetarian`,
+    `vegan`,
+    `cooking_time`
+)
+VALUES (
+    `_name`,
+    `_recipe_description`,
+    NOW(),
+    `_user_id`,
+    `_creator_username`,
+    `_header_image`,
+    `_protein`,
+    `_carbs`,
+    `_fat`,
+    `_fiber`,
+    `_calories`,
+    `_servings`,
+    `_vegetarian`,
+    `_vegan`,
+    `_cooking_time`
+);
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `addSteps` (IN `_recipe_id` INT, IN `_description` VARCHAR(255), IN `_time` INT)
+BEGIN
+
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
+VALUES(`_recipe_id`, `_description`, `_time`);
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `addIngredients` (IN `_ingredient_id` VARCHAR(255), IN `_recipe_id` INT, IN `_ingredient_name` VARCHAR(255), IN `_category` VARCHAR(50))
+BEGIN
+
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
+VALUES(`_ingredient_id`, `_recipe_id`, `_ingredient_name`, `_category`);
 
 END$$
 

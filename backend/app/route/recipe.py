@@ -3,13 +3,12 @@ from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes, get_featured_recipes
+from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
 from functools import reduce
 
 defaultRecipe = {
-    # TODO: id is required due to the nature of the query, should just auto increment if given null id
-    "recipe_id": 0,
+    "recipe_id": "",
     "name": "testRecipeId",
     "recipe_description": "A delicious vegan tofu scramble to beat the Mondays",
     # NOTE: need to create default user before default recipe can be made
@@ -128,11 +127,24 @@ async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatari
 
 
 @router.post("/")
-async def create_recipe(url: str = "", recipe: dict = defaultRecipe):
+def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [], ingredients: list = []):
     try:
         conn, cursor = init_conn()
-        recipe = scraper(url)
+        if (url != ""):
+            recipe, steps, ingredients = scraper(url)
         res = post_recipe(conn, cursor, recipe)
+        _ = post_steps(conn, cursor, steps[0].split("\n"), res[0])
+        _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+        return res, 200
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+
+@router.get("/scrape")
+async def auto_scrape_recipe():
+    try:
+        res = create_recipe(url="https://www.bbcgoodfood.com/recipes/easy-pancakes")
         return res, 200
     except Exception as e:
         logging.error(e)

@@ -47,6 +47,7 @@ CALL umami_db.createIngredientInfo('Dummy7', 'Chicken Breast', 'Meat and Fish', 
 CALL umami_db.createIngredientInfo('Dummy8', 'Salmon', 'Meat and Fish', '', 0, 0, 0, 0, 2);
 CALL umami_db.createIngredientInfo('Dummy9', 'Pepper', 'Seasoning', '', 0, 0, 0, 0, 2);
 CALL umami_db.createIngredientInfo('Dummy10', 'Soy Sauce', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('MagicID', 'Magic', 'Other', '', 0, 0, 0, 0, 0);
 
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy1');
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy2');

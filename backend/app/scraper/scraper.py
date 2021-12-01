@@ -1,20 +1,22 @@
 from recipe_scrapers import scrape_me
-import json
 import re
 
 def scraper (url):
-    scraper = scrape_me(url)
+    scraper = scrape_me(url, wild_mode=True)
     recipename = scraper.title()
+    image = scraper.image()
 
     recipe = {}
     nutrients = {}
     ingredients = []
+    steps = []
     meats = ['Chicken', 'Beef', 'Turkey', 'Sausage', 'Bacon', 'Lamb', "Pork"]
     vegetarian = True
     vegan = False
 
     nutrients.update(scraper.nutrients())
     ingredients.append(scraper.ingredients())
+    steps.append(scraper.instructions())
 
     if 'Vegan' in recipename:
         vegetarian = True
@@ -35,6 +37,14 @@ def scraper (url):
     except:
         carbs = None
     try:
+        fat = float(re.findall("\d+\.\d+", nutrients["fatContent"])[0])
+    except:
+        fat = None
+    try:
+        fiber = float(re.findall("\d+\.\d+", nutrients["fiberContent"])[0])
+    except:
+        fiber = None
+    try:
         cal = float(re.findall("\d+\.\d+", nutrients["calories"])[0])
     except:
         cal = None
@@ -46,12 +56,15 @@ def scraper (url):
     recipe = {
         'recipe_id': None,
         "name": recipename,
-        "recipe_description": "",
+        "recipe_description": "A fun auto generated recipe from the web!",
         "created_time": None,
-        "user_id": None,
-        "creator_username": None,
+        "user_id": "Qnj6AjQOLoZlJw4TZBpRE3iNz0K3",
+        "creator_username": "harinwu",
+        "header_image": image,
         "carbs": carbs,
         "protein": protein,
+        "fat": fat,
+        "fiber": fiber,
         "calories": cal,
         "servings": servings,
         "vegetarian": vegetarian,
@@ -59,4 +72,4 @@ def scraper (url):
         "cooking_time": scraper.total_time()
     }
 
-    return recipe
+    return recipe, steps, ingredients

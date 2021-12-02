@@ -2,3 +2,4 @@
 certbot/
 database/data/
 *.csv
+*.env

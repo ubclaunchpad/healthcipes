@@ -1,6 +1,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
+  <a href="https://github.com/ubclaunchpad/umami">
+    <img src="frontend/src/assets/Logo.png" alt="Logo" height="100" resize>
+  </a>
   <h3 align="center">Umami</h3>
 </p>
 
@@ -38,6 +41,8 @@ Umami has many recipes
 * React Native - Frontend
 * FastAPI - Backend
 * MySQL - Database
+* Nginx - Proxy
+* Firebase - Auth/Storage Bucket
 * Docker Compose - Build/Deployment
 * Python - Scraping
 * GCP Compute Engine - Hosting
@@ -88,9 +93,11 @@ MySQL will be exposed on port 3306
 
 ## Further deployment changes 
 Inide of Production machine from root umami folder
-1. sudo rm -rf ./database/data
-2. sudo ./init-letsencrypt.sh
-3. run `docker-compose up --build -d` 
+1. On a local device, run `bash ./export.sh` to save a csv copy of data
+2. sudo rm -rf ./database/data
+3. sudo ./init-letsencrypt.sh
+4. run `docker-compose up --build -d` 
+5. On a local device, run `bash ./import.sh` to re-upload saved data
 
 <!-- CONTRIBUTING -->
 ## Contributing

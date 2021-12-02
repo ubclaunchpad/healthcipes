@@ -117,12 +117,12 @@ INSERT INTO `recipes_table` (
     `vegan`,
     `cooking_time`
 ) VALUES(
-    'scrambled eggs',
-    'scrambled eggs: timeless, simple, quick',
+    'Scrambled Eggs',
+    'Scrambled eggs: timeless, simple, quick',
     'abc',
     'thenotsohipmillenialchef',
     now(),
-    'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg',
+    'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg',
     10,
     1,
     5,
@@ -158,8 +158,8 @@ INSERT INTO `recipes_table` (
     `vegan`,
     `cooking_time`
 ) VALUES(
-    'scrambled eggs',
-    'scrambled eggs: timeless, simple, quick',
+    'Scrambled Eggs',
+    'Scrambled eggs: timeless, simple, quick',
     'abc',
     'thenotsohipmillenialchef',
     NULL,

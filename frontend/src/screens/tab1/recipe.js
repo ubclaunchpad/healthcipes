@@ -71,8 +71,7 @@ export default function Recipe({navigation, route}) {
           borderBottomWidth: page === tab ? 2 : 0,
           borderColor: color.appPrimary,
           flex: 1,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontWeight: '400',
@@ -80,8 +79,7 @@ export default function Recipe({navigation, route}) {
             padding: 10,
             textAlign: 'center',
             color: page === tab ? color.appPrimary : color.textGray,
-          }}
-        >
+          }}>
           {tab}
         </Text>
       </TouchableOpacity>
@@ -95,17 +93,15 @@ export default function Recipe({navigation, route}) {
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingVertical: 30,
-        }}
-      >
+        }}>
         <View
           style={[
             recipeStyle.nutritionStyle,
             {
               borderColor: color.appPrimary,
             },
-          ]}
-        >
-          <Text>{recipe.calories}</Text>
+          ]}>
+          <Text>{recipe.calories ?? '0'}</Text>
           <Text style={{fontSize: 10}}>Calories</Text>
         </View>
         <View
@@ -114,9 +110,8 @@ export default function Recipe({navigation, route}) {
             {
               borderColor: color.lightGreen,
             },
-          ]}
-        >
-          <Text>{recipe.protein}g</Text>
+          ]}>
+          <Text>{recipe.protein ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Protein</Text>
         </View>
         <View
@@ -125,9 +120,8 @@ export default function Recipe({navigation, route}) {
             {
               borderColor: color.orange,
             },
-          ]}
-        >
-          <Text>{recipe.fiber}g</Text>
+          ]}>
+          <Text>{recipe.fiber ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Fiber</Text>
         </View>
         <View
@@ -136,9 +130,8 @@ export default function Recipe({navigation, route}) {
             {
               borderColor: color.red,
             },
-          ]}
-        >
-          <Text>{recipe.fat}g</Text>
+          ]}>
+          <Text>{recipe.fat ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Fat</Text>
         </View>
       </View>
@@ -153,16 +146,14 @@ export default function Recipe({navigation, route}) {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-          }}
-        >
+          }}>
           <Text style={feedStyle.recipeTitle}>{recipe.name}</Text>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginBottom: 5,
-            }}
-          >
+            }}>
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
@@ -171,8 +162,7 @@ export default function Recipe({navigation, route}) {
                   user_id: auth().currentUser.uid,
                   recipe_like_id: recipe.recipe_id,
                 });
-              }}
-            >
+              }}>
               <Image
                 source={require('../../assets/Like.png')}
                 style={{
@@ -191,8 +181,7 @@ export default function Recipe({navigation, route}) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               source={image}
@@ -256,14 +245,14 @@ export default function Recipe({navigation, route}) {
         data={ingredients}
         keyExtractor={item => item.ingredient_id}
         renderItem={({item}) => {
+          console.log(item.ingredient_name);
           return (
             <View
               style={{
                 flexDirection: 'row',
                 marginBottom: 10,
                 alignItems: 'center',
-              }}
-            >
+              }}>
               <Image
                 source={require('../../assets/Plus.png')}
                 style={{
@@ -296,8 +285,7 @@ export default function Recipe({navigation, route}) {
                 borderWidth: 1,
                 borderRadius: 20,
                 marginBottom: 20,
-              }}
-            >
+              }}>
               <AccordionItem title={`Step ${index + 1}`}>
                 <Text>{item.description}</Text>
               </AccordionItem>
@@ -317,14 +305,12 @@ export default function Recipe({navigation, route}) {
           width: '100%',
           height: '70%',
           justifyContent: 'flex-end',
-        }}
-      >
+        }}>
         <TouchableOpacity
           style={{flex: 1, width: 24, height: 24, margin: 20, marginTop: '15%'}}
           onPress={() => {
             navigation.pop();
-          }}
-        >
+          }}>
           <Image
             source={require('../../assets/Back.png')}
             style={{

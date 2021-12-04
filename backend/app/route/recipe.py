@@ -181,7 +181,7 @@ async def read_recipe_by_id(recipe_id: str = ""):
         }
 
 @router.get("/{user_id}", response_model=RecipeDetailsOut)
-async def read_createdrecipe_by_userid(user_id: str=""):
+async def read_createdrecipe_by_userid(user_id: int):
     '''get recipe info, macros, steps, and ingredients'''
     try:
         conn, cursor = init_conn()

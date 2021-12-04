@@ -27,8 +27,8 @@ export default function Profile({navigation}) {
   const likedFeed = useSelector(
     state => state.profileReducer.likedRecipeReducer,
   );
-  const forYouFeed = useSelector(
-    state => state.recipeReducer.forYouFeedReducer,
+  const myRecipeFeed = useSelector(
+    state => state.myReducer.myRecipeReducer,
   );
   const [page, setPage] = useState('Liked');
   const bottomSheetRef = useRef(null);
@@ -41,6 +41,10 @@ export default function Profile({navigation}) {
 
   useEffect(() => {
     dispatch({type: GET_LIKEDRECIPES, userID: auth().currentUser.uid});
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch({type: GET_MYRECIPES, userID: auth().currentUser.uid});
   }, [dispatch]);
 
 function profileTab(tab) {
@@ -163,7 +167,7 @@ function myRecipes() {
     <View>
       <FlatList
         ref={flatListRef}
-        data={forYouFeed}
+        data={myRecipeFeed}
         showsVerticalScrollIndicator={false}
         onResponderEnd={() => {
             bottomSheetRef.current.close();

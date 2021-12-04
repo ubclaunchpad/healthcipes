@@ -4,7 +4,11 @@ import {
   FORYOU_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
-import {RECIPE} from '../actions/recipeActions';
+import {
+  RECIPE,
+  REGISTER_LIKE_RECIPE,
+  REGISTER_VIEW_RECIPE,
+} from '../actions/recipeActions';
 
 const defaultRecipe = {
   recipe_id: 0,
@@ -72,10 +76,20 @@ const registerRecipeLikeReducer = (state = defaultRecipe, action) => {
   }
 };
 
+const registerRecipeViewReducer = (state = defaultRecipe, action) => {
+  switch (action.type) {
+    case REGISTER_VIEW_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
   searchResultReducer,
   recipeReducer,
   registerRecipeLikeReducer,
+  registerRecipeViewReducer,
 });

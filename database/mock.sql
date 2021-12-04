@@ -63,3 +63,7 @@ CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'aaaa');
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'aaab');
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'aaac');
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'aaad');
+
+CALL umami_db.postGroceryList('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy1');
+CALL umami_db.postGroceryList('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy2');
+CALL umami_db.postGroceryList('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy3');

@@ -14,7 +14,7 @@ BEGIN
 CREATE TABLE `grocery_list_table` (
     `grocery_list_item_id` INT NOT NULL auto_increment,
     `user_id` VARCHAR(50) NOT NULL,
-    `ingredient_id` INT NOT NULL,
+    `ingredient_id` VARCHAR(255) NOT NULL,
     `obtained` BOOLEAN,
     PRIMARY KEY (`grocery_list_item_id`),
     CONSTRAINT fk_grocery_list_user_id FOREIGN KEY (`user_id`)

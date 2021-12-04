@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 @router.post("/")
-async def post_grocery_list(user_id: str, grocery_list_input: List[int] = Query(None)):
+async def post_grocery_list(user_id: str, grocery_list_input: List[str] = Query(None)):
     try:
         conn, _ = init_conn()
         if user_id:

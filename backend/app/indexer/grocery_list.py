@@ -54,7 +54,7 @@ def remove_grocery_list_item(conn, cursor, grocery_list_item_id, user_id):
 def is_valid_grocery_list(grocery_list):
     if isinstance(grocery_list, list):
         for item in grocery_list:
-            if not isinstance(item, int):
+            if not isinstance(item, str):
                 return False
     else:
         return False

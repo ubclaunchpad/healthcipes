@@ -335,3 +335,12 @@ def get_recipe_by_id(conn, cursor, recipe_id):
     except Exception as e:
         print("MYSQL ERROR:", sql)
         logging.error(e)
+
+def get_createdrecipe_by_userid(cursor, user_id):
+    sql_proc = 'getCreatedRecipeById'
+    try:
+        cursor.callproc(sql_proc, (user_id, ))
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)

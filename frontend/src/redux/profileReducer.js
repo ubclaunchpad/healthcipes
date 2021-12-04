@@ -4,7 +4,7 @@ import {
   FORYOU_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
-import {LIKED_RECIPES} from '../actions/profileActions';
+import {LIKED_RECIPES, MY_RECIPES} from '../actions/profileActions';
 
 const likedRecipeReducer = (state = [], action) => {
   switch (action.type) {
@@ -15,6 +15,16 @@ const likedRecipeReducer = (state = [], action) => {
   }
 };
 
+const myRecipeReducer = (state = [], action) => {
+  switch (action.type) {
+    case MY_RECIPES:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   likedRecipeReducer,
+  myRecipeReducer,
 });

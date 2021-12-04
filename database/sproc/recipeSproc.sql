@@ -35,6 +35,20 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
+CREATE PROCEDURE `getCreatedRecipeById` (IN `_user_id` VARCHAR(255))
+BEGIN
+
+SELECT r.*
+FROM `recipes_table` r
+WHERE r.user_id = `_user_id`
+;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
 CREATE PROCEDURE `updateRecipeMacros` (
     IN `_recipe_id` INT,
     IN `_protein` INT,

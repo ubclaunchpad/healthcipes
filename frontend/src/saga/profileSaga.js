@@ -76,7 +76,7 @@ function* getMyRecipesCall(param) {
   try {
     const apiConfig = {
       method: 'get',
-      url: `${API_URL}/user_activity?user_id=${param.userID}`,
+      url: `${API_URL}/recipe?user_id=${param.userID}`,
       headers: {
         'Content-Type': 'application/json',
       },

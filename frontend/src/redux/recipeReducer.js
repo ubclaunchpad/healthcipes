@@ -78,7 +78,7 @@ const registerRecipeLikeReducer = (state = defaultRecipe, action) => {
 
 const recipeLikeGetReducer = (state = defaultRecipe, action) => {
   switch (action.type) {
-    case REGISTER_LIKE_RECIPE:
+    case LIKE_RECIPE:
       return action.payload;
     default:
       return state;
@@ -101,4 +101,5 @@ export default combineReducers({
   recipeReducer,
   registerRecipeLikeReducer,
   registerRecipeViewReducer,
+  recipeLikeGetReducer,
 });

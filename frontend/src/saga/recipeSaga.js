@@ -36,7 +36,7 @@ function* getRecipeLikeCall(param) {
   try {
     const apiConfig = {
       method: 'get',
-      url: `${API_URL}/user_activity/userID=${param.user_id}`,
+      url: `${API_URL}/user_activity/recipe_like/userID=${param.user_id}`,
       headers: {
         'Content-Type': 'application/json',
       },

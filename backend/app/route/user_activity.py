@@ -32,11 +32,15 @@ async def read_user_activity(userID: str = ""):
 
 
 @router.get("/recipe_like")
-async def read_user_activity_recipe_like(userID: str = ""):
+async def read_user_activity_recipe_like(userID: str = "", recipe_id: str = ""):
     try:
         _, cursor = init_conn()
         if userID:
             res = user_activity.get_user_activity_recipe_like(cursor, userID)
+            print(type(res))
+            if recipe_id:
+                recipe_id_index = 5
+                # res = filter(lambda x: x[recipe_id_index] == recipe_id, res)
         else:
             raise Exception('userId not given')
         return res, 200

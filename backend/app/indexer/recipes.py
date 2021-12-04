@@ -338,7 +338,7 @@ def get_recipe_by_id(conn, cursor, recipe_id):
 
 def get_createdrecipe_by_userid(cursor, user_id):
     sql_proc = 'getCreatedRecipeById'
-
+    print(user_id)
     try:
         cursor.callproc(sql_proc, (user_id, ))
         return cursor.fetchall()

@@ -163,7 +163,7 @@ async def auto_scrape_recipe():
 
 
 @router.get("/{recipe_id}", response_model=RecipeDetailsOut)
-async def read_recipe_by_id(recipe_id: str = ""):
+async def read_recipe_by_id(recipe_id: int):
     '''get recipe info, macros, steps, and ingredients'''
     try:
         conn, cursor = init_conn()
@@ -180,10 +180,11 @@ async def read_recipe_by_id(recipe_id: str = ""):
             "status_code": 400
         }
 
-@router.get("/{user_id}")
+@router.get("/user")
 async def read_createdrecipe_by_userid(user_id: str=''):
     '''get recipe info, macros, steps, and ingredients'''
     try:
+        print(user_id)
         conn, cursor = init_conn()
         res = get_createdrecipe_by_userid(conn, cursor, user_id)
         return {

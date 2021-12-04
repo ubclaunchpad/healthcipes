@@ -63,9 +63,19 @@ const recipeReducer = (state = defaultRecipe, action) => {
   }
 };
 
+const registerRecipeLikeReducer = (state = defaultRecipe, action) => {
+  switch (action.type) {
+    case REGISTER_LIKE_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
   searchResultReducer,
   recipeReducer,
+  registerRecipeLikeReducer,
 });

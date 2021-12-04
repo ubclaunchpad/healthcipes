@@ -1,5 +1,7 @@
 // Redux
 export const RECIPE = 'RECIPE';
+export const REGISTER_LIKE_RECIPE = 'LIKE_RECIPE';
+export const REGISTER_VIEW_RECIPE = 'VIEW_RECIPE';
 
 // Saga
 export const GET_RECIPE = 'GET_RECIPE';

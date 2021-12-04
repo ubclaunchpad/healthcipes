@@ -70,7 +70,9 @@ function* postRecipeLikeCall(data) {
     const response = yield call(axios, apiConfig);
     const results = response.data;
     console.log('[INFO]: POST USER ACTIVITY API:');
+
     yield put({type: REGISTER_LIKE_RECIPE, payload: results.data});
+    yield put({type: LIKED_RECIPE, payload: results.data});
     // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
   } catch (e) {
     console.log('Registering like failed: ' + e);

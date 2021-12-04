@@ -342,12 +342,12 @@ def get_createdrecipe_by_userid(conn, cursor, user_id):
     Note: macros may still be empty if they were not added
     to the recipe or corresponding ingredients
     '''
-    sql = 'getRecipe'
+    sql = 'getCreatedRecipeById'
     try:
         cursor.callproc(sql, (user_id, ))
         raw_result = cursor.fetchall()
         res = {
-            "recipe_id":"",
+            "recipe_id": "",
             "name": "",
             "recipe_description": "",
             "user_id": user_id,

@@ -38,10 +38,8 @@ USE `umami_db`$$
 CREATE PROCEDURE `getCreatedRecipeById` (IN `_user_id` VARCHAR(255))
 BEGIN
 
-SELECT r.*, i.ingredient_id, i.ingredient_name, i.category
+SELECT r.*
 FROM `recipes_table` r
-JOIN `recipe_steps_table` rs ON r.recipe_id = rs.recipe_id
-JOIN `ingredients_table` i ON r.recipe_id = i.recipe_id
 WHERE r.user_id = `_user_id`
 ;
 

@@ -180,7 +180,7 @@ async def read_recipe_by_id(recipe_id: str = ""):
             "status_code": 400
         }
 
-@router.get("/{user_id}", response_model=RecipeDetailsOut)
+@router.get("/{user_id}")
 async def read_createdrecipe_by_userid(user_id: str=''):
     '''get recipe info, macros, steps, and ingredients'''
     try:

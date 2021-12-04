@@ -8,6 +8,7 @@ import {
   RECIPE,
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
+  LIKE_RECIPE,
 } from '../actions/recipeActions';
 
 const defaultRecipe = {
@@ -76,7 +77,7 @@ const registerRecipeLikeReducer = (state = defaultRecipe, action) => {
   }
 };
 
-const recipeLikeGetReducer = (state = defaultRecipe, action) => {
+const recipeLikeGetReducer = (state = false, action) => {
   switch (action.type) {
     case LIKE_RECIPE:
       return action.payload;

@@ -7,6 +7,8 @@ import {
   RECIPE,
   POST_RECIPE_LIKE,
   POST_RECIPE_VIEW,
+  REGISTER_LIKE_RECIPE,
+  REGISTER_VIEW_RECIPE,
 } from '../actions/recipeActions';
 
 function* getRecipeCall(param) {
@@ -34,7 +36,7 @@ function* getRecipeLikeCall(param) {
   try {
     const apiConfig = {
       method: 'get',
-      url: `${API_URL}/user_activity/userID=${param.user_id}`,
+      url: `${API_URL}/user_activity/recipe_like/userID=${param.user_id}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -43,7 +45,8 @@ function* getRecipeLikeCall(param) {
     const response = yield call(axios, apiConfig);
     const results = response.data;
     console.log('[INFO]: GET USER ACTIVITY API:');
-    // yield put({type: RECIPE, payload: results.data}); TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
+    yield put({type: LIKED_RECIPE, payload: results.data});
+    // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }
@@ -67,7 +70,10 @@ function* postRecipeLikeCall(data) {
     const response = yield call(axios, apiConfig);
     const results = response.data;
     console.log('[INFO]: POST USER ACTIVITY API:');
-    // yield put({type: RECIPE, payload: results.data}); TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
+
+    yield put({type: REGISTER_LIKE_RECIPE, payload: results.data});
+    yield put({type: LIKED_RECIPE, payload: results.data});
+    // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }
@@ -92,7 +98,8 @@ function* postRecipeViewCall(data) {
     const results = response.data;
     console.log('[INFO]: POST USER ACTIVITY API:');
     // console.log(results);
-    // yield put({type: RECIPE, payload: results.data}); TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
+    yield put({type: REGISTER_VIEW_RECIPE, payload: results.data});
+    // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }

@@ -5,7 +5,7 @@ DROP procedure IF EXISTS `getAllUserActivity`;
 DROP procedure IF EXISTS `postUserActivity`;
 DROP procedure IF EXISTS `rankRecipeByLike`;
 DROP procedure IF EXISTS `rankRecipeByView`;
-
+DROP procedure IF EXISTS `getUsersUserActivitySpecificActivity`;
 
 
 DELIMITER $$
@@ -16,6 +16,25 @@ BEGIN
 SELECT * 
 FROM `user_activity_table` ua
 WHERE ua.user_id = _user_id
+;
+
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `getUsersUserActivitySpecificActivity` (
+    IN `_user_id` VARCHAR(50),
+    IN `_activity_type` ENUM('RECIPE_LIKE', 'USER_FOLLOW', 'RECIPE_VIEW')
+)
+BEGIN
+
+SELECT * 
+FROM `user_activity_table` ua
+WHERE ua.user_id = _user_id
+AND ua.activity_type = _activity_type
 ;
 
 END$$

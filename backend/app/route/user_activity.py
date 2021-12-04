@@ -31,12 +31,12 @@ async def read_user_activity(userID: str = ""):
         return "Error with {}".format(e), 400
 
 
-@router.get("/recipe_view")
+@router.get("/recipe_like")
 async def read_user_activity(userID: str = ""):
     try:
         _, cursor = init_conn()
         if userID:
-            res = user_activity.get_user_activity_recipe_view(cursor, userID)
+            res = user_activity.get_user_activity_recipe_like(cursor, userID)
         else:
             raise Exception('userId not given')
         return res, 200

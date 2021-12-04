@@ -27,7 +27,7 @@ DELIMITER $$
 USE `umami_db`$$
 CREATE PROCEDURE `getUsersUserActivitySpecificActivity` (
     IN `_user_id` VARCHAR(50),
-    IN `_activity_type` ENUM('RECIPE_LIKE', 'USER_FOLLOW', 'RECIPE_VIEW'),
+    IN `_activity_type` ENUM('RECIPE_LIKE', 'USER_FOLLOW', 'RECIPE_VIEW')
 )
 BEGIN
 

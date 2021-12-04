@@ -19,10 +19,10 @@ def get_user_activity(cursor, user_id):
         logging.error(e)
 
 
-def get_user_activity_recipe_view(cursor, user_id):
-    sql_proc = 'getUsersUserActivityRecipeView'
+def get_user_activity_recipe_like(cursor, user_id):
+    sql_proc = 'getUsersUserActivitySpecificActivity'
     try:
-        cursor.callproc(sql_proc, (user_id, RECIPE_VIEW))
+        cursor.callproc(sql_proc, (user_id, RECIPE_LIKE))
         return cursor.fetchall()
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)

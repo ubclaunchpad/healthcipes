@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
+from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
 from functools import reduce
 
@@ -168,6 +168,24 @@ async def read_recipe_by_id(recipe_id: int):
     try:
         conn, cursor = init_conn()
         res = get_recipe_by_id(conn, cursor, recipe_id)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+@router.get("/{user_id}", response_model=RecipeDetailsOut)
+async def read_createdrecipe_by_userid(user_id: int):
+    '''get recipe info, macros, steps, and ingredients'''
+    try:
+        conn, cursor = init_conn()
+        res = get_createdrecipe_by_userid(conn, cursor, user_id)
         return {
             "data": res,
             "status_code": 200

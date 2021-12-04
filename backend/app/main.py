@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
-from app.route import user, recipe, user_activity, pantry
+from app.route import user, recipe, user_activity, pantry, grocery_list
 
 router = APIRouter()
 app = FastAPI()
@@ -18,6 +18,7 @@ app.include_router(user.router)
 app.include_router(recipe.router)
 app.include_router(user_activity.router)
 app.include_router(pantry.router)
+app.include_router(grocery_list.router)
 
 @app.get("/")
 async def root():

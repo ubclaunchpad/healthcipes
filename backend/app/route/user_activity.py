@@ -32,7 +32,7 @@ async def read_user_activity(userID: str = ""):
 
 
 @router.get("/recipe_like")
-async def read_user_activity(userID: str = ""):
+async def read_user_activity_recipe_like(userID: str = ""):
     try:
         _, cursor = init_conn()
         if userID:

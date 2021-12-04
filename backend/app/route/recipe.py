@@ -109,6 +109,25 @@ async def read_featured_recipe():
     return await read_featured_recipes()
 
 
+@router.get("/user")
+async def read_createdrecipe_by_userid(user_id: str=""):
+    '''get recipe info, macros, steps, and ingredients'''
+    try:
+        _, cursor = init_conn()
+        res = get_createdrecipe_by_userid(cursor, user_id)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+
 # TODO: merge filter route with the one above if possible sql statements with default values?
 @router.get("/filter")
 async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatarian: bool = False, gluten_free: bool = False, dairy_free: bool = False, keto: bool = False, paleo: bool = False):
@@ -168,25 +187,6 @@ async def read_recipe_by_id(recipe_id: int):
     try:
         conn, cursor = init_conn()
         res = get_recipe_by_id(conn, cursor, recipe_id)
-        return {
-            "data": res,
-            "status_code": 200
-        }
-
-    except Exception as e:
-        logging.error(e)
-        return {
-            "data": "Error with {}".format(e),
-            "status_code": 400
-        }
-
-@router.get("/user")
-async def read_createdrecipe_by_userid(user_id: str=''):
-    '''get recipe info, macros, steps, and ingredients'''
-    try:
-        print(user_id)
-        conn, cursor = init_conn()
-        res = get_createdrecipe_by_userid(conn, cursor, user_id)
         return {
             "data": res,
             "status_code": 200

@@ -14,6 +14,8 @@ import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
 import recipeStyle from './recipeStyle';
+import axios from 'axios';
+import {API_URL} from '@env';
 import {
   GET_RECIPE,
   POST_RECIPE_LIKE,
@@ -30,10 +32,73 @@ export default function Recipe({navigation, route}) {
   );
   const [ingredients, setIngredients] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [steps, setSteps] = useState([]);
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
+
+  function checkLike(ID) {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/user_activity/like_status?userID=${
+        auth().currentUser.uid
+      }&recipeID=${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig)
+      .then(function (response) {
+        const res = response.data;
+        if (res[0].length > 0) {
+          setIsLiked(true);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    const apiConfig2 = {
+      method: 'get',
+      url: `${API_URL}/user_activity/like_count?recipeID=${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig2)
+      .then(function (response) {
+        const res = response.data[0][0];
+        if (res) {
+          setLikeCount(Number(res));
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function deleteLike(ID) {
+    const apiConfig = {
+      method: 'delete',
+      url: `${API_URL}/user_activity/like?userID=${
+        auth().currentUser.uid
+      }&recipeID=${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   useEffect(() => {
     storage()
@@ -54,6 +119,7 @@ export default function Recipe({navigation, route}) {
       user_id: auth().currentUser.uid,
       recipe_id: recipe.recipe_id,
     });
+    checkLike(recipe.recipe_id);
   }, [dispatch, recipe]);
 
   useEffect(() => {
@@ -71,8 +137,7 @@ export default function Recipe({navigation, route}) {
           borderBottomWidth: page === tab ? 2 : 0,
           borderColor: color.appPrimary,
           flex: 1,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontWeight: '400',
@@ -80,8 +145,7 @@ export default function Recipe({navigation, route}) {
             padding: 10,
             textAlign: 'center',
             color: page === tab ? color.appPrimary : color.textGray,
-          }}
-        >
+          }}>
           {tab}
         </Text>
       </TouchableOpacity>
@@ -95,16 +159,14 @@ export default function Recipe({navigation, route}) {
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingVertical: 30,
-        }}
-      >
+        }}>
         <View
           style={[
             recipeStyle.nutritionStyle,
             {
               borderColor: color.appPrimary,
             },
-          ]}
-        >
+          ]}>
           <Text>{recipe.calories ?? '0'}</Text>
           <Text style={{fontSize: 10}}>Calories</Text>
         </View>
@@ -114,8 +176,7 @@ export default function Recipe({navigation, route}) {
             {
               borderColor: color.lightGreen,
             },
-          ]}
-        >
+          ]}>
           <Text>{recipe.protein ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Protein</Text>
         </View>
@@ -125,8 +186,7 @@ export default function Recipe({navigation, route}) {
             {
               borderColor: color.orange,
             },
-          ]}
-        >
+          ]}>
           <Text>{recipe.fiber ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Fiber</Text>
         </View>
@@ -136,8 +196,7 @@ export default function Recipe({navigation, route}) {
             {
               borderColor: color.red,
             },
-          ]}
-        >
+          ]}>
           <Text>{recipe.fat ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Fat</Text>
         </View>
@@ -145,7 +204,10 @@ export default function Recipe({navigation, route}) {
     );
   }
 
-  function infoTab() {
+  function infoTab(liked, count) {
+    const img = liked
+      ? require('../../assets/LikeFilled.png')
+      : require('../../assets/Like.png');
     return (
       <View>
         <View
@@ -153,37 +215,43 @@ export default function Recipe({navigation, route}) {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-          }}
-        >
+          }}>
           <Text style={feedStyle.recipeTitle}>{recipe.name}</Text>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginBottom: 5,
-            }}
-          >
+            }}>
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                dispatch({
-                  type: POST_RECIPE_LIKE,
-                  user_id: auth().currentUser.uid,
-                  recipe_like_id: recipe.recipe_id,
-                });
-              }}
-            >
+                if (liked) {
+                  deleteLike(recipe.recipe_id);
+                  setIsLiked(false);
+                  setLikeCount(count - 1);
+                } else {
+                  dispatch({
+                    type: POST_RECIPE_LIKE,
+                    user_id: auth().currentUser.uid,
+                    recipe_like_id: recipe.recipe_id,
+                  });
+                  setIsLiked(true);
+                  setLikeCount(count + 1);
+                }
+              }}>
               <Image
-                source={require('../../assets/Like.png')}
+                source={img}
                 style={{
                   width: 24,
                   height: 24,
                   resizeMode: 'contain',
                   marginRight: 5,
+                  tintColor: color.red,
                 }}
               />
             </TouchableOpacity>
-            <Text>2.3k</Text>
+            <Text>{count}</Text>
           </View>
         </View>
         <View
@@ -191,8 +259,7 @@ export default function Recipe({navigation, route}) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               source={image}
@@ -256,15 +323,13 @@ export default function Recipe({navigation, route}) {
         data={ingredients}
         keyExtractor={item => item.ingredient_id}
         renderItem={({item}) => {
-          console.log(item.ingredient_name);
           return (
             <View
               style={{
                 flexDirection: 'row',
                 marginBottom: 10,
                 alignItems: 'center',
-              }}
-            >
+              }}>
               <Image
                 source={require('../../assets/Plus.png')}
                 style={{
@@ -297,8 +362,7 @@ export default function Recipe({navigation, route}) {
                 borderWidth: 1,
                 borderRadius: 20,
                 marginBottom: 20,
-              }}
-            >
+              }}>
               <AccordionItem title={`Step ${index + 1}`}>
                 <Text>{item.description}</Text>
               </AccordionItem>
@@ -318,14 +382,12 @@ export default function Recipe({navigation, route}) {
           width: '100%',
           height: '70%',
           justifyContent: 'flex-end',
-        }}
-      >
+        }}>
         <TouchableOpacity
           style={{flex: 1, width: 24, height: 24, margin: 20, marginTop: '15%'}}
           onPress={() => {
             navigation.pop();
-          }}
-        >
+          }}>
           <Image
             source={require('../../assets/Back.png')}
             style={{
@@ -344,7 +406,7 @@ export default function Recipe({navigation, route}) {
             {recipeTab('Ingredients')}
             {recipeTab('Steps')}
           </View>
-          {page === 'Info' && infoTab()}
+          {page === 'Info' && infoTab(isLiked, likeCount)}
           {page === 'Ingredients' && ingredientTab()}
           {page === 'Steps' && stepTab()}
         </View>

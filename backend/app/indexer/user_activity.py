@@ -29,6 +29,34 @@ def get_user_activity_recipe_like(cursor, user_id):
         logging.error(e)
 
 
+def get_user_like_status(cursor, user_id, recipe_id):
+    sql_proc = 'userLikedStatus'
+    try:
+        cursor.callproc(sql_proc, (user_id, recipe_id))
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def get_like_count(cursor, recipe_id):
+    sql_proc = 'getLikeCount'
+    try:
+        cursor.callproc(sql_proc, (recipe_id, ))
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def delete_user_like(conn, cursor, user_id, recipe_id):
+    sql_proc = 'deleteUserActivity'
+    try:
+        cursor.callproc(sql_proc, (user_id, recipe_id))
+        conn.commit()
+        return "Deleted"
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
 def get_all_user_activity(cursor):
     sql_proc = 'getAllUserActivity'
     try:

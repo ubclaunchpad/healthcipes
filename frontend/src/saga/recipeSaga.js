@@ -9,6 +9,7 @@ import {
   POST_RECIPE_VIEW,
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
+  LIKE_RECIPE,
 } from '../actions/recipeActions';
 
 function* getRecipeCall(param) {
@@ -45,8 +46,7 @@ function* getRecipeLikeCall(param) {
     const response = yield call(axios, apiConfig);
     const results = response.data;
     console.log('[INFO]: GET USER ACTIVITY API:');
-    yield put({type: LIKED_RECIPE, payload: results.data});
-    // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
+    yield put({type: LIKE_RECIPE, payload: results.data});
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }
@@ -72,8 +72,7 @@ function* postRecipeLikeCall(data) {
     console.log('[INFO]: POST USER ACTIVITY API:');
 
     yield put({type: REGISTER_LIKE_RECIPE, payload: results.data});
-    yield put({type: LIKED_RECIPE, payload: results.data});
-    // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
+    yield put({type: LIKE_RECIPE, payload: results.data});
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }

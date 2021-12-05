@@ -45,6 +45,47 @@ async def read_user_activity_recipe_like(userID: str = ""):
         logging.error(e)
         return "Error with {}".format(e), 400
 
+@router.get("/like_status")
+async def read_user_like_status(userID: str = "", recipeID: int = 0):
+    try:
+        _, cursor = init_conn()
+        if userID:
+            res = user_activity.get_user_like_status(cursor, userID, recipeID)
+        else:
+            raise Exception('userId/recipeID not given')
+        return res, 200
+
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+@router.get("/like_count")
+async def read_user_like_status(recipeID: int = 0):
+    try:
+        _, cursor = init_conn()
+        if recipeID:
+            res = user_activity.get_like_count(cursor, recipeID)
+        else:
+            raise Exception('userId/recipeID not given')
+        return res, 200
+
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+@router.delete("/like")
+async def read_user_like_status(userID: str = "", recipeID: int = 0):
+    try:
+        conn, cursor = init_conn()
+        if userID:
+            res = user_activity.delete_user_like(conn, cursor, userID, recipeID)
+        else:
+            raise Exception('userId/recipeID not given')
+        return res, 200
+
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
 
 @router.get("/rank")
 async def rank_recipes(activity_type: str = user_activity.RECIPE_VIEW):

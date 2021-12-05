@@ -9,6 +9,7 @@ import {
   SEARCH_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
+import {SET_LOADING} from '../actions/globalActions';
 
 function* searchFeedCall(param) {
   try {
@@ -160,6 +161,7 @@ function* getFeedCall(param) {
 
     // console.log(recipeArray);
     yield put({type: FORYOU_FEED, payload: recipeArray});
+    yield put({type: SET_LOADING, loading: false});
   } catch (e) {
     console.log('Get Feed Failed: ' + e);
   }

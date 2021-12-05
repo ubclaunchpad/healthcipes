@@ -18,6 +18,8 @@ import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
+import Loader from '../../components/Loader';
+import {SET_LOADING} from '../../actions/globalActions';
 
 export default function Feed({navigation}) {
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ export default function Feed({navigation}) {
   const forYouFeed = useSelector(
     state => state.recipeReducer.forYouFeedReducer,
   );
+  const loading = useSelector(state => state.globalReducer.loadingReducer);
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
   const snapPoints = useMemo(() => ['80%'], []);
@@ -38,6 +41,7 @@ export default function Feed({navigation}) {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch({type: SET_LOADING, loading: true});
     dispatch({type: GET_FEED, user: user});
   }, [dispatch, user]);
 
@@ -46,6 +50,7 @@ export default function Feed({navigation}) {
   } else {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        {Loader(loading, 'fade')}
         <FlatList
           ref={flatListRef}
           data={forYouFeed}

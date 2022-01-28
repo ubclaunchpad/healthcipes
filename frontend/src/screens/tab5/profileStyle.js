@@ -44,17 +44,15 @@ export default StyleSheet.create({
     left: 19,
   },
   textInput: {
-    height: 12,
     marginLeft: 60,
     marginRight: 60,
     borderBottomWidth: 1,
     borderColor: color.gray,
-    padding: 8,
   },
   inputTitle: {
     fontSize: 16,
     color: color.gray,
-    marginLeft: '15%',
+    marginLeft: 60,
     marginTop: "5%",
     marginBottom: "5%",
   },

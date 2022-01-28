@@ -56,10 +56,6 @@ export default function EditProfile({navigation}) {
       });
   }, [user]);
 
-  useEffect(() => {
-    setProfPic(response?.assets[0].uri)
-  }, [response]);
-
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {
@@ -117,6 +113,7 @@ if (!onboarded) {
                       includeBase64: false,
                     }, setResponse)
                     console.log(response.assets[0].uri)
+                    setProfPic(response?.assets[0].uri)
                 }}>
                       <Image
                         source={require('../../assets/Editprofilepicture.png')}
@@ -214,9 +211,7 @@ if (!onboarded) {
                       });
                       bottomSheetRef.current.close();
                     })}
-                <TouchableOpacity style={{
-                    /* Add on Press Action */
-                  }}
+                <TouchableOpacity
                   onPress={() => {
                     auth().signOut();
                   }}>

@@ -14,48 +14,47 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
-import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import profileStyle from './profileStyle';
 import color from '../../styles/color';
 import {GET_USER} from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
-import { csvParseRows } from 'd3-dsv';
-import { randomWeibull } from 'd3-random';
-import { gray } from 'd3-color';
-import { blue100, white } from 'react-native-paper/lib/typescript/styles/colors';
-import { applyMiddleware } from 'redux';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import ProfileChips from '../../components/filterChips';
+import storage from '@react-native-firebase/storage';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const bottomSheetRef = useRef(null);
-  const flatListRef = useRef(null);
-  const snapPoints = useMemo(() => ['70%'], []);
-  const featuredFeed = useSelector(
-    state => state.recipeReducer.featureFeedReducer,
-  );
-  const forYouFeed = useSelector(
-    state => state.recipeReducer.forYouFeedReducer,
-  );
+  const [response, setResponse] = React.useState(null);
+
   [firstname, onFirstNameChange] = useState('');
   [lastname, onLastNameChange] = useState('');
   [username, onUsernameChange] = useState('');
   [email, onEmailChange] = useState('');
+
   const firstnameInput = useRef(null);
   const lastnameInput = useRef(null);
   const emailInput = useRef(null);
   const usernameInput = useRef(null);
-
+  const [profPic, setProfPic] = useState('');
+  
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  state={
-
-  }
+  useEffect(() => {
+    storage()
+      .refFromURL(`gs://umami-2021.appspot.com/Users/${user.user_id}.jpg`)
+      .getDownloadURL()
+      .then(res => {
+        setProfPic({uri: res});
+      })
+      .catch(e => {
+        console.log('No User Image: ' + e);
+      });
+  }, [user]);
 
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -103,16 +102,22 @@ if (!onboarded) {
               </View>
               <View style={profileStyle.editprofilepictureContainer}>
                 <ImageBackground
-                  source={require('../../assets/Profilepicture.png')}
+                  source={profPic}
                   style={profileStyle.editprofilePicture}
                 >
-                  <TouchableOpacity>
-                    <Image
-                      source={require('../../assets/Editprofilepicture.png')}
-                      style={profileStyle.editprofilepicturebutton}
-                    />
-                  </TouchableOpacity>
                 </ImageBackground>
+                <TouchableOpacity onPress={() => {
+                    launchImageLibrary({
+                      selectionLimit: 0,
+                      mediaType: 'photo',
+                      includeBase64: false,
+                  }, setResponse)
+                }}>
+                      <Image
+                        source={require('../../assets/Editprofilepicture.png')}
+                        style={profileStyle.editprofilepicturebutton}
+                      />
+                </TouchableOpacity>
               </View>
               <View>
                 <Text style = {profileStyle.inputTitle}>
@@ -206,11 +211,14 @@ if (!onboarded) {
                     })}
                 <TouchableOpacity style={{
                     /* Add on Press Action */
+                  }}
+                  onPress={() => {
+                    auth().signOut();
                   }}>
                   <Text
                     style={{
                       paddingTop: '20%',
-                      paddingBottom: '40%',
+                      marginBottom: 300,
                       color: color.black,
                       alignSelf: 'center',
                       fontSize: 16,

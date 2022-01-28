@@ -30,16 +30,18 @@ export default StyleSheet.create({
     width: '25%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: '7%',
+    marginVertical: '6%',
   },
   editprofilePicture: {
-    width: '90%',
-    height: '90%',
-    borderRadius: 50, /* Requires overwork: hidden*/
+    width: '100%',
+    height: '100%',
+    borderRadius: 150 / 2,
+    overflow: "hidden",
   },
   editprofilepicturebutton: {
-    marginTop: '80%',
-    marginLeft: '60%',
+    position: 'absolute',
+    bottom: 0,
+    left: 19,
   },
   textInput: {
     height: 12,

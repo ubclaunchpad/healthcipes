@@ -57,7 +57,7 @@ export default function EditProfile({navigation}) {
   }, [user]);
 
   useEffect(() => {
-    setProfPic(response?.assets[0].uri)
+    setProfPic(response.assets[0].uri)
   }, [response]);
 
 if (!onboarded) {

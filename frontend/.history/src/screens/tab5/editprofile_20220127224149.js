@@ -56,10 +56,6 @@ export default function EditProfile({navigation}) {
       });
   }, [user]);
 
-  useEffect(() => {
-    setProfPic(response?.assets[0].uri)
-  }, [response]);
-
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {
@@ -116,7 +112,7 @@ if (!onboarded) {
                       mediaType: 'photo',
                       includeBase64: false,
                     }, setResponse)
-                    console.log(response.assets[0].uri)
+                    console.log(response.assets.[0].type)
                 }}>
                       <Image
                         source={require('../../assets/Editprofilepicture.png')}

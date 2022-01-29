@@ -48,6 +48,7 @@ export default StyleSheet.create({
     marginRight: 60,
     borderBottomWidth: 1,
     borderColor: color.gray,
+    paddingBottom: 5,
   },
   inputTitle: {
     fontSize: 16,

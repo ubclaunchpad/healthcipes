@@ -27,12 +27,12 @@ export default function EditProfile({navigation}) {
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const bottomSheetRef = useRef(null);
-  const [response, setResponse] = React.useState(null);
+  const [response, setResponse] = React.useState('');
 
-  [firstname, onFirstNameChange] = useState('');
-  [lastname, onLastNameChange] = useState('');
-  [username, onUsernameChange] = useState('');
-  [email, onEmailChange] = useState('');
+  const [firstname, onFirstNameChange] = useState('');
+  const [lastname, onLastNameChange] = useState('');
+  const [username, onUsernameChange] = useState('');
+  const [email, onEmailChange] = useState('');
 
   const firstnameInput = useRef(null);
   const lastnameInput = useRef(null);
@@ -55,6 +55,67 @@ export default function EditProfile({navigation}) {
         console.log('No User Image: ' + e);
       });
   }, [user]);
+
+  async function updateForm (firstname, lastname, username, email) {
+    const usernameLower = username.toLowerCase();
+    if (firstname !== '') {
+      if (lastname !== '') {
+        if (         
+          usernameLower.length <= 30 &&
+          !usernameLower.includes('/') &&
+          usernameLower.length >= 1          
+          ) {
+            if (
+              email !== '' &&
+              email.includes('@')
+            ) {
+
+              var user = auth().currentUser;
+              user.updateEmail(email).then(() => {
+                console.log('success')
+              }).catch((error) => {
+                console.log(error)
+              });
+
+            } else {
+              console.log('Invalid Email');
+              Alert.alert(
+              "Invalid Email",
+              "Your email needs to be a valid email"
+              ); 
+             
+            }
+          } else {
+            console.log('Invalid Username');
+            Alert.alert(
+              "Error",
+              "Invalid Username"
+              );     
+          }
+        } else {
+          console.log('Last Name Does Not Match');
+          Alert.alert(
+            "Error",
+            "Last Name Does Not Match"
+            ); 
+        }
+      } else {
+        console.log('First Name Cannot Be Empty');
+        Alert.alert(
+          "Error",
+          "First Name Cannot Be Empty"
+          ); 
+      }
+  }
+
+  const submitForm = (
+    Firstname,
+    Lastname,
+    Username,
+    Email,
+  ) => {
+    updateForm(Firstname, Lastname, Username, Email,);
+  };
 
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -112,7 +173,6 @@ if (!onboarded) {
                       mediaType: 'photo',
                       includeBase64: false,
                     }, setResponse)
-                    console.log(response.assets[0].uri)
                     setProfPic(response?.assets[0].uri)
                 }}>
                       <Image
@@ -203,6 +263,8 @@ if (!onboarded) {
                     alignSelf: 'center',
                     }}>
                     {GoButton('Save', () => {
+                      submitForm(firstname, lastname, username, email) 
+                      /*
                       dispatch({
                         type: PUT_USER,
                         payload: {
@@ -210,6 +272,7 @@ if (!onboarded) {
                         },
                       });
                       bottomSheetRef.current.close();
+                      */
                     })}
                 <TouchableOpacity
                   onPress={() => {

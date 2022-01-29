@@ -19,6 +19,18 @@ import color from '../../styles/color';
 import loginStyles from './loginStyles';
 import {POST_USER} from '../../actions/accountActions';
 import {SET_ONBOARDING} from '../../actions/globalActions';
+import messaging from '@react-native-firebase/messaging';
+
+export async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+}
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -68,41 +80,29 @@ export default function SignUp({navigation}) {
                 });
             } else {
               console.log('Invalid Username');
-              Alert.alert(
-                "Error",
-                "Invalid Username"
-                ); 
+              Alert.alert('Error', 'Invalid Username');
             }
           } else {
             console.log('Invalid Password');
             Alert.alert(
-              "Invalid Password",
-              "Your password needs to be at least 6 digits long"
-              ); 
+              'Invalid Password',
+              'Your password needs to be at least 6 digits long',
+            );
           }
         } else {
           console.log('Password Does Not Match');
-          Alert.alert(
-            "Error",
-            "Password Does Not Match"
-            ); 
+          Alert.alert('Error', 'Password Does Not Match');
         }
       } else {
         console.log('Password Cannot Be Empty');
-        Alert.alert(
-          "Error",
-          "Password Cannot Be Empty"
-          ); 
+        Alert.alert('Error', 'Password Cannot Be Empty');
       }
     } else {
       console.log('Email Cannot Be Empty');
-      Alert.alert(
-        "Error",
-        "Email Cannot Be Empty"
-        ); 
+      Alert.alert('Error', 'Email Cannot Be Empty');
     }
   }
-  
+
   // Function to Pass
   const submitForm = (
     newUsername,
@@ -118,13 +118,15 @@ export default function SignUp({navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? '' : ''}
         style={{flex: 1}}
-        contentContainerStyle={{flex: 1}}>
+        contentContainerStyle={{flex: 1}}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
           <View
             style={{
               paddingHorizontal: '15%',
               flex: 1,
-            }}>
+            }}
+          >
             <Image
               source={require('../../assets/Logo.png')}
               style={{
@@ -141,7 +143,8 @@ export default function SignUp({navigation}) {
                   fontSize: 20,
                   fontWeight: 'bold',
                   color: color.appPrimary,
-                }}>
+                }}
+              >
                 Register
               </Text>
               <TextInput
@@ -205,7 +208,8 @@ export default function SignUp({navigation}) {
                 style={{alignSelf: 'center'}}
                 onPress={() => {
                   navigation.push('Login');
-                }}>
+                }}
+              >
                 <Text style={{fontWeight: '300'}}>
                   Already have an account?{'   '}Login
                 </Text>

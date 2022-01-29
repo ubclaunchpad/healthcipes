@@ -156,7 +156,8 @@ if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: color.white,}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: color.white,     position: 'absolute', //Here is the trick
+      bottom: 0,}}>
         <FlatList
           ListHeaderComponent={
             <View>

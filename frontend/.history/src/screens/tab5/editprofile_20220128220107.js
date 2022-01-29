@@ -158,6 +158,7 @@ if (!onboarded) {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: color.white,}}>
         <FlatList
+         style={{paddingBottom: 100}}
           ListHeaderComponent={
             <View>
               <View

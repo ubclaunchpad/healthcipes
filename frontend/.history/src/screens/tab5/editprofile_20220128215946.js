@@ -336,7 +336,6 @@ if (!onboarded) {
                   <Text
                     style={{
                       paddingTop: '20%',
-                      marginBottom: 100,
                       color: color.black,
                       alignSelf: 'center',
                       fontSize: 16,

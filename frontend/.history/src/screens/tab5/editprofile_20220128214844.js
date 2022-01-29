@@ -13,7 +13,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {Chip} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import profileStyle from './profileStyle';
@@ -24,7 +23,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import ProfileChips from '../../components/filterChips';
 import storage from '@react-native-firebase/storage';
 import { launchImageLibrary } from 'react-native-image-picker';
-import {USER_INFO} from '../../actions/accountActions';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
@@ -298,7 +296,7 @@ if (!onboarded) {
                           key={item}
                           onPress={() => {
                             dispatch({
-                              type: PUT_USER,
+                              type: USER_INFO,
                               payload: {...user, [diet]: !user[diet]},
                             });
                           }}

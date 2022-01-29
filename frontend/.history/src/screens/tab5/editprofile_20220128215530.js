@@ -298,7 +298,7 @@ if (!onboarded) {
                           key={item}
                           onPress={() => {
                             dispatch({
-                              type: PUT_USER,
+                              type: USER_INFO,
                               payload: {...user, [diet]: !user[diet]},
                             });
                           }}

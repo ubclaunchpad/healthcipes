@@ -24,7 +24,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import ProfileChips from '../../components/filterChips';
 import storage from '@react-native-firebase/storage';
 import { launchImageLibrary } from 'react-native-image-picker';
-import {USER_INFO} from '../../actions/accountActions';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
@@ -297,10 +296,7 @@ if (!onboarded) {
                         <Chip
                           key={item}
                           onPress={() => {
-                            dispatch({
-                              type: PUT_USER,
-                              payload: {...user, [diet]: !user[diet]},
-                            });
+
                           }}
                           selectedColor={color.appPrimary}
                           style={[

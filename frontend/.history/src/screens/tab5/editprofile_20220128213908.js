@@ -10,21 +10,17 @@ import {
   Image,
   ImageBackground,
   ColorPropType,
-  StyleSheet,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {Chip} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import profileStyle from './profileStyle';
 import color from '../../styles/color';
-import {GET_USER} from '../../actions/accountActions';
 import {PUT_USER} from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
 import ProfileChips from '../../components/filterChips';
 import storage from '@react-native-firebase/storage';
 import { launchImageLibrary } from 'react-native-image-picker';
-import {USER_INFO} from '../../actions/accountActions';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
@@ -129,28 +125,6 @@ export default function EditProfile({navigation}) {
   ) => {
     updateForm(Firstname, Lastname, Username, Email,);
   };
-
-  const dietList = {
-    Vegetarian: 'vegetarian',
-    Vegan: 'vegan',
-    Pescatarian: 'pescatarian',
-    'Gluten-free': 'gluten_free',
-    'Dairy-free': 'dairy_free',
-    Keto: 'keto',
-    Paleo: 'paleo',
-  };
-  const styles = StyleSheet.create({
-    chipStyle: {
-      marginRight: 10,
-      marginBottom: 15,
-      borderRadius: 50,
-    },
-    chipTextStyle: {
-      fontSize: 18,
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-    },
-  });
 
 if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -290,36 +264,7 @@ if (!onboarded) {
                     }}>
                     Dietary Requirements
                   </Text>
-                  <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 3}}>
-                    {Object.keys(dietList).map(item => {
-                      const diet = dietList[item];
-                      return (
-                        <Chip
-                          key={item}
-                          onPress={() => {
-                            dispatch({
-                              type: PUT_USER,
-                              payload: {...user, [diet]: !user[diet]},
-                            });
-                          }}
-                          selectedColor={color.appPrimary}
-                          style={[
-                            styles.chipStyle,
-                            {
-                              backgroundColor: user[diet] ? color.appPrimary : null,
-                            },
-                          ]}
-                          textStyle={[
-                            styles.chipTextStyle,
-                            {
-                              color: user[diet] ? color.white : color.textGray,
-                            },
-                          ]}>
-                          {item}
-                        </Chip>
-                      );
-                    })}
-                  </View>
+                  {ProfileChips()}
                 </View>
                 <View style={{
                     paddingTop: "10%",

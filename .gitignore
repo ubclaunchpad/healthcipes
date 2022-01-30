@@ -3,3 +3,4 @@ certbot/
 database/data/
 *.csv
 *.env
+frontend/.history/

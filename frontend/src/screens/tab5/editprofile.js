@@ -300,6 +300,7 @@ export default function EditProfile({navigation}) {
                   paddingTop: '10%',
                   width: '60%',
                   alignSelf: 'center',
+                  marginBottom: '40%',
                 }}>
                 {GoButton('Save', () => {
                   submitForm(firstname, lastname, username, email);

@@ -45,10 +45,20 @@ export default function Feed({navigation}) {
 
     if (enabled) {
       console.log('Authorization status:', authStatus);
-      messaging()
+      if (!messaging().isDeviceRegisteredForRemoteMessages) {
+        await messaging()
+          .registerDeviceForRemoteMessages()
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      await messaging()
         .getToken()
         .then(token => {
           console.log(token);
+        })
+        .catch(error => {
+          console.log(error);
         });
     }
   }

@@ -1,7 +1,7 @@
 import logging
 from app.indexer import users
 
-def post_notification(cursor, userID, token):
+def post_notification(conn, cursor, userID, token):
     try:
         # assume user exists
         res = users.get_user(cursor, userID)

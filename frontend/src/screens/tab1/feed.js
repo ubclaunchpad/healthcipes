@@ -20,6 +20,7 @@ import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 import Loader from '../../components/Loader';
 import {SET_LOADING} from '../../actions/globalActions';
+import messaging from '@react-native-firebase/messaging';
 
 export default function Feed({navigation}) {
   const dispatch = useDispatch();
@@ -36,8 +37,35 @@ export default function Feed({navigation}) {
   const flatListRef = useRef(null);
   const snapPoints = useMemo(() => ['80%'], []);
 
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      if (!messaging().isDeviceRegisteredForRemoteMessages) {
+        await messaging()
+          .registerDeviceForRemoteMessages()
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      await messaging()
+        .getToken()
+        .then(token => {
+          console.log(token);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
+    requestUserPermission();
   }, [dispatch]);
 
   useEffect(() => {

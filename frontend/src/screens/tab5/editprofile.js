@@ -1,67 +1,139 @@
-import React, {useEffect, useRef, useMemo, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
   TextInput,
   SafeAreaView,
   TouchableOpacity,
-  Keyboard,
-  TouchableWithoutFeedback,
   View,
   Image,
   ImageBackground,
-  ColorPropType,
+  Alert,
+  StyleSheet,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import {Chip} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
-import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import profileStyle from './profileStyle';
 import color from '../../styles/color';
 import {GET_USER} from '../../actions/accountActions';
-import { FlatList } from 'react-native-gesture-handler';
-import { csvParseRows } from 'd3-dsv';
-import { randomWeibull } from 'd3-random';
-import { gray } from 'd3-color';
-import { blue100, white } from 'react-native-paper/lib/typescript/styles/colors';
-import { applyMiddleware } from 'redux';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import ProfileChips from '../../components/filterChips';
+import {FlatList} from 'react-native-gesture-handler';
+import storage from '@react-native-firebase/storage';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {PUT_USER} from '../../actions/accountActions';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
-  const bottomSheetRef = useRef(null);
-  const flatListRef = useRef(null);
-  const snapPoints = useMemo(() => ['70%'], []);
-  const featuredFeed = useSelector(
-    state => state.recipeReducer.featureFeedReducer,
-  );
-  const forYouFeed = useSelector(
-    state => state.recipeReducer.forYouFeedReducer,
-  );
-  [firstname, onFirstNameChange] = useState('');
-  [lastname, onLastNameChange] = useState('');
-  [username, onUsernameChange] = useState('');
-  [email, onEmailChange] = useState('');
+
+  const [firstname, onFirstNameChange] = useState('');
+  const [lastname, onLastNameChange] = useState('');
+  const [username, onUsernameChange] = useState('');
+  const [email, onEmailChange] = useState('');
   const firstnameInput = useRef(null);
   const lastnameInput = useRef(null);
   const emailInput = useRef(null);
   const usernameInput = useRef(null);
+  const [profPic, setProfPic] = useState('');
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  state={
+  useEffect(() => {
+    storage()
+      .refFromURL(`gs://umami-2021.appspot.com/Users/${user.user_id}.jpg`)
+      .getDownloadURL()
+      .then(res => {
+        setProfPic({uri: res});
+      })
+      .catch(e => {
+        console.log('No User Image: ' + e);
+      });
+  }, [user]);
 
+  async function updateForm(firstName, lastName, userName, userEmail) {
+    const usernameLower = userName.toLowerCase();
+    if (firstName !== '') {
+      if (lastName !== '') {
+        if (
+          usernameLower.length <= 30 &&
+          !usernameLower.includes('/') &&
+          usernameLower.length >= 1
+        ) {
+          if (userEmail !== '' && userEmail.includes('@')) {
+            var userFB = auth().currentUser;
+            userFB
+              .updateEmail(userEmail)
+              .then(() => {
+                console.log('success');
+                dispatch({
+                  type: PUT_USER,
+                  payload: {
+                    user_id: userFB.uid,
+                    username: usernameLower,
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: userEmail,
+                  },
+                });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else {
+            console.log('Invalid Email');
+            Alert.alert(
+              'Invalid Email',
+              'Your email needs to be a valid email',
+            );
+          }
+        } else {
+          console.log('Invalid Username');
+          Alert.alert('Error', 'Invalid Username');
+        }
+      } else {
+        console.log('Last Name Does Not Match');
+        Alert.alert('Error', 'Last Name Does Not Match');
+      }
+    } else {
+      console.log('First Name Cannot Be Empty');
+      Alert.alert('Error', 'First Name Cannot Be Empty');
+    }
   }
 
-if (!onboarded) {
+  const submitForm = (Firstname, Lastname, Username, Email) => {
+    updateForm(Firstname, Lastname, Username, Email);
+  };
+
+  const dietList = {
+    Vegetarian: 'vegetarian',
+    Vegan: 'vegan',
+    Pescatarian: 'pescatarian',
+    'Gluten-free': 'gluten_free',
+    'Dairy-free': 'dairy_free',
+    Keto: 'keto',
+    Paleo: 'paleo',
+  };
+  const styles = StyleSheet.create({
+    chipStyle: {
+      marginRight: 10,
+      marginBottom: 15,
+      borderRadius: 50,
+    },
+    chipTextStyle: {
+      fontSize: 18,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+    },
+  });
+
+  if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: color.white,}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: color.white}}>
         <FlatList
           ListHeaderComponent={
             <View>
@@ -78,7 +150,7 @@ if (!onboarded) {
                   onPress={() => {
                     navigation.pop();
                   }}>
-                  <Image 
+                  <Image
                     source={require('../../assets/Back.png')}
                     style={{
                       resizeMode: 'contain',
@@ -89,35 +161,41 @@ if (!onboarded) {
                   />
                 </TouchableOpacity>
                 <Text
-                    style={{
-                      marginBottom: '5%',
-                      marginTop: '9.5%',
-                      fontSize: 30,
-                      color: 'black',
-                      fontWeight: 'bold',
-                      flex: 2.3,
-                      alignSelf: 'center',
-                    }}>
-                    Edit Profile
-                  </Text>
+                  style={{
+                    marginBottom: '5%',
+                    marginTop: '9.5%',
+                    fontSize: 30,
+                    color: 'black',
+                    fontWeight: 'bold',
+                    flex: 2.3,
+                    alignSelf: 'center',
+                  }}>
+                  Edit Profile
+                </Text>
               </View>
               <View style={profileStyle.editprofilepictureContainer}>
                 <ImageBackground
-                  source={require('../../assets/Profilepicture.png')}
+                  source={profPic}
                   style={profileStyle.editprofilePicture}
-                >
-                  <TouchableOpacity>
-                    <Image
-                      source={require('../../assets/Editprofilepicture.png')}
-                      style={profileStyle.editprofilepicturebutton}
-                    />
-                  </TouchableOpacity>
-                </ImageBackground>
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    launchImageLibrary({
+                      selectionLimit: 1,
+                      mediaType: 'photo',
+                      includeBase64: false,
+                    }).then(res => {
+                      setProfPic({uri: res?.assets[0].uri});
+                    });
+                  }}>
+                  <Image
+                    source={require('../../assets/Editprofilepicture.png')}
+                    style={profileStyle.editprofilepicturebutton}
+                  />
+                </TouchableOpacity>
               </View>
               <View>
-                <Text style = {profileStyle.inputTitle}>
-                  First Name
-                </Text>
+                <Text style={profileStyle.inputTitle}>First Name</Text>
                 <TextInput
                   textContentType="firstname"
                   placeholder=""
@@ -130,9 +208,7 @@ if (!onboarded) {
                     firstnameInput.current.focus();
                   }}
                 />
-                <Text style = {profileStyle.inputTitle}>
-                  Last Name
-                </Text>
+                <Text style={profileStyle.inputTitle}>Last Name</Text>
                 <TextInput
                   textContentType="lastname"
                   placeholder=""
@@ -145,9 +221,7 @@ if (!onboarded) {
                     lastnameInput.current.focus();
                   }}
                 />
-                <Text style = {profileStyle.inputTitle}>
-                  Username
-                </Text>
+                <Text style={profileStyle.inputTitle}>Username</Text>
                 <TextInput
                   textContentType="username"
                   placeholder=""
@@ -160,9 +234,7 @@ if (!onboarded) {
                     usernameInput.current.focus();
                   }}
                 />
-                <Text style = {profileStyle.inputTitle}>
-                  Email
-                </Text>
+                <Text style={profileStyle.inputTitle}>Email</Text>
                 <TextInput
                   textContentType="email"
                   placeholder=""
@@ -175,37 +247,67 @@ if (!onboarded) {
                     emailInput.current.focus();
                   }}
                 />
-              </View> 
-              <View style={{
-                  marginHorizontal: "8%",
-                  }}> 
-                  <Text style={{
+              </View>
+              <View
+                style={{
+                  marginHorizontal: '8%',
+                }}>
+                <Text
+                  style={{
                     fontSize: 17,
-                    marginTop: "10%",
-                    fontWeight: "700",
+                    marginTop: '10%',
+                    fontWeight: '700',
                     color: color.textGray,
-                    marginBottom: "5%",
-                    }}>
-                    Dietary Requirements
-                  </Text>
-                  {ProfileChips()}
+                    marginBottom: '5%',
+                  }}>
+                  Dietary Requirements
+                </Text>
+                <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 3}}>
+                  {Object.keys(dietList).map(item => {
+                    const diet = dietList[item];
+                    return (
+                      <Chip
+                        key={item}
+                        onPress={() => {
+                          dispatch({
+                            type: PUT_USER,
+                            payload: {...user, [diet]: !user[diet]},
+                          });
+                        }}
+                        selectedColor={color.appPrimary}
+                        style={[
+                          styles.chipStyle,
+                          {
+                            backgroundColor: user[diet]
+                              ? color.appPrimary
+                              : null,
+                          },
+                        ]}
+                        textStyle={[
+                          styles.chipTextStyle,
+                          {
+                            color: user[diet] ? color.white : color.textGray,
+                          },
+                        ]}>
+                        {item}
+                      </Chip>
+                    );
+                  })}
                 </View>
-                <View style={{
-                    paddingTop: "10%",
-                    width: "60%",
-                    alignSelf: 'center',
-                    }}>
-                    {GoButton('Save', () => {
-                      dispatch({
-                        type: PUT_USER,
-                        payload: {
-                          ...user,
-                        },
-                      });
-                      bottomSheetRef.current.close();
-                    })}
-                <TouchableOpacity style={{
-                    /* Add on Press Action */
+              </View>
+              <View
+                style={{
+                  paddingTop: '10%',
+                  width: '60%',
+                  alignSelf: 'center',
+                  marginBottom: '40%',
+                }}>
+                {GoButton('Save', () => {
+                  submitForm(firstname, lastname, username, email);
+                })}
+                <TouchableOpacity
+                  onPress={() => {
+                    auth().signOut();
                   }}>
                   <Text
                     style={{
@@ -219,10 +321,10 @@ if (!onboarded) {
                     Log Out
                   </Text>
                 </TouchableOpacity>
-                </View>          
+              </View>
             </View>
           }
-      />
+        />
       </SafeAreaView>
     );
   }

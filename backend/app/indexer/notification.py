@@ -2,6 +2,7 @@ import logging
 from app.indexer import users
 
 def upsert_user_notification_token(conn, cursor, userID, token):
+    sql = 'upsertUserNotificationToken'
     try:
         # assume user exists
         res = users.get_user(cursor, userID)
@@ -9,16 +10,8 @@ def upsert_user_notification_token(conn, cursor, userID, token):
             logging.error("User does not exist")
             raise Exception()
 
-        # User exists
-
-        # check if user has token
-
-        # if not insert
-        # else update
-        
-        # return row
-        row = token 
-        return row
+        cursor.callproc(sql, (userID, token))
+        return cursor.fetchall()
 
     except Exception as e:
         logging.error(e)

@@ -2,7 +2,7 @@ from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
 from app.indexer.users import post_user, get_user, update_user
-from app.indexer.notification import upsert_user_notification_token
+from app.indexer.notification import upsert_user_notification_token, get_user_notification
 
 defaultUser = {
     "user_id": "testID",
@@ -56,8 +56,21 @@ async def create_user(user: dict = defaultUser):
 async def create_token(token, user: dict = defaultUser):
     # upsert method
     try:
-        conn, cursor = init_conn()
-        res = upsert_user_notification_token(conn, cursor, user, token)
+        _ , cursor = init_conn()
+        res = upsert_user_notification_token(cursor, user, token)
+        return res, 200
+
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+
+@router.get("/token")
+async def get_token(user: dict = defaultUser):
+    # upsert method
+    try:
+        _ , cursor = init_conn()
+        res = get_user_notification(cursor, user)
         return res, 200
 
     except Exception as e:

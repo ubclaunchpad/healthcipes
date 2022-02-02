@@ -4,10 +4,9 @@ DROP procedure IF EXISTS `getUserNotificationToken`;
 DROP procedure IF EXISTS `upsertUserNotificationToken`;
 
 DELIMITER $$
-USE `umami_db`$$
+
 CREATE PROCEDURE `getUserNotificationToken` (
-    IN `_user_id` VARCHAR(50)i
-    /* IN `_notification_token` VARCHAR(255) */
+    IN `_user_id` VARCHAR(50)
 )
 
 BEGIN
@@ -20,11 +19,12 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-USE `umami_db`$$
+
 CREATE PROCEDURE `upsertUserNotificationToken` (
-    IN `_user_id` VARCHAR(50)i
+    IN `_user_id` VARCHAR(50),
     IN `_notification_token` VARCHAR(255)
-) BEGIN REPLACE INTO `notification_token_table` (
+) BEGIN 
+REPLACE INTO `notification_token_table` (
     `notification_token` 
     `user_id` 
     `created_at`

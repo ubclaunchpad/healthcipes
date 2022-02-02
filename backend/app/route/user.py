@@ -53,11 +53,13 @@ async def create_user(user: dict = defaultUser):
 
 
 @router.post("/token")
-async def create_token(token, user: dict = defaultUser):
+async def create_token(token, userID: str = ""):
+    print("HERE")
     # upsert method
+    print("hitting token route")
     try:
-        _ , cursor = init_conn()
-        res = upsert_user_notification_token(cursor, user, token)
+        conn , cursor = init_conn()
+        res = upsert_user_notification_token(conn, cursor, userID, token)
         return res, 200
 
     except Exception as e:
@@ -66,11 +68,11 @@ async def create_token(token, user: dict = defaultUser):
 
 
 @router.get("/token")
-async def get_token(user: dict = defaultUser):
+async def get_token(userID: str = ""):
     # upsert method
     try:
         _ , cursor = init_conn()
-        res = get_user_notification(cursor, user)
+        res = get_user_notification(cursor, userID)
         return res, 200
 
     except Exception as e:

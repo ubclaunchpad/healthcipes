@@ -25,16 +25,16 @@ CREATE PROCEDURE `upsertUserNotificationToken` (
     IN `_notification_token` VARCHAR(255)
 ) BEGIN 
 REPLACE INTO `notification_token_table` (
-    `notification_token` 
-    `user_id` 
-    `created_at`
+    `notification_token`,
+    `user_id`,
+    `created_at`,
     `updated_at`
 )
 VALUES (
     `_notification_token`,
-    `_user_id`
+    `_user_id`,
     NOW(),
-    NOW(),
+    NOW()
 );
 
 END$$

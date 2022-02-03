@@ -3,6 +3,8 @@ import accountReducer from './accountReducer';
 import globalReducer from './globalReducer';
 import recipeReducer from './recipeReducer';
 import pantryReducer from './pantryReducer';
+import accordionReducer from './accordionReducer';
+import accordionStepReducer from './accordionReducer';
 import profileReducer from './profileReducer';
 
 const rootReducer = combineReducers({
@@ -10,6 +12,8 @@ const rootReducer = combineReducers({
   globalReducer,
   recipeReducer,
   pantryReducer,
+  accordionReducer,
+  accordionStepReducer,
   profileReducer,
 });
 

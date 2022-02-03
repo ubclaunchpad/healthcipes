@@ -15,6 +15,7 @@ import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
 import recipeStyle from './recipeStyle';
 import {GET_RECIPE} from '../../actions/recipeActions';
+import { set_open, set_step } from '../../actions/accordionActions';
 
 export default function Recipe({navigation, route}) {
   const {recipe} = route.params;
@@ -28,6 +29,9 @@ export default function Recipe({navigation, route}) {
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
+
+  const open = useSelector(state => state.accordionReducer.accordionReducer); 
+  const stepIndex = useSelector(state => state.accordionStepReducer.accordionStepReducer);
 
   useEffect(() => {
     storage()
@@ -253,6 +257,7 @@ export default function Recipe({navigation, route}) {
   }
 
   function stepTab() {
+    data = {steps};
     return (
       <BottomSheetFlatList
         contentContainerStyle={{paddingTop: 20, paddingBottom: '30%'}}
@@ -267,8 +272,11 @@ export default function Recipe({navigation, route}) {
                 borderWidth: 1,
                 borderRadius: 20,
                 marginBottom: 20,
+                backgroundColor: open && stepIndex == item.step_id ? 'white' : color.appPrimary,
               }}>
-              <AccordionItem title={`Step ${index + 1}`}>
+              <AccordionItem 
+              title={`Step ${index + 1}`}
+              index={index+1}>
                 <Text>{item.description}</Text>
               </AccordionItem>
             </View>

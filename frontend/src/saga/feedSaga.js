@@ -100,7 +100,8 @@ function* getFeedCall(param) {
     const recipeArray = [];
     for (const results of resultsArray) {
       yield storage()
-        .refFromURL(results[4])
+      
+        .refFromURL(results[6])
         .getDownloadURL()
         .then(res => {
           const vegetarian = param.user.vegetarian ? results[11] === 1 : true;
@@ -166,7 +167,7 @@ function* getFeaturedCall(param) {
     const recipeArray = [];
     for (const results of resultsArray) {
       yield storage()
-        .refFromURL(results[4])
+        .refFromURL(results[6])
         .getDownloadURL()
         .then(res => {
           const vegetarian = param.user.vegetarian ? results[11] === 1 : true;

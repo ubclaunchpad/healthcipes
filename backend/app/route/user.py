@@ -49,3 +49,8 @@ async def create_user(user: dict = defaultUser):
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
+
+
+@router.post("/token")
+async def create_token(user: dict = defaultUser):
+    return

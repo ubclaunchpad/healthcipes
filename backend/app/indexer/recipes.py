@@ -78,14 +78,20 @@ def _filter_vegan(cursor):
 
 
 def post_recipe(conn, cursor, recipe):
-    sql_proc = 'createRecipe'
+    sql_proc = 'createRecipeAutoID'
 
     recipe_id = recipe['recipe_id']
+    if (recipe_id):
+        sql_proc = 'createRecipe'
     name = recipe['name']
+    recipe_description = recipe['recipe_description']
     user_id = recipe['user_id']
+    creator_username = recipe['creator_username']
     header_image = recipe.get('header_image', '')
     protein = recipe['protein']
     carbs = recipe['carbs']
+    fat = recipe['fat']
+    fiber = recipe['fiber']
     calories = recipe['calories']
     servings = recipe['servings']
     vegetarian = recipe['vegetarian']
@@ -93,25 +99,85 @@ def post_recipe(conn, cursor, recipe):
     cooking_time = recipe['cooking_time']
 
     try:
-        hello = cursor.callproc(sql_proc, (
-            recipe_id,
-            name,
-            user_id,
-            header_image,
-            protein,
-            carbs,
-            calories,
-            servings,
-            vegetarian,
-            vegan,
-            cooking_time,
-        ))
-        conn.commit()
-        return hello
+        if (recipe_id):
+            finalRecipe = cursor.callproc(sql_proc, (
+                recipe_id,
+                name,
+                recipe_description,
+                user_id,
+                creator_username,
+                header_image,
+                protein,
+                carbs,
+                fat,
+                fiber,
+                calories,
+                servings,
+                vegetarian,
+                vegan,
+                cooking_time,
+            ))
+            conn.commit()
+            return finalRecipe
+        else:
+            finalRecipe = cursor.callproc(sql_proc, (
+                name,
+                recipe_description,
+                user_id,
+                creator_username,
+                header_image,
+                protein,
+                carbs,
+                fat,
+                fiber,
+                calories,
+                servings,
+                vegetarian,
+                vegan,
+                cooking_time,
+            ))
+            conn.commit()
+            cursor.nextset()
+            cursor.execute("SELECT * FROM recipes_table ORDER BY created_time DESC LIMIT 1;")
+            return cursor.fetchone()
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
+def post_steps(conn, cursor, stepList, recipe):
+    sql_proc = 'addSteps'
+
+    try:
+        for step in stepList:
+            cursor.callproc(sql_proc, (
+                recipe,
+                step,
+                0
+            ))
+            conn.commit()
+            cursor.nextset()
+        return stepList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def post_ingredients(conn, cursor, ingredientList, recipe):
+    sql_proc = 'addIngredients'
+
+    try:
+        for ingredient in ingredientList:
+            cursor.callproc(sql_proc, (
+                "MagicID",
+                recipe,
+                ingredient,
+                "Other"
+            ))
+            conn.commit()
+            cursor.nextset()
+        return ingredientList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
 
 def is_missing_macros(recipe_details):
     '''
@@ -169,7 +235,9 @@ def get_recipe_by_id(conn, cursor, recipe_id):
         res = {
             "recipe_id": recipe_id,
             "name": "",
+            "recipe_description": "",
             "user_id": "",
+            "creator_username": "",
             "protein": 0,
             "carbs": 0,
             "fat": 0,
@@ -185,40 +253,42 @@ def get_recipe_by_id(conn, cursor, recipe_id):
 
         if len(raw_result):
             res["name"] = raw_result[0][1]
-            res["user_id"] = raw_result[0][2]
-            res["protein"] = raw_result[0][3]
-            res["carbs"] = raw_result[0][4]
-            res["fat"] = raw_result[0][5]
-            res["fiber"] = raw_result[0][6]
-            res["calories"] = raw_result[0][7]
-            res["servings"] = raw_result[0][8]
-            res["vegetarian"] = bool(raw_result[0][9])
-            res["vegan"] = bool(raw_result[0][10])
-            res["cooking_time"] = raw_result[0][11]
+            res["recipe_description"] = raw_result[0][2]
+            res["user_id"] = raw_result[0][3]
+            res["creator_username"] = raw_result[0][4]
+            res["protein"] = raw_result[0][5]
+            res["carbs"] = raw_result[0][6]
+            res["fat"] = raw_result[0][7]
+            res["fiber"] = raw_result[0][8]
+            res["calories"] = raw_result[0][9]
+            res["servings"] = raw_result[0][10]
+            res["vegetarian"] = bool(raw_result[0][11])
+            res["vegan"] = bool(raw_result[0][12])
+            res["cooking_time"] = raw_result[0][13]
 
             step_ids = set()
             ingredient_ids = set()
 
             for result in raw_result:
-                if result[12] not in step_ids:
+                if result[14] not in step_ids:
                     res["steps"].append(
                         {
-                            "step_id": result[12],
-                            "description": result[13],
-                            "time": result[14],
+                            "step_id": result[14],
+                            "description": result[15],
+                            "time": result[16],
                         }
                     )
-                    step_ids.add(result[12])
+                    step_ids.add(result[14])
 
-                if result[15] not in ingredient_ids:
+                if result[17] not in ingredient_ids:
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[15],
-                            "ingredient_name": result[16],
-                            "category": result[17]
+                            "ingredient_id": result[17],
+                            "ingredient_name": result[18],
+                            "category": result[19]
                         }
                     )
-                    ingredient_ids.add(result[15])
+                    ingredient_ids.add(result[17])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])
@@ -264,4 +334,13 @@ def get_recipe_by_id(conn, cursor, recipe_id):
         return res
     except Exception as e:
         print("MYSQL ERROR:", sql)
+        logging.error(e)
+
+def get_createdrecipe_by_userid(cursor, user_id):
+    sql_proc = 'getCreatedRecipeById'
+    try:
+        cursor.callproc(sql_proc, (user_id, ))
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
         logging.error(e)

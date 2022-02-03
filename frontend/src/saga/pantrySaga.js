@@ -9,6 +9,7 @@ import {
   PANTRY_ADD,
   PANTRY_REMOVE,
   REMOVE_INGREDIENT,
+  SEARCH_INGREDIENTS,
 } from '../actions/pantryActions';
 
 function* addToPantry(param) {
@@ -68,7 +69,27 @@ function* getAllIngredientsCall() {
 
     yield put({type: INGREDIENTS, payload: results.data});
   } catch (e) {
-    console.log('Get Pantry Failed: ' + e);
+    console.log('Get All Ingredients Failed: ' + e);
+  }
+}
+
+function* searchIngredientsCall(param) {
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/pantry/ingredients?keyword=${param.keyword}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: SEARCH INGREDIENTS API:');
+
+    yield put({type: INGREDIENTS, payload: results.data});
+  } catch (e) {
+    console.log('Search Ingredients Failed: ' + e);
   }
 }
 
@@ -136,6 +157,10 @@ export function* getPantry() {
 
 export function* getAllIngredients() {
   yield takeLatest(GET_ALL_INGREDIENTS, getAllIngredientsCall);
+}
+
+export function* searchIngredients() {
+  yield takeLatest(SEARCH_INGREDIENTS, searchIngredientsCall);
 }
 
 export function* addIngredient() {

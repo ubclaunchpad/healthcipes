@@ -4,13 +4,20 @@ import {
   FORYOU_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
-import {RECIPE} from '../actions/recipeActions';
+import {
+  RECIPE,
+  REGISTER_LIKE_RECIPE,
+  REGISTER_VIEW_RECIPE,
+  LIKE_RECIPE,
+} from '../actions/recipeActions';
 
 const defaultRecipe = {
   recipe_id: 0,
   name: '',
+  recipe_description: '',
   created_time: new Date(),
   user_id: '',
+  creator_username: '',
   header_image: '',
   protein: 0,
   carbs: 0,
@@ -61,9 +68,39 @@ const recipeReducer = (state = defaultRecipe, action) => {
   }
 };
 
+const registerRecipeLikeReducer = (state = defaultRecipe, action) => {
+  switch (action.type) {
+    case REGISTER_LIKE_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const recipeLikeGetReducer = (state = false, action) => {
+  switch (action.type) {
+    case LIKE_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const registerRecipeViewReducer = (state = defaultRecipe, action) => {
+  switch (action.type) {
+    case REGISTER_VIEW_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
   searchResultReducer,
   recipeReducer,
+  registerRecipeLikeReducer,
+  registerRecipeViewReducer,
+  recipeLikeGetReducer,
 });

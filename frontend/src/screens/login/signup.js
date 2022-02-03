@@ -68,41 +68,29 @@ export default function SignUp({navigation}) {
                 });
             } else {
               console.log('Invalid Username');
-              Alert.alert(
-                "Error",
-                "Invalid Username"
-                ); 
+              Alert.alert('Error', 'Invalid Username');
             }
           } else {
             console.log('Invalid Password');
             Alert.alert(
-              "Invalid Password",
-              "Your password needs to be at least 6 digits long"
-              ); 
+              'Invalid Password',
+              'Your password needs to be at least 6 digits long',
+            );
           }
         } else {
           console.log('Password Does Not Match');
-          Alert.alert(
-            "Error",
-            "Password Does Not Match"
-            ); 
+          Alert.alert('Error', 'Password Does Not Match');
         }
       } else {
         console.log('Password Cannot Be Empty');
-        Alert.alert(
-          "Error",
-          "Password Cannot Be Empty"
-          ); 
+        Alert.alert('Error', 'Password Cannot Be Empty');
       }
     } else {
       console.log('Email Cannot Be Empty');
-      Alert.alert(
-        "Error",
-        "Email Cannot Be Empty"
-        ); 
+      Alert.alert('Error', 'Email Cannot Be Empty');
     }
   }
-  
+
   // Function to Pass
   const submitForm = (
     newUsername,

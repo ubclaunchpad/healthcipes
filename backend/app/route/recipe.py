@@ -2,18 +2,19 @@ from fastapi import APIRouter
 from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
+import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_recipe_by_keyword, get_all_recipes, post_recipe, get_recipe_by_id, filter_recipes, get_featured_recipes
+from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
 from app.scraper.scraper import scraper
-from datetime import datetime
 from functools import reduce
 
 defaultRecipe = {
-    # TODO: id is required due to the nature of the query, should just auto increment if given null id
-    "recipe_id": 0,
+    "recipe_id": "",
     "name": "testRecipeId",
+    "recipe_description": "A delicious vegan tofu scramble to beat the Mondays",
     # NOTE: need to create default user before default recipe can be made
     "user_id": "testID",
+    "creator_username": "VeganDaddy",
     "protein": 1,
     "carbs": 2,
     "fat": 2,
@@ -31,14 +32,16 @@ class RecipeStep(BaseModel):
     time: Optional[int] = None
 
 class RecipeIngredient(BaseModel):
-    ingredient_id: int
+    ingredient_id: str
     ingredient_name: str
     category: str
 
 class RecipeDetails(BaseModel):
     recipe_id: int
     name: str
+    recipe_description: str
     user_id: str
+    creator_username: str
     protein: int
     carbs: int
     fat: int
@@ -106,6 +109,25 @@ async def read_featured_recipe():
     return await read_featured_recipes()
 
 
+@router.get("/user")
+async def read_createdrecipe_by_userid(user_id: str=""):
+    '''get recipe info, macros, steps, and ingredients'''
+    try:
+        _, cursor = init_conn()
+        res = get_createdrecipe_by_userid(cursor, user_id)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+
 # TODO: merge filter route with the one above if possible sql statements with default values?
 @router.get("/filter")
 async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatarian: bool = False, gluten_free: bool = False, dairy_free: bool = False, keto: bool = False, paleo: bool = False):
@@ -125,12 +147,35 @@ async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatari
 
 
 @router.post("/")
-async def create_recipe(url: str = "", recipe: dict = defaultRecipe):
+def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [], ingredients: list = []):
     try:
         conn, cursor = init_conn()
-        recipe = scraper(url)
+        if (url != ""):
+            recipe, steps, ingredients = scraper(url)
         res = post_recipe(conn, cursor, recipe)
+        _ = post_steps(conn, cursor, steps[0].split("\n"), res[0])
+        _ = post_ingredients(conn, cursor, ingredients[0], res[0])
         return res, 200
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+
+@router.get("/scrape")
+async def auto_scrape_recipe():
+    try:
+        url = "https://www.themealdb.com/api/json/v1/1/random.php"
+        payload={}
+        headers = {}
+        response = requests.request("GET", url, headers=headers, data=payload)
+        # print(response.json()['meals'])
+        recipeURL = response.json()['meals'][0]['strSource']
+        print(recipeURL)
+        if (recipeURL):
+            res = create_recipe(url=recipeURL)
+            return res, 200
+        else:
+            return "Recipe isn't compatible today :(", 400
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400

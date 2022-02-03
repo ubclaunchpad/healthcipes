@@ -5,7 +5,10 @@ DROP procedure IF EXISTS `getAllUserActivity`;
 DROP procedure IF EXISTS `postUserActivity`;
 DROP procedure IF EXISTS `rankRecipeByLike`;
 DROP procedure IF EXISTS `rankRecipeByView`;
-
+DROP procedure IF EXISTS `getUsersUserActivitySpecificActivity`;
+DROP procedure IF EXISTS `userLikedStatus`;
+DROP procedure IF EXISTS `getLikeCount`;
+DROP procedure IF EXISTS `deleteUserActivity`;
 
 
 DELIMITER $$
@@ -17,6 +20,65 @@ SELECT *
 FROM `user_activity_table` ua
 WHERE ua.user_id = _user_id
 ;
+
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `userLikedStatus` (IN `_user_id` VARCHAR(50), IN `_recipe_id` INT)
+BEGIN
+
+SELECT * 
+FROM `user_activity_table` ua
+WHERE ua.user_id = _user_id AND ua.recipe_like_id = _recipe_id AND ua.activity_type = 'RECIPE_LIKE';
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `getLikeCount` (IN `_recipe_id` INT)
+BEGIN
+
+SELECT COUNT(*)
+FROM `user_activity_table` ua
+WHERE ua.recipe_like_id = _recipe_id AND ua.activity_type = 'RECIPE_LIKE';
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `deleteUserActivity` (IN `_user_id` VARCHAR(50), IN `_recipe_id` INT)
+BEGIN
+
+DELETE FROM `user_activity_table` ua
+WHERE ua.user_id = _user_id AND ua.recipe_like_id = _recipe_id AND ua.activity_type = 'RECIPE_LIKE';
+
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `getUsersUserActivitySpecificActivity` (
+    IN `_user_id` VARCHAR(50),
+    IN `_activity_type` ENUM('RECIPE_LIKE', 'USER_FOLLOW', 'RECIPE_VIEW')
+)
+BEGIN
+
+SELECT r.* FROM `recipes_table` as r
+INNER JOIN 
+(SELECT *
+FROM `user_activity_table` 
+WHERE activity_type = 'RECIPE_LIKE' and user_id = _user_id) as li
+ON li.recipe_like_id = r.recipe_id;
 
 END$$
 

@@ -14,8 +14,15 @@ import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
 import recipeStyle from './recipeStyle';
-import {GET_RECIPE} from '../../actions/recipeActions';
 import { set_open, set_step } from '../../actions/accordionActions';
+import axios from 'axios';
+import {API_URL} from '@env';
+import {
+  GET_RECIPE,
+  POST_RECIPE_LIKE,
+  POST_RECIPE_VIEW,
+} from '../../actions/recipeActions';
+import auth from '@react-native-firebase/auth';
 
 export default function Recipe({navigation, route}) {
   const {recipe} = route.params;
@@ -25,13 +32,78 @@ export default function Recipe({navigation, route}) {
     require('../../assets/defaultProfile.png'),
   );
   const [ingredients, setIngredients] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [steps, setSteps] = useState([]);
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
 
+
   const open = useSelector(state => state.accordionReducer.accordionReducer); 
   const stepIndex = useSelector(state => state.accordionStepReducer.accordionStepReducer);
+
+  function checkLike(ID) {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/user_activity/like_status?userID=${
+        auth().currentUser.uid
+      }&recipeID=${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig)
+      .then(function (response) {
+        const res = response.data;
+        if (res[0].length > 0) {
+          setIsLiked(true);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    const apiConfig2 = {
+      method: 'get',
+      url: `${API_URL}/user_activity/like_count?recipeID=${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig2)
+      .then(function (response) {
+        const res = response.data[0][0];
+        if (res) {
+          setLikeCount(Number(res));
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function deleteLike(ID) {
+    const apiConfig = {
+      method: 'delete',
+      url: `${API_URL}/user_activity/like?userID=${
+        auth().currentUser.uid
+      }&recipeID=${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   useEffect(() => {
     storage()
@@ -47,6 +119,12 @@ export default function Recipe({navigation, route}) {
 
   useEffect(() => {
     dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
+    dispatch({
+      type: POST_RECIPE_VIEW,
+      user_id: auth().currentUser.uid,
+      recipe_id: recipe.recipe_id,
+    });
+    checkLike(recipe.recipe_id);
   }, [dispatch, recipe]);
 
   useEffect(() => {
@@ -94,7 +172,7 @@ export default function Recipe({navigation, route}) {
               borderColor: color.appPrimary,
             },
           ]}>
-          <Text>{recipe.calories}</Text>
+          <Text>{recipe.calories ?? '0'}</Text>
           <Text style={{fontSize: 10}}>Calories</Text>
         </View>
         <View
@@ -104,7 +182,7 @@ export default function Recipe({navigation, route}) {
               borderColor: color.lightGreen,
             },
           ]}>
-          <Text>{recipe.protein}g</Text>
+          <Text>{recipe.protein ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Protein</Text>
         </View>
         <View
@@ -114,7 +192,7 @@ export default function Recipe({navigation, route}) {
               borderColor: color.orange,
             },
           ]}>
-          <Text>{recipe.fiber}g</Text>
+          <Text>{recipe.fiber ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Fiber</Text>
         </View>
         <View
@@ -124,14 +202,17 @@ export default function Recipe({navigation, route}) {
               borderColor: color.red,
             },
           ]}>
-          <Text>{recipe.fat}g</Text>
+          <Text>{recipe.fat ?? '0'}g</Text>
           <Text style={{fontSize: 10}}>Fat</Text>
         </View>
       </View>
     );
   }
 
-  function infoTab() {
+  function infoTab(liked, count) {
+    const img = liked
+      ? require('../../assets/LikeFilled.png')
+      : require('../../assets/Like.png');
     return (
       <View>
         <View
@@ -147,16 +228,35 @@ export default function Recipe({navigation, route}) {
               alignItems: 'center',
               marginBottom: 5,
             }}>
-            <Image
-              source={require('../../assets/Like.png')}
-              style={{
-                width: 24,
-                height: 24,
-                resizeMode: 'contain',
-                marginRight: 5,
-              }}
-            />
-            <Text>2.3k</Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                if (liked) {
+                  deleteLike(recipe.recipe_id);
+                  setIsLiked(false);
+                  setLikeCount(count - 1);
+                } else {
+                  dispatch({
+                    type: POST_RECIPE_LIKE,
+                    user_id: auth().currentUser.uid,
+                    recipe_like_id: recipe.recipe_id,
+                  });
+                  setIsLiked(true);
+                  setLikeCount(count + 1);
+                }
+              }}>
+              <Image
+                source={img}
+                style={{
+                  width: 24,
+                  height: 24,
+                  resizeMode: 'contain',
+                  marginRight: 5,
+                  tintColor: color.red,
+                }}
+              />
+            </TouchableOpacity>
+            <Text>{count}</Text>
           </View>
         </View>
         <View
@@ -178,7 +278,7 @@ export default function Recipe({navigation, route}) {
             />
             <View style={{flexDirection: 'column'}}>
               <Text numberOfLines={1} style={{width: 80}}>
-                {recipe.user_id}
+                {recipe.creator_username}
               </Text>
               <Text style={{fontSize: 10}}>
                 {moment(new Date(recipe.created_time)).format('D MMM YYYY')}
@@ -215,11 +315,7 @@ export default function Recipe({navigation, route}) {
           <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
             About this Recipe
           </Text>
-          <Text>
-            Homemade Lasagna is a classic that every cook should have in their
-            rotation. Tender sheets of pasta, a cheese filling, and a rich meaty
-            tomato sauce make the perfect dish!
-          </Text>
+          <Text>{recipe.recipe_description}</Text>
         </View>
       </View>
     );
@@ -319,7 +415,7 @@ export default function Recipe({navigation, route}) {
             {recipeTab('Ingredients')}
             {recipeTab('Steps')}
           </View>
-          {page === 'Info' && infoTab()}
+          {page === 'Info' && infoTab(isLiked, likeCount)}
           {page === 'Ingredients' && ingredientTab()}
           {page === 'Steps' && stepTab()}
         </View>

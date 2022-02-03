@@ -28,6 +28,11 @@ const defaultPantry = [
     data: [],
     chipColor: color.yellow,
   },
+  {
+    title: 'Other',
+    data: [],
+    chipColor: color.yellow,
+  },
 ];
 
 const pantryReducer = (state = defaultPantry, action) => {

@@ -10,7 +10,9 @@ services:
   db:
     build: ./database
     restart: always
-    command: --secure_file_priv=''
+    command: 
+      --secure_file_priv=''
+      --local_infile=1
     environment:
       MYSQL_DATABASE: 'umami_db'
       MYSQL_USER: 'user'

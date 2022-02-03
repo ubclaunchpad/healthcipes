@@ -1,3 +1,5 @@
 *.DS_STORE
 certbot/
 database/data/
+*.csv
+*.env

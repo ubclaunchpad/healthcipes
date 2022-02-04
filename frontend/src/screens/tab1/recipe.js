@@ -13,7 +13,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
-import recipeStyle from './recipeStyle';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
@@ -22,6 +21,7 @@ import {
   POST_RECIPE_VIEW,
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
+import NutritionChips from '../../components/nutritionChips';
 
 export default function Recipe({navigation, route}) {
   const {recipe} = route.params;
@@ -152,58 +152,6 @@ export default function Recipe({navigation, route}) {
     );
   }
 
-  function nutrition() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingVertical: 30,
-        }}>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.appPrimary,
-            },
-          ]}>
-          <Text>{recipe.calories ?? '0'}</Text>
-          <Text style={{fontSize: 10}}>Calories</Text>
-        </View>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.lightGreen,
-            },
-          ]}>
-          <Text>{recipe.protein ?? '0'}g</Text>
-          <Text style={{fontSize: 10}}>Protein</Text>
-        </View>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.orange,
-            },
-          ]}>
-          <Text>{recipe.fiber ?? '0'}g</Text>
-          <Text style={{fontSize: 10}}>Fiber</Text>
-        </View>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.red,
-            },
-          ]}>
-          <Text>{recipe.fat ?? '0'}g</Text>
-          <Text style={{fontSize: 10}}>Fat</Text>
-        </View>
-      </View>
-    );
-  }
-
   function infoTab(liked, count) {
     const img = liked
       ? require('../../assets/LikeFilled.png')
@@ -305,7 +253,7 @@ export default function Recipe({navigation, route}) {
             <Text>{recipe.servings} Servings</Text>
           </View>
         </View>
-        {nutrition()}
+        {NutritionChips(recipe)}
         <View>
           <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
             About this Recipe

@@ -4,81 +4,27 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
-  Keyboard,
-  TouchableWithoutFeedback,
   View,
   Image,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
-import recipeStyle from '../tab1/recipeStyle';
 import GoButton from '../../components/goButton';
+import {POST_RECIPE} from '../../actions/recipeActions';
+import NutritionChips from '../../components/nutritionChips';
 
 export default function Post({navigation}) {
   const dispatch = useDispatch();
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
-  const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const [steps, setSteps] = useState(['NEW']);
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
-
-  function nutrition(recipe) {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingVertical: 30,
-        }}>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.appPrimary,
-            },
-          ]}>
-          <Text>{recipe.calories ?? '0'}</Text>
-          <Text style={{fontSize: 10}}>Calories</Text>
-        </View>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.lightGreen,
-            },
-          ]}>
-          <Text>{recipe.protein ?? '0'}g</Text>
-          <Text style={{fontSize: 10}}>Protein</Text>
-        </View>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.orange,
-            },
-          ]}>
-          <Text>{recipe.fiber ?? '0'}g</Text>
-          <Text style={{fontSize: 10}}>Fiber</Text>
-        </View>
-        <View
-          style={[
-            recipeStyle.nutritionStyle,
-            {
-              borderColor: color.red,
-            },
-          ]}>
-          <Text>{recipe.fat ?? '0'}g</Text>
-          <Text style={{fontSize: 10}}>Fat</Text>
-        </View>
-      </View>
-    );
-  }
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -178,6 +124,15 @@ export default function Post({navigation}) {
     );
   };
 
+  function save() {
+    const recipeObj = {
+      name: recipeName,
+      image: '',
+      description: recipeDescription,
+    };
+    dispatch({type: POST_RECIPE, recipe: recipeObj});
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{paddingHorizontal: '5%', flex: 2}}>
@@ -267,7 +222,7 @@ export default function Post({navigation}) {
                   }}
                 />
               </TouchableOpacity>
-              <View style={{flex: 1}}>{nutrition({})}</View>
+              <View style={{flex: 1}}>{NutritionChips({})}</View>
               <View style={{flex: 1, width: '80%'}}>
                 <TextInput
                   style={{
@@ -334,9 +289,7 @@ export default function Post({navigation}) {
                 </View>
               </View>
               <View style={{flex: 0.75, width: '50%'}}>
-                {GoButton('Save', () => {
-                  console.log('save');
-                })}
+                {GoButton('Save', save)}
               </View>
             </View>
           </View>

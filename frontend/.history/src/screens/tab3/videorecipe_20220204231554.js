@@ -13,8 +13,6 @@ import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
-import videorecipeStyle from './videorecipeStyle';
-import color from '../../styles/color';
 
 export default function Post({navigation}) {
   const dispatch = useDispatch();
@@ -32,12 +30,11 @@ export default function Post({navigation}) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
-      <SafeAreaView style={{flex: 1, marginHorizontal: '5%'}}>
+      <SafeAreaView style={{flex: 1}}>
         <View style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: 20
+            justifyContent: 'center',
         }}>
             <TouchableOpacity 
                 onPress={() => {navigation.pop()}}
@@ -46,47 +43,18 @@ export default function Post({navigation}) {
                     source={require("../../assets/Back.png")}
                     style={{
                         tintColor: 'black',
-                        height: 30,
-                        width: 30,
+                        height: 25,
+                        width: 25,
                         resizeMode: 'contain',
                     }}
                 />
             </TouchableOpacity>
-            <Text style={videorecipeStyle.Title}> New Recipe </Text>
-            <TouchableOpacity>
-            <Text style={videorecipeStyle.Next}> Next </Text>
-            </TouchableOpacity>
+            <Text> New Recipe </Text>
+            <Text> Next </Text>
         </View>
-        <View>
-            <Image
-                source={require("../../assets/BestSpaghettiInItaly.png")}
-                style={{
-                    marginTop: 20,
-                    borderRadius: 35,
-                }}
-            />
-        </View>
-            <TextInput
-                textContentType="firstname"
-                placeholder=""
-                autoCorrect={false}
-                onChangeText={text => onFirstNameChange(text)}
-                value={RecipeName}
-                style={videorecipeStyle.textInput}
-                placeholderTextColor={color.gray}
-                onSubmitEditing={() => {                }}
-            />
-        <View>
-
-        </View>
-        <View style={{
-            paddingHorizontal: 60
-        }}>
-            {GoButton('Submit', () => {
-                navigation.push('VideoRecipe');
-            })}
-        </View>
-
+        <Image
+            source={require("../../assets/BestSpaghettiInItaly.png")}
+        />
       </SafeAreaView>
     );
   }

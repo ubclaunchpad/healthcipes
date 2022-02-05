@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
 import videorecipeStyle from './videorecipeStyle';
-import color from '../../styles/color';
 
 export default function Post({navigation}) {
   const dispatch = useDispatch();
@@ -37,7 +36,6 @@ export default function Post({navigation}) {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: 20
         }}>
             <TouchableOpacity 
                 onPress={() => {navigation.pop()}}
@@ -56,37 +54,17 @@ export default function Post({navigation}) {
             <TouchableOpacity>
             <Text style={videorecipeStyle.Next}> Next </Text>
             </TouchableOpacity>
+            
         </View>
         <View>
             <Image
                 source={require("../../assets/BestSpaghettiInItaly.png")}
-                style={{
-                    marginTop: 20,
-                    borderRadius: 35,
-                }}
             />
         </View>
-            <TextInput
-                textContentType="firstname"
-                placeholder=""
-                autoCorrect={false}
-                onChangeText={text => onFirstNameChange(text)}
-                value={RecipeName}
-                style={videorecipeStyle.textInput}
-                placeholderTextColor={color.gray}
-                onSubmitEditing={() => {                }}
-            />
         <View>
 
         </View>
-        <View style={{
-            paddingHorizontal: 60
-        }}>
-            {GoButton('Submit', () => {
-                navigation.push('VideoRecipe');
-            })}
-        </View>
-
+        
       </SafeAreaView>
     );
   }

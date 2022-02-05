@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
 import videorecipeStyle from './videorecipeStyle';
-import color from '../../styles/color';
 
 export default function Post({navigation}) {
   const dispatch = useDispatch();
@@ -66,21 +65,11 @@ export default function Post({navigation}) {
                 }}
             />
         </View>
-            <TextInput
-                textContentType="firstname"
-                placeholder=""
-                autoCorrect={false}
-                onChangeText={text => onFirstNameChange(text)}
-                value={RecipeName}
-                style={videorecipeStyle.textInput}
-                placeholderTextColor={color.gray}
-                onSubmitEditing={() => {                }}
-            />
         <View>
 
         </View>
         <View style={{
-            paddingHorizontal: 60
+            paddingHorizontal: 20
         }}>
             {GoButton('Submit', () => {
                 navigation.push('VideoRecipe');

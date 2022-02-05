@@ -72,7 +72,7 @@ export default function Post({navigation}) {
                 autoCorrect={false}
                 onChangeText={text => onFirstNameChange(text)}
                 value={RecipeName}
-                style={videorecipeStyle.textInput}
+                style={{}}
                 placeholderTextColor={color.gray}
                 onSubmitEditing={() => {                }}
             />

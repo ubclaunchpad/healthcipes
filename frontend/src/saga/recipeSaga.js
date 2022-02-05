@@ -10,7 +10,49 @@ import {
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
+  POST_RECIPE,
 } from '../actions/recipeActions';
+
+function* postRecipeCall(param) {
+  try {
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/recipe`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        recipe: {
+          recipe_id: '',
+          name: 'testRecipeId',
+          recipe_description:
+            'A delicious vegan tofu scramble to beat the Mondays',
+          user_id: 'testID',
+          creator_username: 'VeganDaddy',
+          protein: 1,
+          carbs: 2,
+          fat: 2,
+          fiber: 2,
+          calories: 3,
+          servings: 4,
+          vegetarian: true,
+          vegan: false,
+          cooking_time: 10,
+        },
+        steps: [],
+        ingredients: [],
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: POST RECIPE API:');
+
+    console.log(results);
+  } catch (e) {
+    console.log('Post Recipe Failed: ' + e);
+  }
+}
 
 function* getRecipeCall(param) {
   try {
@@ -102,6 +144,10 @@ function* postRecipeViewCall(data) {
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }
+}
+
+export function* postRecipe() {
+  yield takeLatest(POST_RECIPE, postRecipeCall);
 }
 
 export function* getRecipe() {

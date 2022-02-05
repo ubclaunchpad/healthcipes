@@ -117,7 +117,11 @@ export default function TabsUI({tabs}) {
 
   return (
     <View
-      {...{height: NAVIGATION_BOTTOM_TABS_HEIGHT, width: wWidth, bottom: 0}}
+      {...{
+        height: NAVIGATION_BOTTOM_TABS_HEIGHT,
+        width: wWidth,
+        bottom: 0,
+      }}
       position="absolute"
       backgroundColor="transparent">
       <Svg width={wWidth} {...{height: NAVIGATION_BOTTOM_TABS_HEIGHT}}>

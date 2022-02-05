@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   TextInput,
@@ -22,16 +22,34 @@ export default function Post({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
+  const [RecipeName, SetRecipeName] = useState('')
+  const [URL, SetURL] = useState('')
+  const [Description, SetDescription] = useState('')
+
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
       <SafeAreaView style={{flex: 1}}>
-        <View>
-              {GoButton('Import Video Recipe', () => {
-                navigation.push('VideoRecipe');
-              })}
+        <View style={{
+            flexDirection: 'row'
+        }}>
+            <TouchableOpacity 
+                onPress={() => {navigation.pop()}}
+            > 
+                <Image
+                    source={require("../../assets/Back.png")}
+                    style={{
+                        tintColor: 'black'
+                    }}
+                />
+            </TouchableOpacity>
+            <Text> New Recipe </Text>
+            <Text> Next </Text>
         </View>
+        <Image
+            source={require("../../assets/BestSpaghettiInItaly.png")}
+        />
       </SafeAreaView>
     );
   }

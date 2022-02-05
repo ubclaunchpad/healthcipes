@@ -63,8 +63,6 @@ export default function Post({navigation}) {
                 style={{
                     marginTop: 20,
                     borderRadius: 35,
-                    height: 300,
-                    width: "100%",
                 }}
             />
         </View>

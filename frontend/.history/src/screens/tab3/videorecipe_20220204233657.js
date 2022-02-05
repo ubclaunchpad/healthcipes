@@ -63,26 +63,20 @@ export default function Post({navigation}) {
                 style={{
                     marginTop: 20,
                     borderRadius: 35,
-                    height: 300,
-                    width: "100%",
                 }}
             />
         </View>
-        <View style={{
-            marginTop: 20,
-        }}>
-            <View style={videorecipeStyle.textBox}>
-                <TextInput
-                        textContentType="firstname"
-                        placeholder="Recipe Name"
-                        autoCorrect={false}
-                        onChangeText={text => SetRecipeName(text)}
-                        value={RecipeName}
-                        style={videorecipeStyle.textInput}
-                        placeholderTextColor={color.gray}
-                />
-            </View>
-            
+            <TextInput
+                textContentType="firstname"
+                placeholder=""
+                autoCorrect={false}
+                onChangeText={text => SetRecipeName(text)}
+                value={RecipeName}
+                style={videorecipeStyle.textInput}
+                placeholderTextColor={color.gray}
+            />
+        <View>
+
         </View>
         <View style={{
             paddingHorizontal: 60

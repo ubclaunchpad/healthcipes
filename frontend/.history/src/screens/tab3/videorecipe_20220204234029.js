@@ -63,8 +63,6 @@ export default function Post({navigation}) {
                 style={{
                     marginTop: 20,
                     borderRadius: 35,
-                    height: 300,
-                    width: "100%",
                 }}
             />
         </View>
@@ -74,7 +72,7 @@ export default function Post({navigation}) {
             <View style={videorecipeStyle.textBox}>
                 <TextInput
                         textContentType="firstname"
-                        placeholder="Recipe Name"
+                        placeholder="First Name"
                         autoCorrect={false}
                         onChangeText={text => SetRecipeName(text)}
                         value={RecipeName}

@@ -65,6 +65,7 @@ export default function Post({navigation}) {
                     borderRadius: 35,
                     height: 300,
                     width: "100%",
+                    resizeMode: 'contain',
                 }}
             />
         </View>

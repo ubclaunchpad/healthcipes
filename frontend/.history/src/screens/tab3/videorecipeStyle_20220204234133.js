@@ -23,7 +23,6 @@ export default StyleSheet.create({
         borderColor: color.textGray,
         borderRadius: 35,
         paddingHorizontal: 18,
-        paddingVertical: 16
     }
 
 })

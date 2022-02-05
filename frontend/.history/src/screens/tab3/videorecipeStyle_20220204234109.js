@@ -19,11 +19,11 @@ export default StyleSheet.create({
         borderColor: color.gray,
       },
     textBox: {
+        backgroundColor: 'beige',
         borderWidth: 1,
         borderColor: color.textGray,
         borderRadius: 35,
-        paddingHorizontal: 18,
-        paddingVertical: 16
+        padding: 20,
     }
 
 })

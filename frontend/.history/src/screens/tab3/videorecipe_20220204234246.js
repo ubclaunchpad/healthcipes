@@ -63,7 +63,7 @@ export default function Post({navigation}) {
                 style={{
                     marginTop: 20,
                     borderRadius: 35,
-                    height: 300,
+                    height: 500,
                     width: "100%",
                 }}
             />

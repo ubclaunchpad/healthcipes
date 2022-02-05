@@ -15,15 +15,14 @@ export default StyleSheet.create({
         color: color.lightGey,
     },
     textInput: {
-        height: 16,
+        height: 12,
+        borderBottomWidth: 1,
         borderColor: color.gray,
       },
     textBox: {
-        borderWidth: 1,
+        backgroundColor: 'beige',
+        borderBottomWidth: 1,
         borderColor: color.textGray,
-        borderRadius: 35,
-        paddingHorizontal: 18,
-        paddingVertical: 16
     }
 
 })

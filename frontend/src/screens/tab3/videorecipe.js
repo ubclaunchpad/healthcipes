@@ -28,6 +28,7 @@ export default function Post({navigation}) {
   const [RecipeName, SetRecipeName] = useState('')
   const [URL, SetURL] = useState('')
   const [Description, SetDescription] = useState('')
+  const [profPic, setProfPic] = useState('');
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -90,7 +91,7 @@ export default function Post({navigation}) {
                     <View style={videorecipeStyle.textBox}>
                         <TextInput
                                 textContentType="firstname"
-                                placeholder="URL"
+                                placeholder="Video URL"
                                 autoCorrect={false}
                                 onChangeText={text => SetURL(text)}
                                 value={URL}

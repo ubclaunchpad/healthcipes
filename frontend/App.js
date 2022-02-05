@@ -14,7 +14,9 @@ import AboutYou from './src/screens/onboarding/about-you';
 import Feed from './src/screens/tab1/feed';
 import Pantry from './src/screens/tab2/pantry';
 import Post from './src/screens/tab3/post';
+import NewRecipe from './src/screens/tab3/newrecipe'
 import VideoRecipe from './src/screens/tab3/videorecipe'
+import WebRecipe from './src/screens/tab3/webrecipe'
 import Notification from './src/screens/tab4/notification';
 import Profile from './src/screens/tab5/profile';
 import Diet from './src/screens/onboarding/diet';
@@ -63,7 +65,9 @@ function CreateScreen() {
         headerShown: false,
       }}>
       <CreateStack.Screen name="Create" component={Post} />
+      <CreateStack.Screen name="NewRecipe" component={NewRecipe} />
       <CreateStack.Screen name="VideoRecipe" component={VideoRecipe} />
+      <CreateStack.Screen name="WebRecipe" component={WebRecipe} />
     </CreateStack.Navigator>
   );
 }

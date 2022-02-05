@@ -54,9 +54,6 @@ async def create_user(user: dict = defaultUser):
 
 @router.post("/token")
 async def create_token(token, userID: str = ""):
-    print("HERE")
-    # upsert method
-    print("hitting token route")
     try:
         conn , cursor = init_conn()
         res = upsert_user_notification_token(conn, cursor, userID, token)

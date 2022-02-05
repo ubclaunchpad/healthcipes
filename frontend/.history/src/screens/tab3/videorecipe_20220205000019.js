@@ -35,7 +35,6 @@ export default function Post({navigation}) {
     return (
       <SafeAreaView style={{flex: 1, marginHorizontal: '5%'}}>
         <FlatList 
-            showsVerticalScrollIndicator={false}
             ListHeaderComponent={
             <View>
                 <View style={{
@@ -115,7 +114,7 @@ export default function Post({navigation}) {
                 <View style={{
                     paddingHorizontal: 60,
                     marginTop: 20,
-                    marginBottom: 100,
+                    marginBottom: 200,
                 }}>
                     {GoButton('Submit', () => {
                         navigation.push('VideoRecipe');

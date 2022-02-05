@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
 
-export default function Post({navigation}) {
+export default function webrecipe({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
 
@@ -28,19 +28,7 @@ export default function Post({navigation}) {
     return (
       <SafeAreaView style={{flex: 1}}>
         <View>
-              {GoButton('NewRecipe', () => {
-                navigation.push('NewRecipe');
-              })}
-        </View>
-        <View>
-              {GoButton('New Video Recipe', () => {
-                navigation.push('VideoRecipe');
-              })}
-        </View>
-        <View>
-              {GoButton('Import Web Recipe', () => {
-                navigation.push('WebRecipe');
-              })}
+             <Text> New Recipe </Text>
         </View>
       </SafeAreaView>
     );

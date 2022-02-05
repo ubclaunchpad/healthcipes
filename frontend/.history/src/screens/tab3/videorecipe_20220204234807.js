@@ -95,21 +95,18 @@ export default function Post({navigation}) {
             </View>
             <View style={[videorecipeStyle.textBox, videorecipeStyle.description]}>
                 <TextInput
-                    textContentType="firstname"
-                    placeholder="Description"
-                    autoCorrect={false}
-                    multiline={true}
-                    numberOfLines={10}
-                    onChangeText={text => SetDescription(text)}
-                    value={Description}
-                    style={[videorecipeStyle.textInput, videorecipeStyle.descriptionText]}
-                    placeholderTextColor={color.gray}
-            />
+                        textContentType="firstname"
+                        placeholder="Description"
+                        autoCorrect={false}
+                        onChangeText={text => SetDescription(text)}
+                        value={Description}
+                        style={videorecipeStyle.textInput}
+                        placeholderTextColor={color.gray}
+                />
             </View>
         </View>
         <View style={{
-            paddingHorizontal: 60,
-            marginTop: 20,
+            paddingHorizontal: 60
         }}>
             {GoButton('Submit', () => {
                 navigation.push('VideoRecipe');

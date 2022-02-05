@@ -26,16 +26,10 @@ export default StyleSheet.create({
     textInput: {
         height: 16,
         borderColor: color.gray,
-        paddingTop: 0,
-        paddingBottom: 0,
+        textAlignVertical: 'top'
       },
     description: {
-        borderRadius: 25,
-    },
-    descriptionText: {
-        paddingTop: 0,
-        paddingBottom: 0,
-        height: 150,
+        paddingVertical:  100,
     }
 
 })

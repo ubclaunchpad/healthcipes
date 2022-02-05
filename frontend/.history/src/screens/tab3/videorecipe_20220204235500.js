@@ -108,8 +108,7 @@ export default function Post({navigation}) {
             </View>
         </View>
         <View style={{
-            paddingHorizontal: 60,
-            marginTop: 20,
+            paddingHorizontal: 60
         }}>
             {GoButton('Submit', () => {
                 navigation.push('VideoRecipe');

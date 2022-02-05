@@ -30,12 +30,11 @@ export default StyleSheet.create({
         paddingBottom: 0,
       },
     description: {
-        borderRadius: 25,
     },
     descriptionText: {
         paddingTop: 0,
         paddingBottom: 0,
-        height: 150,
+        height: 100,
     }
 
 })

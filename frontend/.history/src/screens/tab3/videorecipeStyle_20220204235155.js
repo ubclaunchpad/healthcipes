@@ -27,15 +27,10 @@ export default StyleSheet.create({
         height: 16,
         borderColor: color.gray,
         paddingTop: 0,
-        paddingBottom: 0,
+        backgroundColor: 'beige',
       },
     description: {
-        borderRadius: 25,
-    },
-    descriptionText: {
-        paddingTop: 0,
-        paddingBottom: 0,
-        height: 150,
+        paddingVertical:  100,
     }
 
 })

@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native'
 import { blue100 } from 'react-native-paper/lib/typescript/styles/colors';
-import { startDetecting } from 'react-native/Libraries/Utilities/PixelRatio';
 import color from '../../styles/color';
 
 export default StyleSheet.create({
@@ -26,16 +25,10 @@ export default StyleSheet.create({
     textInput: {
         height: 16,
         borderColor: color.gray,
-        paddingTop: 0,
-        paddingBottom: 0,
+        textAlign: top,
       },
     description: {
-        borderRadius: 25,
-    },
-    descriptionText: {
-        paddingTop: 0,
-        paddingBottom: 0,
-        height: 150,
+        paddingVertical:  100,
     }
 
 })

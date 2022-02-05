@@ -99,7 +99,7 @@ export default function Post({navigation}) {
                     placeholder="Description"
                     autoCorrect={false}
                     multiline={true}
-                    numberOfLines={10}
+                    numberOfLines={10},
                     onChangeText={text => SetDescription(text)}
                     value={Description}
                     style={[videorecipeStyle.textInput, videorecipeStyle.descriptionText]}
@@ -108,8 +108,7 @@ export default function Post({navigation}) {
             </View>
         </View>
         <View style={{
-            paddingHorizontal: 60,
-            marginTop: 20,
+            paddingHorizontal: 60
         }}>
             {GoButton('Submit', () => {
                 navigation.push('VideoRecipe');

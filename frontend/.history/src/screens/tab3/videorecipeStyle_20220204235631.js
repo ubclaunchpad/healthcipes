@@ -35,7 +35,7 @@ export default StyleSheet.create({
     descriptionText: {
         paddingTop: 0,
         paddingBottom: 0,
-        height: 150,
+        height: 100,
     }
 
 })

@@ -76,7 +76,7 @@ export default function Post({navigation}) {
                         textContentType="firstname"
                         placeholder="Recipe Name"
                         autoCorrect={false}
-                        onChangeText={text => SetRecipeName(text)}
+                        onChangeText={text => SetURL(text)}
                         value={RecipeName}
                         style={videorecipeStyle.textInput}
                         placeholderTextColor={color.gray}
@@ -85,31 +85,17 @@ export default function Post({navigation}) {
             <View style={videorecipeStyle.textBox}>
                 <TextInput
                         textContentType="firstname"
-                        placeholder="URL"
+                        placeholder="url"
                         autoCorrect={false}
-                        onChangeText={text => SetURL(text)}
-                        value={URL}
+                        onChangeText={text => SetRecipeName(text)}
+                        value={RecipeName}
                         style={videorecipeStyle.textInput}
                         placeholderTextColor={color.gray}
                 />
             </View>
-            <View style={[videorecipeStyle.textBox, videorecipeStyle.description]}>
-                <TextInput
-                    textContentType="firstname"
-                    placeholder="Description"
-                    autoCorrect={false}
-                    multiline={true}
-                    numberOfLines={10}
-                    onChangeText={text => SetDescription(text)}
-                    value={Description}
-                    style={[videorecipeStyle.textInput, videorecipeStyle.descriptionText]}
-                    placeholderTextColor={color.gray}
-            />
-            </View>
         </View>
         <View style={{
-            paddingHorizontal: 60,
-            marginTop: 20,
+            paddingHorizontal: 60
         }}>
             {GoButton('Submit', () => {
                 navigation.push('VideoRecipe');

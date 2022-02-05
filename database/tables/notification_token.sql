@@ -15,7 +15,7 @@ CREATE TABLE `notification_token_table` (
 
     `notification_token_id` INT NOT NULL AUTO_INCREMENT,
     `notification_token` VARCHAR(255) NOT NULL,
-    `user_id` VARCHAR(50) NOT NULL,
+    `user_id` VARCHAR(50) NOT NULL UNIQUE,
     `created_at` DATETIME NOT NULL,
     `updated_at` DATETIME NOT NULL,
 

@@ -55,6 +55,8 @@ export default function Feed({navigation}) {
       await messaging()
         .getToken()
         .then(token => {
+          // TODO: send token to server
+          // TODO: POST /user/token
           console.log(token);
         })
         .catch(error => {
@@ -102,7 +104,8 @@ export default function Feed({navigation}) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                }}>
+                }}
+              >
                 <TouchableOpacity
                   style={{
                     backgroundColor: color.lightGray,
@@ -115,7 +118,8 @@ export default function Feed({navigation}) {
                   }}
                   onPress={() => {
                     navigation.push('Search');
-                  }}>
+                  }}
+                >
                   <Image
                     source={require('../../assets/Search.png')}
                     style={{
@@ -128,7 +132,8 @@ export default function Feed({navigation}) {
                 <TouchableOpacity
                   onPress={() => {
                     bottomSheetRef.current.snapToIndex(0);
-                  }}>
+                  }}
+                >
                   <Image
                     source={require('../../assets/Filter.png')}
                     style={{
@@ -158,7 +163,8 @@ export default function Feed({navigation}) {
                           height: 250,
                           borderRadius: 20,
                           marginRight: 10,
-                        }}>
+                        }}
+                      >
                         <ImageBackground
                           source={{uri: item.header_image}}
                           resizeMode="cover"
@@ -167,7 +173,8 @@ export default function Feed({navigation}) {
                             width: '100%',
                             height: '100%',
                             justifyContent: 'flex-end',
-                          }}>
+                          }}
+                        >
                           <View
                             style={{
                               backgroundColor: 'rgba(0,0,0,0.5)',
@@ -176,13 +183,15 @@ export default function Feed({navigation}) {
                               paddingVertical: 10,
                               borderBottomRightRadius: 20,
                               borderBottomLeftRadius: 20,
-                            }}>
+                            }}
+                          >
                             <Text
                               style={{
                                 color: color.white,
                                 fontWeight: 'bold',
                                 fontSize: 16,
-                              }}>
+                              }}
+                            >
                               {item.name}
                             </Text>
                           </View>
@@ -215,7 +224,8 @@ export default function Feed({navigation}) {
                   marginBottom: 10,
                   marginLeft: index % 2 === 0 ? '5%' : 0,
                   marginRight: index % 2 === 0 ? 0 : '5%',
-                }}>
+                }}
+              >
                 <ImageBackground
                   source={{uri: item.header_image}}
                   resizeMode="cover"
@@ -224,7 +234,8 @@ export default function Feed({navigation}) {
                     width: '100%',
                     height: '100%',
                     justifyContent: 'flex-end',
-                  }}>
+                  }}
+                >
                   <View
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.5)',
@@ -233,13 +244,15 @@ export default function Feed({navigation}) {
                       paddingVertical: 10,
                       borderBottomRightRadius: 20,
                       borderBottomLeftRadius: 20,
-                    }}>
+                    }}
+                  >
                     <Text
                       style={{
                         color: color.white,
                         fontWeight: 'bold',
                         fontSize: 16,
-                      }}>
+                      }}
+                    >
                       {item.name}
                     </Text>
                   </View>
@@ -253,7 +266,8 @@ export default function Feed({navigation}) {
           ref={bottomSheetRef}
           enablePanDownToClose={true}
           index={-1}
-          snapPoints={snapPoints}>
+          snapPoints={snapPoints}
+        >
           <View style={{flex: 1, paddingHorizontal: '7%'}}>
             <Text style={feedStyle.filterTitle}>Refine Results</Text>
             {FilterChips()}

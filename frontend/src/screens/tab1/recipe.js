@@ -13,8 +13,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
-import recipeStyle from './recipeStyle';
-import { set_open, set_step } from '../../actions/accordionActions';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
@@ -40,9 +38,10 @@ export default function Recipe({navigation, route}) {
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
 
-
-  const open = useSelector(state => state.accordionReducer.accordionReducer); 
-  const stepIndex = useSelector(state => state.accordionStepReducer.accordionStepReducer);
+  const open = useSelector(state => state.accordionReducer.accordionReducer);
+  const stepIndex = useSelector(
+    state => state.accordionStepReducer.accordionStepReducer,
+  );
 
   function checkLike(ID) {
     const apiConfig = {
@@ -317,11 +316,12 @@ export default function Recipe({navigation, route}) {
                 borderWidth: 1,
                 borderRadius: 20,
                 marginBottom: 20,
-                backgroundColor: open && stepIndex == item.step_id ? 'white' : color.appPrimary,
+                backgroundColor:
+                  open && stepIndex == item.step_id
+                    ? 'white'
+                    : color.appPrimary,
               }}>
-              <AccordionItem 
-              title={`Step ${index + 1}`}
-              index={index+1}>
+              <AccordionItem title={`Step ${index + 1}`} index={index + 1}>
                 <Text>{item.description}</Text>
               </AccordionItem>
             </View>

@@ -28,19 +28,19 @@ export default function Post({navigation}) {
     return (
       <SafeAreaView style={{flex: 1}}>
         <View>
-              {GoButton('NewRecipe', () => {
-                navigation.push('NewRecipe');
-              })}
+          {GoButton('NewRecipe', () => {
+            navigation.push('NewRecipe');
+          })}
         </View>
         <View>
-              {GoButton('New Video Recipe', () => {
-                navigation.push('VideoRecipe');
-              })}
+          {GoButton('New Video Recipe', () => {
+            navigation.push('VideoRecipe');
+          })}
         </View>
         <View>
-              {GoButton('Import Web Recipe', () => {
-                navigation.push('WebRecipe');
-              })}
+          {GoButton('Import Web Recipe', () => {
+            navigation.push('WebRecipe');
+          })}
         </View>
       </SafeAreaView>
     );

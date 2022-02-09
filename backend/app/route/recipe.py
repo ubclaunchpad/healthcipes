@@ -12,6 +12,7 @@ defaultRecipe = {
     "recipe_id": "",
     "name": "testRecipeId",
     "recipe_description": "A delicious vegan tofu scramble to beat the Mondays",
+    "header_image": "",
     # NOTE: need to create default user before default recipe can be made
     "user_id": "testID",
     "creator_username": "VeganDaddy",
@@ -40,6 +41,7 @@ class RecipeDetails(BaseModel):
     recipe_id: int
     name: str
     recipe_description: str
+    header_image: str
     user_id: str
     creator_username: str
     protein: int
@@ -153,8 +155,10 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         if (url != ""):
             recipe, steps, ingredients = scraper(url)
         res = post_recipe(conn, cursor, recipe)
-        _ = post_steps(conn, cursor, steps[0].split("\n"), res[0])
-        _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+        if (len(steps) > 0):
+            _ = post_steps(conn, cursor, steps[0].split("\n"), res[0])
+        if (len(ingredients) > 0):
+            _ = post_ingredients(conn, cursor, ingredients[0], res[0])
         return res, 200
     except Exception as e:
         logging.error(e)

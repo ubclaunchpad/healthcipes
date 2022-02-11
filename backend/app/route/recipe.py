@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
+from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
 from app.scraper.scraper import scraper
 from functools import reduce
 
@@ -159,6 +159,23 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
+
+@router.post("/video")
+def create_recipe(url: str = ""):
+    try:
+        conn, cursor = init_conn()
+        if (url != ""):
+            res = recipe_from_video_url(conn, cursor, url)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
 
 
 @router.get("/scrape")

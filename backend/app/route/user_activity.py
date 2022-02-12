@@ -60,7 +60,7 @@ async def read_user_like_status(userID: str = "", recipeID: int = 0):
         return "Error with {}".format(e), 400
 
 @router.get("/like_count")
-async def read_user_like_status(recipeID: int = 0):
+async def read_user_like_count(recipeID: int = 0):
     try:
         _, cursor = init_conn()
         if recipeID:

@@ -103,6 +103,39 @@ function ProfileScreen() {
 const SignUpLoginStack = createNativeStackNavigator();
 const MasterStack = createNativeStackNavigator();
 
+
+// useEffect so recipe id that is taking in will navigate?
+// parse recipe id into recipe object (look at other examples)
+//    - done in recipe.js wherre it checks if param is id or object, if id then find object
+//    - navigation.push('Recipe', {recipe: item});
+
+const linking = {
+  prefixes: ["umami://"],
+  config: {
+    screens: {
+      MainTabs: {
+        screens: {
+          FeedTab: {
+            path: 'feed',
+            screens: {
+              Recipe: {
+                path: 'recipe/:recipe_id?',
+                parse: {
+                  id: (id) => `${id}`
+                }
+            }
+          }
+          },
+          PantryTab: 'pantry',
+          CreateTab: 'create',
+          NotificationTab: 'noti',
+          ProfileTab: 'profile',
+        }
+      }
+    }
+  }
+}
+
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
@@ -190,7 +223,7 @@ export default function App() {
     );
   }
   return (
-    <NavigationContainer ref={navigation}>
+    <NavigationContainer ref={navigation} linking={linking}>
       <MasterStack.Navigator
         initialRouteName="MainTabs"
         screenOptions={{

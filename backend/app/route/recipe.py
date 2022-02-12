@@ -1,3 +1,5 @@
+from datetime import datetime
+from sqlite3 import Timestamp
 from fastapi import APIRouter
 from typing import List, Optional, Union
 from pydantic import BaseModel
@@ -41,9 +43,10 @@ class RecipeDetails(BaseModel):
     recipe_id: int
     name: str
     recipe_description: str
-    header_image: str
+    created_time: Optional[datetime] = None
     user_id: str
     creator_username: str
+    header_image: str
     protein: int
     carbs: int
     fat: int

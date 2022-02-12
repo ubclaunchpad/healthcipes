@@ -239,8 +239,10 @@ def get_recipe_by_id(conn, cursor, recipe_id):
             "recipe_id": recipe_id,
             "name": "",
             "recipe_description": "",
+            "created_time": None,
             "user_id": "",
             "creator_username": "",
+            "header_image": "",
             "protein": 0,
             "carbs": 0,
             "fat": 0,
@@ -257,41 +259,43 @@ def get_recipe_by_id(conn, cursor, recipe_id):
         if len(raw_result):
             res["name"] = raw_result[0][1]
             res["recipe_description"] = raw_result[0][2]
-            res["user_id"] = raw_result[0][3]
-            res["creator_username"] = raw_result[0][4]
-            res["protein"] = raw_result[0][5]
-            res["carbs"] = raw_result[0][6]
-            res["fat"] = raw_result[0][7]
-            res["fiber"] = raw_result[0][8]
-            res["calories"] = raw_result[0][9]
-            res["servings"] = raw_result[0][10]
-            res["vegetarian"] = bool(raw_result[0][11])
-            res["vegan"] = bool(raw_result[0][12])
-            res["cooking_time"] = raw_result[0][13]
+            res["created_time"] = raw_result[0][3]
+            res["user_id"] = raw_result[0][4]
+            res["creator_username"] = raw_result[0][5]
+            res["header_image"] = raw_result[0][6]
+            res["protein"] = raw_result[0][7]
+            res["carbs"] = raw_result[0][8]
+            res["fat"] = raw_result[0][9]
+            res["fiber"] = raw_result[0][10]
+            res["calories"] = raw_result[0][11]
+            res["servings"] = raw_result[0][12]
+            res["vegetarian"] = bool(raw_result[0][13])
+            res["vegan"] = bool(raw_result[0][14])
+            res["cooking_time"] = raw_result[0][15]
 
             step_ids = set()
             ingredient_ids = set()
 
             for result in raw_result:
-                if result[14] not in step_ids:
+                if (result[16]) and (result[16] not in step_ids):
                     res["steps"].append(
                         {
-                            "step_id": result[14],
-                            "description": result[15],
-                            "time": result[16],
+                            "step_id": result[16],
+                            "description": result[17],
+                            "time": result[18],
                         }
                     )
                     step_ids.add(result[14])
 
-                if result[17] not in ingredient_ids:
+                if (result[17]) and (result[17] not in ingredient_ids):
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[17],
-                            "ingredient_name": result[18],
-                            "category": result[19]
+                            "ingredient_id": result[19],
+                            "ingredient_name": result[20],
+                            "category": result[21]
                         }
                     )
-                    ingredient_ids.add(result[17])
+                    ingredient_ids.add(result[19])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])

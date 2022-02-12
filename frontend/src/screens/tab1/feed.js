@@ -59,8 +59,6 @@ export default function Feed({navigation}) {
       await messaging()
         .getToken()
         .then(token => {
-          // TODO: send token to server
-          // TODO: POST /user/token
           dispatch({
             type: POST_USER_TOKEN,
             payload: {

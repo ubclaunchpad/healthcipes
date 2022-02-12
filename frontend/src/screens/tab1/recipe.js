@@ -60,7 +60,17 @@ export default function Recipe({navigation, route}) {
 
     axios(apiConfig)
       .then(function (response) {
+        if (response.data.data.header_image.startsWith('gs://')) {
+          storage()
+            .refFromURL(response.data.data.header_image)
+            .getDownloadURL()
+            .then(res => {
+              response.data.data.header_image = res;
+              setRecipe(response.data.data);
+            });
+        } else {
           setRecipe(response.data.data);
+        }
       })
       .catch(function (error) {
         console.log(error);

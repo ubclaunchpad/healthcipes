@@ -24,7 +24,7 @@ import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
 
 export default function Recipe({navigation, route}) {
-  const {recipe} = route.params;
+  const [recipe, setRecipe] = useState(route.params.recipe);
   const dispatch = useDispatch();
   const [page, setPage] = useState('Info');
   const [image, setImage] = useState(
@@ -37,11 +37,35 @@ export default function Recipe({navigation, route}) {
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
-
+  
   const open = useSelector(state => state.accordionReducer.accordionReducer);
   const stepIndex = useSelector(
     state => state.accordionStepReducer.accordionStepReducer,
   );
+
+  useEffect(() => {
+    if(route.params.recipe_id) {
+      getRecipeFromID(parseInt(route.params.recipe_id));
+    }
+  }, []);
+
+  function getRecipeFromID(ID) {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/recipe/${ID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig)
+      .then(function (response) {
+          setRecipe(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   function checkLike(ID) {
     const apiConfig = {
@@ -106,6 +130,7 @@ export default function Recipe({navigation, route}) {
   }
 
   useEffect(() => {
+    if(recipe) {
     storage()
       .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
       .getDownloadURL()
@@ -115,9 +140,11 @@ export default function Recipe({navigation, route}) {
       .catch(e => {
         console.log('No User Image: ' + e);
       });
+    }
   }, [recipe]);
 
   useEffect(() => {
+    if(recipe) {
     dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
     dispatch({
       type: POST_RECIPE_VIEW,
@@ -125,6 +152,7 @@ export default function Recipe({navigation, route}) {
       recipe_id: recipe.recipe_id,
     });
     checkLike(recipe.recipe_id);
+  }
   }, [dispatch, recipe]);
 
   useEffect(() => {
@@ -330,7 +358,9 @@ export default function Recipe({navigation, route}) {
       />
     );
   }
-
+  if(!recipe) {
+    return null;
+  }
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ImageBackground

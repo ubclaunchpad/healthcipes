@@ -6,6 +6,7 @@ import {
   POST_USER,
   PUT_USER,
   USER_INFO,
+  POST_USER_TOKEN,
 } from '../actions/accountActions';
 
 function* signUpCall(param) {
@@ -115,6 +116,24 @@ function* getUserCall(param) {
   }
 }
 
+function* registerUserTokenCall(param) {
+  try {
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/user/token?userID=${param.payload.userID}&token=${param.payload.token}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    console.log('[INFO]: POST USER TOKEN API:');
+    yield call(axios, apiConfig);
+  } catch (e) {
+    console.log(e);
+    console.log('User token registeration failed');
+  }
+}
+
 export function* signUp() {
   yield takeLatest(POST_USER, signUpCall);
 }
@@ -125,4 +144,8 @@ export function* getUser() {
 
 export function* updateUser() {
   yield takeLatest(PUT_USER, updateUserCall);
+}
+
+export function* registerUserToken() {
+  yield takeLatest(POST_USER_TOKEN, registerUserTokenCall);
 }

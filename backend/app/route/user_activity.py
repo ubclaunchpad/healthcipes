@@ -74,7 +74,7 @@ async def read_user_like_count(recipeID: int = 0):
         return "Error with {}".format(e), 400
 
 @router.delete("/like")
-async def read_user_like_status(userID: str = "", recipeID: int = 0):
+async def user_like_delete(userID: str = "", recipeID: int = 0):
     try:
         conn, cursor = init_conn()
         if userID:

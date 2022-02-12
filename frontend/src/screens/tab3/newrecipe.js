@@ -6,21 +6,30 @@ import {
   TouchableOpacity,
   View,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {useDispatch} from 'react-redux';
+import storage from '@react-native-firebase/storage';
+import {useDispatch, useSelector} from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
 import GoButton from '../../components/goButton';
 import {POST_RECIPE} from '../../actions/recipeActions';
 import NutritionChips from '../../components/nutritionChips';
+import newrecipeStyle from './newrecipeStyle';
 
 export default function NewRecipe({navigation}) {
   const dispatch = useDispatch();
+  const user = useSelector(state => state.accountReducer.userInfoReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
+  const [recipeImage, setRecipeImage] = useState('');
   const [steps, setSteps] = useState(['NEW']);
+  const [servings, setServings] = useState(0);
+  const [prepTime, setPrepTime] = useState(0);
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
@@ -30,6 +39,9 @@ export default function NewRecipe({navigation}) {
     return (
       <TouchableOpacity
         onLongPress={drag}
+        onPress={() => {
+          navigation.push('NewStep', {index});
+        }}
         disabled={isActive}
         style={[
           {
@@ -51,63 +63,27 @@ export default function NewRecipe({navigation}) {
         />
         {index % 2 === 0 ? (
           <View style={{alignItems: 'center', marginBottom: '120%'}}>
-            <View
-              style={{
-                backgroundColor: color.gray,
-                width: 150,
-                height: 150,
-                borderRadius: 20,
-                justifyContent: 'flex-end',
-                alignItems: 'flex-end',
-                zIndex: 2,
-              }}>
+            <View style={newrecipeStyle.StepImageContainer}>
               <Image
                 source={require('../../assets/EditStep.png')}
-                style={{
-                  height: 20,
-                  width: 20,
-                  resizeMode: 'contain',
-                  margin: 10,
-                }}
+                style={newrecipeStyle.EditStepIcon}
               />
             </View>
             <Image
               source={require('../../assets/DashLine.png')}
-              style={{
-                height: 100,
-                width: 3,
-                resizeMode: 'cover',
-              }}
+              style={newrecipeStyle.StepDashLine}
             />
           </View>
         ) : (
           <View style={{alignItems: 'center', marginTop: '120%'}}>
             <Image
               source={require('../../assets/DashLine.png')}
-              style={{
-                height: 100,
-                width: 3,
-                resizeMode: 'cover',
-              }}
+              style={newrecipeStyle.StepDashLine}
             />
-            <View
-              style={{
-                backgroundColor: color.gray,
-                width: 150,
-                height: 150,
-                borderRadius: 20,
-                justifyContent: 'flex-end',
-                alignItems: 'flex-end',
-                zIndex: 2,
-              }}>
+            <View style={newrecipeStyle.StepImageContainer}>
               <Image
                 source={require('../../assets/EditStep.png')}
-                style={{
-                  height: 20,
-                  width: 20,
-                  resizeMode: 'contain',
-                  margin: 10,
-                }}
+                style={newrecipeStyle.EditStepIcon}
               />
             </View>
           </View>
@@ -125,12 +101,58 @@ export default function NewRecipe({navigation}) {
   };
 
   function save() {
-    const recipeObj = {
-      name: recipeName,
-      image: '',
-      description: recipeDescription,
-    };
-    dispatch({type: POST_RECIPE, recipe: recipeObj});
+    if (recipeName !== '') {
+      if (recipeImage !== '') {
+        const uploadUri =
+          Platform.OS === 'ios'
+            ? recipeImage.uri.replace('file://', '')
+            : recipeImage.uri;
+
+        const storageRef = storage()
+          .ref()
+          .child('Recipes')
+          .child(`${recipeName}_${auth().currentUser.uid}.jpeg`);
+
+        storageRef
+          .putFile(uploadUri, {
+            customMetadata: {
+              Owner: auth().currentUser.uid,
+            },
+          })
+          .then(() => {
+            console.log('Uploaded');
+            const recipeObj = {
+              recipe_id: '',
+              name: recipeName,
+              recipe_description: recipeDescription,
+              header_image: storageRef.toString(),
+              user_id: auth().currentUser.uid,
+              creator_username: user.username,
+              protein: 0,
+              carbs: 0,
+              fat: 0,
+              fiber: 0,
+              calories: 0,
+              servings: servings,
+              vegetarian: false,
+              vegan: false,
+              cooking_time: prepTime,
+            };
+            const finalSteps = [];
+            const ingredients = [];
+            dispatch({
+              type: POST_RECIPE,
+              recipeObj: recipeObj,
+              steps: finalSteps,
+              ingredients: ingredients,
+            });
+          });
+      } else {
+        console.log('Image Cannot Be Empty');
+      }
+    } else {
+      console.log('Recipe Name Cannot Be Empty');
+    }
   }
 
   return (
@@ -159,7 +181,7 @@ export default function NewRecipe({navigation}) {
         containerStyle={{flex: 18}}
         style={{height: '100%'}}
         showsHorizontalScrollIndicator={false}
-        ListFooterComponent={() => (
+        ListFooterComponent={
           <View style={{flexDirection: 'row', height: '100%'}}>
             <TouchableOpacity
               onPress={() => {
@@ -193,15 +215,16 @@ export default function NewRecipe({navigation}) {
                 }}
               />
             </TouchableOpacity>
-            <View
-              style={[
-                {
-                  width: 400,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                },
-              ]}>
+            <KeyboardAvoidingView
+              behavior={'position'}
+              keyboardVerticalOffset={30}
+              contentContainerStyle={{
+                height: '100%',
+                width: 400,
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}>
               <TouchableOpacity
                 style={{
                   flex: 2,
@@ -211,19 +234,44 @@ export default function NewRecipe({navigation}) {
                   borderRadius: 20,
                   justifyContent: 'flex-end',
                   alignItems: 'flex-end',
+                  padding: recipeImage !== '' ? 0 : 20,
+                }}
+                onPress={() => {
+                  launchImageLibrary({
+                    selectionLimit: 1,
+                    mediaType: 'photo',
+                    includeBase64: false,
+                  }).then(res => {
+                    setRecipeImage({uri: res?.assets[0].uri});
+                  });
                 }}>
                 <Image
-                  source={require('../../assets/EditStep.png')}
+                  source={
+                    recipeImage !== ''
+                      ? recipeImage
+                      : require('../../assets/Logo.png')
+                  }
                   style={{
-                    height: 20,
-                    width: 20,
-                    resizeMode: 'contain',
-                    margin: 10,
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 20,
+                    resizeMode: recipeImage !== '' ? 'cover' : 'contain',
                   }}
                 />
+                <Image
+                  source={require('../../assets/EditStep.png')}
+                  style={[
+                    newrecipeStyle.EditStepIcon,
+                    {
+                      position: 'absolute',
+                      bottom: 10,
+                      right: 10,
+                    },
+                  ]}
+                />
               </TouchableOpacity>
-              <View style={{flex: 1}}>{NutritionChips({})}</View>
-              <View style={{flex: 1, width: '80%'}}>
+              <View style={{flex: 1.2}}>{NutritionChips({})}</View>
+              <View style={{flex: 1.5, width: '80%'}}>
                 <TextInput
                   style={{
                     paddingHorizontal: '5%',
@@ -233,7 +281,9 @@ export default function NewRecipe({navigation}) {
                     borderColor: color.gray,
                   }}
                   value={recipeDescription}
-                  onChangeText={text => setRecipeDescription(text)}
+                  onChangeText={text => {
+                    setRecipeDescription(text);
+                  }}
                   placeholder="Description"
                   multiline
                 />
@@ -243,57 +293,61 @@ export default function NewRecipe({navigation}) {
                   style={{
                     flex: 1,
                     flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={require('../../assets/ServesIcon.png')}
-                    style={{
-                      height: 24,
-                      width: 24,
-                      resizeMode: 'contain',
-                      margin: 10,
-                    }}
-                  />
-                  <View style={{flexDirection: 'column'}}>
-                    <Text>Serves</Text>
-                    <Text>4</Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
                     justifyContent: 'space-evenly',
                     alignItems: 'center',
                   }}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image
-                      source={require('../../assets/TimeIcon.png')}
-                      style={{
-                        height: 24,
-                        width: 24,
-                        resizeMode: 'contain',
-                        margin: 10,
-                      }}
+                      source={require('../../assets/ServesIcon.png')}
+                      style={newrecipeStyle.InputPromptIcon}
                     />
-                    <View style={{flexDirection: 'column'}}>
-                      <Text>Prep</Text>
-                      <Text>4</Text>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={newrecipeStyle.InputPromptText}>Serves</Text>
+                      <TextInput
+                        style={{
+                          borderBottomWidth: 1,
+                          borderColor: color.gray,
+                          width: 50,
+                          textAlign: 'center',
+                        }}
+                        value={servings}
+                        onChangeText={text => {
+                          setServings(Number(text));
+                        }}
+                        keyboardType="number-pad"
+                        placeholder="1"
+                        returnKeyType="done"
+                      />
                     </View>
                   </View>
-                  <View style={{flexDirection: 'column'}}>
-                    <Text>Cook</Text>
-                    <Text>4</Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image
+                      source={require('../../assets/TimeIcon.png')}
+                      style={newrecipeStyle.InputPromptIcon}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={newrecipeStyle.InputPromptText}>Time</Text>
+                      <Text>{prepTime} Mins</Text>
+                    </View>
                   </View>
                 </View>
               </View>
               <View style={{flex: 0.75, width: '50%'}}>
                 {GoButton('Save', save)}
               </View>
-            </View>
+            </KeyboardAvoidingView>
           </View>
-        )}
+        }
       />
       <View style={{flex: 2}} />
     </SafeAreaView>

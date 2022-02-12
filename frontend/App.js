@@ -25,6 +25,7 @@ import Search from './src/screens/tab1/search';
 import Recipe from './src/screens/tab1/recipe';
 import EditPantry from './src/screens/tab2/editPantry';
 import EditProfile from './src/screens/tab5/editprofile';
+import NewStep from './src/screens/tab3/newStep';
 
 enableScreens();
 
@@ -66,6 +67,7 @@ function CreateScreen() {
       }}>
       <CreateStack.Screen name="Create" component={Post} />
       <CreateStack.Screen name="NewRecipe" component={NewRecipe} />
+      <CreateStack.Screen name="NewStep" component={NewStep} />
       <CreateStack.Screen name="VideoRecipe" component={VideoRecipe} />
       <CreateStack.Screen name="WebRecipe" component={WebRecipe} />
     </CreateStack.Navigator>

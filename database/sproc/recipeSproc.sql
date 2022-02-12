@@ -19,13 +19,12 @@ USE `umami_db`$$
 CREATE PROCEDURE `getRecipe` (IN `_recipe_id` INT)
 BEGIN
 
-SELECT r.recipe_id, r.name, r.recipe_description, r.user_id, r.creator_username,
-r.protein, r.carbs, r.fat, r.fiber, r.calories, r.servings, r.vegetarian, r.vegan, r.cooking_time,
+SELECT r.*,
 rs.step_id, rs.description, rs.time,
 i.ingredient_id, i.ingredient_name, i.category
 FROM `recipes_table` r
-JOIN `recipe_steps_table` rs ON r.recipe_id = rs.recipe_id
-JOIN `ingredients_table` i ON r.recipe_id = i.recipe_id
+LEFT JOIN `recipe_steps_table` rs ON r.recipe_id = rs.recipe_id
+LEFT JOIN `ingredients_table` i ON r.recipe_id = i.recipe_id
 WHERE r.recipe_id = `_recipe_id`
 ;
 

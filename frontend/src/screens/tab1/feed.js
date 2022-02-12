@@ -12,7 +12,11 @@ import {
 import auth from '@react-native-firebase/auth';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
-import {GET_USER, PUT_USER} from '../../actions/accountActions';
+import {
+  GET_USER,
+  PUT_USER,
+  POST_USER_TOKEN,
+} from '../../actions/accountActions';
 import {GET_FEED} from '../../actions/feedActions';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
@@ -38,26 +42,32 @@ export default function Feed({navigation}) {
   const snapPoints = useMemo(() => ['80%'], []);
 
   async function requestUserPermission() {
+    console.log('requesting permission ahh');
     const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const enabled = true;
+    // authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    // authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
-      if (!messaging().isDeviceRegisteredForRemoteMessages) {
-        await messaging()
-          .registerDeviceForRemoteMessages()
-          .catch(error => {
-            console.log(error);
-          });
-      }
+      // if (!messaging().isDeviceRegisteredForRemoteMessages) {
+      //   await messaging()
+      //     .registerDeviceForRemoteMessages()
+      //     .catch(error => {
+      //       console.log(error);
+      //     });
+      // }
+
       await messaging()
         .getToken()
         .then(token => {
-          // TODO: send token to server
-          // TODO: POST /user/token
-          console.log(token);
+          dispatch({
+            type: POST_USER_TOKEN,
+            payload: {
+              userID: auth().currentUser.uid,
+              token: token,
+            },
+          });
+          console.log(`token is ${token}`);
         })
         .catch(error => {
           console.log(error);

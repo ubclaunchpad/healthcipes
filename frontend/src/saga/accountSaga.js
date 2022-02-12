@@ -120,16 +120,16 @@ function* registerUserTokenCall(param) {
   try {
     const apiConfig = {
       method: 'post',
-      url: `${API_URL}/user/token?userID=${param.userID}&token=${param.token}`,
+      url: `${API_URL}/user/token?userID=${param.payload.userID}&token=${param.payload.token}`,
       headers: {
         'Content-Type': 'application/json',
       },
     };
 
     console.log('[INFO]: POST USER TOKEN API:');
-    const response = yield call(axios, apiConfig);
-    yield put({type: POST_USER_TOKEN, payload: token});
+    yield call(axios, apiConfig);
   } catch (e) {
+    console.log(e);
     console.log('User token registeration failed');
   }
 }

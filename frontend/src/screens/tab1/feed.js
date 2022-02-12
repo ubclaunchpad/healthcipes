@@ -42,27 +42,29 @@ export default function Feed({navigation}) {
   const snapPoints = useMemo(() => ['80%'], []);
 
   async function requestUserPermission() {
+    console.log('requesting permission ahh');
     const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const enabled = true;
+    // authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    // authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
-      if (!messaging().isDeviceRegisteredForRemoteMessages) {
-        await messaging()
-          .registerDeviceForRemoteMessages()
-          .catch(error => {
-            console.log(error);
-          });
-      }
+      // if (!messaging().isDeviceRegisteredForRemoteMessages) {
+      //   await messaging()
+      //     .registerDeviceForRemoteMessages()
+      //     .catch(error => {
+      //       console.log(error);
+      //     });
+      // }
+
       await messaging()
         .getToken()
         .then(token => {
           dispatch({
             type: POST_USER_TOKEN,
             payload: {
-              token,
+              userID: auth().currentUser.uid,
+              token: token,
             },
           });
           console.log(`token is ${token}`);

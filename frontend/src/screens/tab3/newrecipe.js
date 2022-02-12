@@ -39,6 +39,9 @@ export default function NewRecipe({navigation}) {
     return (
       <TouchableOpacity
         onLongPress={drag}
+        onPress={() => {
+          navigation.push('NewStep', {index});
+        }}
         disabled={isActive}
         style={[
           {
@@ -231,6 +234,7 @@ export default function NewRecipe({navigation}) {
                   borderRadius: 20,
                   justifyContent: 'flex-end',
                   alignItems: 'flex-end',
+                  padding: recipeImage !== '' ? 0 : 20,
                 }}
                 onPress={() => {
                   launchImageLibrary({

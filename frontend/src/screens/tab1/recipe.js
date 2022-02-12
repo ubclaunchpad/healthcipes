@@ -24,15 +24,7 @@ import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
 
 export default function Recipe({navigation, route}) {
-  // const paramID = route.params.recipe_id ? route.params.recipe_id : 0;
-  // const [recipeObj, setRecipeObj] = useState({});
-  console.log(parseInt(route.params.recipe_id));
-  // console.log("data");
-  // console.log(recipeObj);
-
-  // set recipe to object with param id
-  const {recipe} = route.params;
-  console.log(recipe);
+  const [recipe, setRecipe] = useState(route.params.recipe);
   const dispatch = useDispatch();
   const [page, setPage] = useState('Info');
   const [image, setImage] = useState(
@@ -51,12 +43,7 @@ export default function Recipe({navigation, route}) {
     state => state.accordionStepReducer.accordionStepReducer,
   );
 
-  console.log("recipe:");
-  console.log(recipe);
-
   useEffect(() => {
-    console.log("route params");
-    console.log(route.params);
     if(route.params.recipe_id) {
       getRecipeFromID(parseInt(route.params.recipe_id));
     }
@@ -73,36 +60,12 @@ export default function Recipe({navigation, route}) {
 
     axios(apiConfig)
       .then(function (response) {
-        // if (route.params.recipe_id) {
-          console.log("res data:")
-          console.log(response.data.data);
-          // recipe = response.data.data;
-        // }
+          setRecipe(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   }
-
-  // function* getRecipeCall(ID) {
-  //   try {
-  //     const apiConfig = {
-  //       method: 'get',
-  //       url: `${API_URL}/recipe/${ID}`,
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     };
-  
-  //     const response = yield call(axios, apiConfig);
-  //     const results = response.data;
-  //     console.log('[INFO]: GET RECIPE API:');
-  //     console.log(results);
-  //     yield put({type: RECIPE, payload: results.data});
-  //   } catch (e) {
-  //     console.log('Get Feed Failed: ' + e);
-  //   }
-  // }
 
   function checkLike(ID) {
     const apiConfig = {
@@ -167,6 +130,7 @@ export default function Recipe({navigation, route}) {
   }
 
   useEffect(() => {
+    if(recipe) {
     storage()
       .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
       .getDownloadURL()
@@ -176,9 +140,11 @@ export default function Recipe({navigation, route}) {
       .catch(e => {
         console.log('No User Image: ' + e);
       });
+    }
   }, [recipe]);
 
   useEffect(() => {
+    if(recipe) {
     dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
     dispatch({
       type: POST_RECIPE_VIEW,
@@ -186,6 +152,7 @@ export default function Recipe({navigation, route}) {
       recipe_id: recipe.recipe_id,
     });
     checkLike(recipe.recipe_id);
+  }
   }, [dispatch, recipe]);
 
   useEffect(() => {
@@ -391,7 +358,9 @@ export default function Recipe({navigation, route}) {
       />
     );
   }
-
+  if(!recipe) {
+    return null;
+  }
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ImageBackground

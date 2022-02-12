@@ -12,7 +12,11 @@ import {
 import auth from '@react-native-firebase/auth';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
-import {GET_USER, PUT_USER} from '../../actions/accountActions';
+import {
+  GET_USER,
+  PUT_USER,
+  POST_USER_TOKEN,
+} from '../../actions/accountActions';
 import {GET_FEED} from '../../actions/feedActions';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
@@ -57,7 +61,13 @@ export default function Feed({navigation}) {
         .then(token => {
           // TODO: send token to server
           // TODO: POST /user/token
-          console.log(token);
+          dispatch({
+            type: POST_USER_TOKEN,
+            payload: {
+              token,
+            },
+          });
+          console.log(`token is ${token}`);
         })
         .catch(error => {
           console.log(error);

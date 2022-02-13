@@ -15,6 +15,7 @@ CREATE TABLE `ingredients_table` (
   `instance_id` INT NOT NULL auto_increment,
   `ingredient_id` VARCHAR(255) NOT NULL,
   `recipe_id` INT NOT NULL,
+  `step_id` INT NOT NULL,
   `ingredient_name` VARCHAR(255),
   `category` VARCHAR(50),
   PRIMARY KEY (`instance_id`),
@@ -22,6 +23,8 @@ CREATE TABLE `ingredients_table` (
   REFERENCES `recipes_table`(`recipe_id`),
   CONSTRAINT fk_ingredient_info_id FOREIGN KEY (`ingredient_id`)
   REFERENCES `ingredients_info_table`(`ingredient_id`)
+  CONSTRAINT fk_step_id FOREIGN KEY (`step_id`)
+  REFERENCES `recipe_steps_table`(`step_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 END$$

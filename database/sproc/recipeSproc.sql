@@ -20,8 +20,8 @@ CREATE PROCEDURE `getRecipe` (IN `_recipe_id` INT)
 BEGIN
 
 SELECT r.*,
-rs.step_id, rs.description, rs.time,
-i.ingredient_id, i.ingredient_name, i.category
+rs.*,
+i.ingredient_id, i.ingredient_name, i.category, i.step_id
 FROM `recipes_table` r
 LEFT JOIN `recipe_steps_table` rs ON r.recipe_id = rs.recipe_id
 LEFT JOIN `ingredients_table` i ON r.recipe_id = i.recipe_id
@@ -195,14 +195,14 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockSteps` ()
 BEGIN
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(1, 'crack two eggs into a small bowl', NULL);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(1, 'crack two eggs into a small bowl', NULL, 'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg');
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(1, 'add salt, pepper, and crushed red pepper', NULL);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(1, 'add salt, pepper, and crushed red pepper', NULL, 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg');
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(1, 'cook in small pan on medium heat, stirring occassionally', 5);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(1, 'cook in small pan on medium heat, stirring occassionally', 5, 'gs://umami-2021.appspot.com/Recipes/Fried Chicken.jpeg');
 
 END$$
 
@@ -213,17 +213,17 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockIngredients` ()
 BEGIN
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaaa', 1, '2 eggs', 'Dairy');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaaa', 1, 1, '2 eggs', 'Dairy');
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaab', 1, 'pinch of salt', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaab', 1, 2, 'pinch of salt', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaac', 1, 'pinch of pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaac', 1, 2, 'pinch of pepper', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaad', 1, 'pinch of crushed red pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaad', 1, 2, 'pinch of crushed red pepper', 'Seasoning');
 
 END$$
 

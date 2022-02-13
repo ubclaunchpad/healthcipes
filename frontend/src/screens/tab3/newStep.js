@@ -7,29 +7,77 @@ import {
   View,
   Image,
   ScrollView,
+  Platform,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import {v4 as uuidv4} from 'uuid';
 import {useDispatch, useSelector} from 'react-redux';
-import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
 import {launchImageLibrary} from 'react-native-image-picker';
 import newrecipeStyle from './newrecipeStyle';
+import {REPLACE_RECIPE_STEP} from '../../actions/recipeActions';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
   const dispatch = useDispatch();
-  const onboarded = useSelector(state => state.globalReducer.onboardReducer);
+  const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const [stepImage, setStepImage] = useState('');
   const [step, setStep] = useState('');
   const [time, setTime] = useState(0);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     console.log(index);
   }, [dispatch]);
 
+  function save() {
+    if (stepImage !== '') {
+      const uploadUri =
+        Platform.OS === 'ios'
+          ? stepImage.uri.replace('file://', '')
+          : stepImage.uri;
+
+      const storageRef = storage()
+        .ref()
+        .child('Steps')
+        .child(`${uuidv4()}.jpeg`);
+
+      storageRef
+        .putFile(uploadUri, {
+          customMetadata: {
+            Owner: auth().currentUser.uid,
+          },
+        })
+        .then(() => {
+          console.log('Uploaded');
+          const stepObj = {
+            step_index: index,
+            step_image: storageRef.toString(),
+            step_text: step,
+            step_time: time,
+            step_ingredients: ingredients,
+            // image_cache: stepImage
+          };
+          dispatch({
+            type: REPLACE_RECIPE_STEP,
+            payload: {
+              index: index,
+              step: stepObj,
+            },
+          });
+          navigation.pop();
+        });
+    } else {
+      console.log('Image Cannot Be Empty');
+    }
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
-      <ScrollView style={{paddingHorizontal: '5%'}} contentContainerStyle={{paddingBottom: '50%'}}>
+      <ScrollView
+        style={{paddingHorizontal: '5%'}}
+        contentContainerStyle={{paddingBottom: '50%'}}>
         <View
           style={{
             flex: 1,
@@ -65,7 +113,7 @@ export default function NewStep({navigation, route}) {
           <TouchableOpacity
             style={{flex: 1, alignItems: 'flex-end'}}
             onPress={() => {
-              navigation.pop();
+              save();
             }}>
             <Text style={{fontSize: 20}}>Save</Text>
           </TouchableOpacity>
@@ -130,7 +178,8 @@ export default function NewStep({navigation, route}) {
             multiline
           />
         </View>
-        <View style={{marginTop: 30, flexDirection: 'row', alignItems: 'flex-end'}}>
+        <View
+          style={{marginTop: 30, flexDirection: 'row', alignItems: 'flex-end'}}>
           <Text style={{fontSize: 18, fontWeight: '600'}}>Time</Text>
           <TextInput
             style={{
@@ -139,9 +188,9 @@ export default function NewStep({navigation, route}) {
               width: 50,
               textAlign: 'center',
               marginLeft: 10,
-              fontSize: 16
+              fontSize: 16,
             }}
-            value={time}
+            value={time.toString()}
             onChangeText={text => {
               setTime(Number(text));
             }}
@@ -149,7 +198,10 @@ export default function NewStep({navigation, route}) {
             placeholder="10"
             returnKeyType="done"
           />
-          <Text style={{fontSize: 16, fontWeight: '600', color: color.textGray}}>mins</Text>
+          <Text
+            style={{fontSize: 16, fontWeight: '600', color: color.textGray}}>
+            mins
+          </Text>
         </View>
         <View style={{marginTop: 30}}>
           <Text style={{fontSize: 18, fontWeight: '600'}}>Ingredients</Text>

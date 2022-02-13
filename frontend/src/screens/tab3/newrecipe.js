@@ -8,6 +8,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
@@ -17,17 +18,17 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
 import GoButton from '../../components/goButton';
-import {POST_RECIPE} from '../../actions/recipeActions';
+import {POST_RECIPE, RECIPE_STEP} from '../../actions/recipeActions';
 import NutritionChips from '../../components/nutritionChips';
 import newrecipeStyle from './newrecipeStyle';
 
 export default function NewRecipe({navigation}) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.accountReducer.userInfoReducer);
+  const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
   const [recipeImage, setRecipeImage] = useState('');
-  const [steps, setSteps] = useState(['NEW']);
   const [servings, setServings] = useState(0);
   const [prepTime, setPrepTime] = useState(0);
 
@@ -35,7 +36,7 @@ export default function NewRecipe({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  const renderItem = ({item, drag, isActive, index}) => {
+  const returnItem = (img, drag, isActive, index) => {
     return (
       <TouchableOpacity
         onLongPress={drag}
@@ -63,12 +64,12 @@ export default function NewRecipe({navigation}) {
         />
         {index % 2 === 0 ? (
           <View style={{alignItems: 'center', marginBottom: '120%'}}>
-            <View style={newrecipeStyle.StepImageContainer}>
+            <ImageBackground style={newrecipeStyle.StepImageContainer} source={img}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
               />
-            </View>
+            </ImageBackground>
             <Image
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
@@ -98,6 +99,22 @@ export default function NewRecipe({navigation}) {
         />
       </TouchableOpacity>
     );
+  };
+
+  const renderItem = ({item, drag, isActive, index}) => {
+    console.log(item)
+    if (item.image_cache) {
+      return returnItem(item.image_cache, drag, isActive, index);
+    } else if (item.step_image) {
+      storage()
+        .refFromURL(item.step_image)
+        .getDownloadURL()
+        .then(url => {
+          return returnItem({uri: url}, drag, isActive, index);
+        });
+    }
+
+    return returnItem(null, drag, isActive, index);
   };
 
   function save() {
@@ -174,9 +191,14 @@ export default function NewRecipe({navigation}) {
       </View>
       <DraggableFlatList
         data={steps}
-        onDragEnd={({data}) => setSteps(data)}
+        onDragEnd={({data}) =>
+          dispatch({
+            type: RECIPE_STEP,
+            payload: data,
+          })
+        }
         horizontal
-        keyExtractor={item => item.key}
+        keyExtractor={item => item.step_index}
         renderItem={renderItem}
         containerStyle={{flex: 18}}
         style={{height: '100%'}}
@@ -185,7 +207,13 @@ export default function NewRecipe({navigation}) {
           <View style={{flexDirection: 'row', height: '100%'}}>
             <TouchableOpacity
               onPress={() => {
-                setSteps([...steps, 'NEW']);
+                dispatch({
+                  type: RECIPE_STEP,
+                  payload: [
+                    ...steps,
+                    {step_index: steps.length, step_image: ''},
+                  ],
+                });
               }}
               style={[
                 {
@@ -315,7 +343,7 @@ export default function NewRecipe({navigation}) {
                           width: 50,
                           textAlign: 'center',
                         }}
-                        value={servings}
+                        value={servings.toString()}
                         onChangeText={text => {
                           setServings(Number(text));
                         }}

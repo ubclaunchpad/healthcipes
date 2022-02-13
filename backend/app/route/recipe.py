@@ -33,11 +33,13 @@ class RecipeStep(BaseModel):
     step_id: int
     description: str
     time: Optional[int] = None
+    header_image: str
 
 class RecipeIngredient(BaseModel):
     ingredient_id: str
     ingredient_name: str
     category: str
+    step_id: int
 
 class RecipeDetails(BaseModel):
     recipe_id: int

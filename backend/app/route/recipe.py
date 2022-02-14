@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlite3 import Timestamp
+from backend.app.indexer.recipes import post_scrape_steps
 from fastapi import APIRouter
 from typing import List, Optional, Union
 from pydantic import BaseModel
@@ -161,9 +161,13 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
             recipe, steps, ingredients = scraper(url)
         res = post_recipe(conn, cursor, recipe)
         if (len(steps) > 0):
-            _ = post_steps(conn, cursor, steps[0].split("\n"), res[0])
+            if (url != ""):
+                _ = post_scrape_steps(conn, cursor, steps[0].split("\n"), res[0])
+            else:
+                _ = post_steps(conn, cursor, steps, res[0])
         if (len(ingredients) > 0):
-            _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+            if (url != ""):
+                _ = post_ingredients(conn, cursor, ingredients[0], res[0])
         return res, 200
     except Exception as e:
         logging.error(e)

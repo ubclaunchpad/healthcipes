@@ -37,6 +37,14 @@ export default function NewRecipe({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
+  useEffect(() => {
+    let prepTimeCalc = 0;
+    steps.forEach(step => {
+      prepTimeCalc += step.step_time;
+    });
+    setPrepTime(prepTimeCalc);
+  }, [steps]);
+
   const renderItem = ({item, drag, isActive, index}) => {
     return (
       <TouchableOpacity
@@ -65,7 +73,10 @@ export default function NewRecipe({navigation}) {
         />
         {index % 2 === 0 ? (
           <View style={{alignItems: 'center', marginBottom: '120%'}}>
-            <ImageBackground imageStyle={{borderRadius: 20}} style={newrecipeStyle.StepImageContainer} source={item.image_cache}>
+            <ImageBackground
+              imageStyle={{borderRadius: 20}}
+              style={newrecipeStyle.StepImageContainer}
+              source={item.image_cache}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
@@ -82,7 +93,10 @@ export default function NewRecipe({navigation}) {
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
             />
-            <ImageBackground imageStyle={{borderRadius: 20}} style={newrecipeStyle.StepImageContainer} source={item.image_cache}>
+            <ImageBackground
+              imageStyle={{borderRadius: 20}}
+              style={newrecipeStyle.StepImageContainer}
+              source={item.image_cache}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
@@ -140,12 +154,21 @@ export default function NewRecipe({navigation}) {
               vegan: false,
               cooking_time: prepTime,
             };
-            const finalSteps = [];
             const ingredients = [];
+
+            steps.forEach(step => {
+              ingredientList = step.step_ingredients
+              ingredientList.forEach(ingredient => {
+                if (!ingredients.includes(ingredient)) {
+                  ingredients.push(ingredient);
+                }
+              });
+            });
+
             dispatch({
               type: POST_RECIPE,
               recipeObj: recipeObj,
-              steps: finalSteps,
+              steps: steps,
               ingredients: ingredients,
             });
           });

@@ -373,11 +373,11 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `addSteps` (IN `_recipe_id` INT, IN `_description` VARCHAR(255), IN `_time` INT)
+CREATE PROCEDURE `addSteps` (IN `_recipe_id` INT, IN `_description` VARCHAR(255), IN `_time` INT, IN `_header_image` VARCHAR(255))
 BEGIN
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(`_recipe_id`, `_description`, `_time`);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(`_recipe_id`, `_description`, `_time`, `_header_image`);
 
 END$$
 
@@ -385,11 +385,11 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `addIngredients` (IN `_ingredient_id` VARCHAR(255), IN `_recipe_id` INT, IN `_ingredient_name` VARCHAR(255), IN `_category` VARCHAR(50))
+CREATE PROCEDURE `addIngredients` (IN `_ingredient_id` VARCHAR(255), IN `_recipe_id` INT, IN `_step_id` INT, IN `_ingredient_name` VARCHAR(255), IN `_category` VARCHAR(50))
 BEGIN
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES(`_ingredient_id`, `_recipe_id`, `_ingredient_name`, `_category`);
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES(`_ingredient_id`, `_recipe_id`, `_step_id`, `_ingredient_name`, `_category`);
 
 END$$
 

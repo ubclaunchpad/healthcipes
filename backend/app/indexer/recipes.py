@@ -147,7 +147,7 @@ def post_recipe(conn, cursor, recipe):
 def recipe_from_video_url(conn, cursor, url):
     return url
 
-def post_steps(conn, cursor, stepList, recipe):
+def post_scrape_steps(conn, cursor, stepList, recipe):
     sql_proc = 'addSteps'
 
     try:
@@ -155,10 +155,44 @@ def post_steps(conn, cursor, stepList, recipe):
             cursor.callproc(sql_proc, (
                 recipe,
                 step,
-                0
+                0,
+                "",
             ))
             conn.commit()
             cursor.nextset()
+        return stepList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def post_steps(conn, cursor, stepList, recipe):
+    sql_proc = 'addSteps'
+    sql_ingredient_proc = 'addIngredients'
+
+    try:
+        for step in stepList:
+            cursor.callproc(sql_proc, (
+                recipe,
+                step["step_text"],
+                step["step_time"],
+                step["step_image"],
+            ))
+            conn.commit()
+            cursor.nextset()
+
+            cursor.execute('SELECT LAST_INSERT_ID()')
+            cursor.lastrowid = cursor.fetchone()[0]  
+
+            for ingredient in step["step_ingredients"]:
+                cursor.callproc(sql_ingredient_proc, (
+                    ingredient,
+                    recipe,
+                    cursor.lastrowid,
+                    ingredient,
+                    "Other"
+                ))
+                conn.commit()
+                cursor.nextset()
         return stepList
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
@@ -172,6 +206,7 @@ def post_ingredients(conn, cursor, ingredientList, recipe):
             cursor.callproc(sql_proc, (
                 "MagicID",
                 recipe,
+                0,
                 ingredient,
                 "Other"
             ))

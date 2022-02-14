@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   Platform,
+  FlatList,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
@@ -16,7 +17,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import {launchImageLibrary} from 'react-native-image-picker';
 import newrecipeStyle from './newrecipeStyle';
-import {REPLACE_RECIPE_STEP} from '../../actions/recipeActions';
+import {
+  REMOVE_RECIPE_STEP,
+  REPLACE_RECIPE_STEP,
+} from '../../actions/recipeActions';
+import GoButton from '../../components/goButton';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
@@ -25,11 +30,19 @@ export default function NewStep({navigation, route}) {
   const [stepImage, setStepImage] = useState('');
   const [step, setStep] = useState('');
   const [time, setTime] = useState(0);
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState([
+    'Apple',
+    'Banana',
+    'Pickles',
+  ]);
 
   useEffect(() => {
-    console.log(index);
-  }, [dispatch]);
+    console.log(steps[index]);
+    setStepImage(steps[index].image_cache ? steps[index].image_cache : null);
+    setStep(steps[index].step_text ? steps[index].step_text : '');
+    setTime(steps[index].step_time ? steps[index].step_time : 0);
+    setIngredients(steps[index].step_ingredients ? steps[index].step_ingredients : []);
+  }, [steps]);
 
   function save() {
     if (stepImage !== '') {
@@ -57,7 +70,7 @@ export default function NewStep({navigation, route}) {
             step_text: step,
             step_time: time,
             step_ingredients: ingredients,
-            // image_cache: stepImage
+            image_cache: stepImage,
           };
           dispatch({
             type: REPLACE_RECIPE_STEP,
@@ -66,7 +79,7 @@ export default function NewStep({navigation, route}) {
               step: stepObj,
             },
           });
-          navigation.pop();
+          navigation.replace('NewRecipe');
         });
     } else {
       console.log('Image Cannot Be Empty');
@@ -204,7 +217,43 @@ export default function NewStep({navigation, route}) {
           </Text>
         </View>
         <View style={{marginTop: 30}}>
-          <Text style={{fontSize: 18, fontWeight: '600'}}>Ingredients</Text>
+          <Text style={{fontSize: 18, fontWeight: '600', marginBottom: 10}}>
+            Ingredients
+          </Text>
+          {ingredients.map((ingredient, index) => {
+            return (
+              <TouchableOpacity
+                key={ingredient}
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                onPress={() => {
+                  ingredients.splice(index, 1);
+                  setIngredients([...ingredients]);
+                }}>
+                <Text style={{fontSize: 18}}>{ingredient}</Text>
+                <Image
+                  source={require('../../assets/X.png')}
+                  style={{
+                    height: 16,
+                    width: 16,
+                    resizeMode: 'contain',
+                    margin: 10,
+                    tintColor: color.black,
+                  }}
+                />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <View style={{marginTop: 30}}>
+          {GoButton('Remove Step', () => {
+            dispatch({
+              type: REMOVE_RECIPE_STEP,
+              payload: {
+                index: index,
+              },
+            });
+            navigation.replace('NewRecipe');
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>

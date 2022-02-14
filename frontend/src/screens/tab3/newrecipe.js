@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
+import {v4 as uuidv4} from 'uuid';
 import {useDispatch, useSelector} from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -36,7 +37,7 @@ export default function NewRecipe({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  const returnItem = (img, drag, isActive, index) => {
+  const renderItem = ({item, drag, isActive, index}) => {
     return (
       <TouchableOpacity
         onLongPress={drag}
@@ -64,7 +65,7 @@ export default function NewRecipe({navigation}) {
         />
         {index % 2 === 0 ? (
           <View style={{alignItems: 'center', marginBottom: '120%'}}>
-            <ImageBackground style={newrecipeStyle.StepImageContainer} source={img}>
+            <ImageBackground imageStyle={{borderRadius: 20}} style={newrecipeStyle.StepImageContainer} source={item.image_cache}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
@@ -81,12 +82,12 @@ export default function NewRecipe({navigation}) {
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
             />
-            <View style={newrecipeStyle.StepImageContainer}>
+            <ImageBackground imageStyle={{borderRadius: 20}} style={newrecipeStyle.StepImageContainer} source={item.image_cache}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
               />
-            </View>
+            </ImageBackground>
           </View>
         )}
         <View
@@ -99,22 +100,6 @@ export default function NewRecipe({navigation}) {
         />
       </TouchableOpacity>
     );
-  };
-
-  const renderItem = ({item, drag, isActive, index}) => {
-    console.log(item)
-    if (item.image_cache) {
-      return returnItem(item.image_cache, drag, isActive, index);
-    } else if (item.step_image) {
-      storage()
-        .refFromURL(item.step_image)
-        .getDownloadURL()
-        .then(url => {
-          return returnItem({uri: url}, drag, isActive, index);
-        });
-    }
-
-    return returnItem(null, drag, isActive, index);
   };
 
   function save() {
@@ -198,7 +183,7 @@ export default function NewRecipe({navigation}) {
           })
         }
         horizontal
-        keyExtractor={item => item.step_index}
+        keyExtractor={() => uuidv4()}
         renderItem={renderItem}
         containerStyle={{flex: 18}}
         style={{height: '100%'}}

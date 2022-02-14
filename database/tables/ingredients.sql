@@ -22,7 +22,7 @@ CREATE TABLE `ingredients_table` (
   CONSTRAINT fk_recipe_ingredient FOREIGN KEY (`recipe_id`)
   REFERENCES `recipes_table`(`recipe_id`),
   CONSTRAINT fk_ingredient_info_id FOREIGN KEY (`ingredient_id`)
-  REFERENCES `ingredients_info_table`(`ingredient_id`)
+  REFERENCES `ingredients_info_table`(`ingredient_id`),
   CONSTRAINT fk_step_id FOREIGN KEY (`step_id`)
   REFERENCES `recipe_steps_table`(`step_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -181,7 +181,7 @@ def post_steps(conn, cursor, stepList, recipe):
             cursor.nextset()
 
             cursor.execute('SELECT LAST_INSERT_ID()')
-            cursor.lastrowid = cursor.fetchone()[0]  
+            cursor.lastrowid = cursor.fetchone()[0] 
 
             for ingredient in step["step_ingredients"]:
                 cursor.callproc(sql_ingredient_proc, (

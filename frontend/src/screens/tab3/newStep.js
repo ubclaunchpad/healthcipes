@@ -28,6 +28,7 @@ export default function NewStep({navigation, route}) {
   const dispatch = useDispatch();
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const [stepImage, setStepImage] = useState('');
+  const [imageURI, setImageURI] = useState('');
   const [step, setStep] = useState('');
   const [time, setTime] = useState(0);
   const [ingredients, setIngredients] = useState([
@@ -41,46 +42,57 @@ export default function NewStep({navigation, route}) {
     setStepImage(steps[index].image_cache ? steps[index].image_cache : null);
     setStep(steps[index].step_text ? steps[index].step_text : '');
     setTime(steps[index].step_time ? steps[index].step_time : 0);
-    setIngredients(steps[index].step_ingredients ? steps[index].step_ingredients : []);
+    setImageURI(steps[index].step_image ? steps[index].step_image : '');
+    setIngredients(
+      steps[index].step_ingredients ? steps[index].step_ingredients : [],
+    );
   }, [steps]);
 
   function save() {
-    if (stepImage !== '') {
-      const uploadUri =
-        Platform.OS === 'ios'
-          ? stepImage.uri.replace('file://', '')
-          : stepImage.uri;
+    if (stepImage && stepImage !== '') {
+      if (time > 0) {
+        const uploadUri =
+          Platform.OS === 'ios'
+            ? stepImage.uri.replace('file://', '')
+            : stepImage.uri;
 
-      const storageRef = storage()
-        .ref()
-        .child('Steps')
-        .child(`${uuidv4()}.jpeg`);
+        let storageRef = storage()
+          .ref()
+          .child('Steps')
+          .child(`${uuidv4()}.jpeg`);
 
-      storageRef
-        .putFile(uploadUri, {
-          customMetadata: {
-            Owner: auth().currentUser.uid,
-          },
-        })
-        .then(() => {
-          console.log('Uploaded');
-          const stepObj = {
-            step_index: index,
-            step_image: storageRef.toString(),
-            step_text: step,
-            step_time: time,
-            step_ingredients: ingredients,
-            image_cache: stepImage,
-          };
-          dispatch({
-            type: REPLACE_RECIPE_STEP,
-            payload: {
-              index: index,
-              step: stepObj,
+        if (imageURI !== '') {
+          storageRef = storage().refFromURL(imageURI);
+        }
+
+        storageRef
+          .putFile(uploadUri, {
+            customMetadata: {
+              Owner: auth().currentUser.uid,
             },
+          })
+          .then(() => {
+            console.log('Uploaded');
+            const stepObj = {
+              step_index: index,
+              step_image: storageRef.toString(),
+              step_text: step,
+              step_time: time,
+              step_ingredients: ingredients,
+              image_cache: stepImage,
+            };
+            dispatch({
+              type: REPLACE_RECIPE_STEP,
+              payload: {
+                index: index,
+                step: stepObj,
+              },
+            });
+            navigation.pop();
           });
-          navigation.replace('NewRecipe');
-        });
+      } else {
+        console.log('Cooking Time Has To Be Greater Than 0');
+      }
     } else {
       console.log('Image Cannot Be Empty');
     }
@@ -220,6 +232,11 @@ export default function NewStep({navigation, route}) {
           <Text style={{fontSize: 18, fontWeight: '600', marginBottom: 10}}>
             Ingredients
           </Text>
+          {ingredients.length === 0 && (
+            <Text style={{fontSize: 16, color: color.textGray}}>
+              No Ingredients Found in Step
+            </Text>
+          )}
           {ingredients.map((ingredient, index) => {
             return (
               <TouchableOpacity
@@ -244,7 +261,7 @@ export default function NewStep({navigation, route}) {
             );
           })}
         </View>
-        <View style={{marginTop: 30}}>
+        <View style={{marginTop: 50}}>
           {GoButton('Remove Step', () => {
             dispatch({
               type: REMOVE_RECIPE_STEP,
@@ -252,7 +269,7 @@ export default function NewStep({navigation, route}) {
                 index: index,
               },
             });
-            navigation.replace('NewRecipe');
+            navigation.pop();
           })}
         </View>
       </ScrollView>

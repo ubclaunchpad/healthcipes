@@ -13,6 +13,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {v4 as uuidv4} from 'uuid';
+import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -37,13 +38,15 @@ export default function NewRecipe({navigation}) {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  useEffect(() => {
-    let prepTimeCalc = 0;
-    steps.forEach(step => {
-      prepTimeCalc += step.step_time;
-    });
-    setPrepTime(prepTimeCalc);
-  }, [steps]);
+  useFocusEffect(
+    React.useCallback(() => {
+      let prepTimeCalc = 0;
+      steps.forEach(step => {
+        prepTimeCalc += step.step_time ? step.step_time : 0;
+      });
+      setPrepTime(prepTimeCalc);
+    }, [steps]),
+  );
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -157,7 +160,7 @@ export default function NewRecipe({navigation}) {
             const ingredients = [];
 
             steps.forEach(step => {
-              ingredientList = step.step_ingredients
+              ingredientList = step.step_ingredients;
               ingredientList.forEach(ingredient => {
                 if (!ingredients.includes(ingredient)) {
                   ingredients.push(ingredient);

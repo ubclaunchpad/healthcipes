@@ -413,18 +413,18 @@ PODS:
     - React-jsi (= 0.66.0)
     - React-logger (= 0.66.0)
     - React-perflogger (= 0.66.0)
-  - RNFBApp (14.3.3):
+  - RNFBApp (14.5.0):
     - Firebase/CoreOnly (= 8.12.1)
     - React-Core
-  - RNFBAuth (14.3.3):
+  - RNFBAuth (14.5.0):
     - Firebase/Auth (= 8.12.1)
     - React-Core
     - RNFBApp
-  - RNFBMessaging (14.3.3):
+  - RNFBMessaging (14.5.0):
     - Firebase/Messaging (= 8.12.1)
     - React-Core
     - RNFBApp
-  - RNFBStorage (14.3.3):
+  - RNFBStorage (14.5.0):
     - Firebase/Storage (= 8.12.1)
     - React-Core
     - RNFBApp
@@ -704,10 +704,10 @@ SPEC CHECKSUMS:
   React-RCTVibration: 53b92d54b923283638cb0186da7a5c2d2b70a49b
   React-runtimeexecutor: 4bb657a97aa74568d9ed634c8bd478299bb8a3a6
   ReactCommon: eb059748e842a1a86025ebbd4ac9d99e74492f88
-  RNFBApp: 920a4992d33019eecca3cfada87caaf3784c1cbd
-  RNFBAuth: 48d5ac5cae96b92673dc0dfa96bdadfd65dc40a9
-  RNFBMessaging: 53bf58bb94b68a1137a4c916bd457e421f394bb4
-  RNFBStorage: d996382f9e53d843ac57b7eed9e17d3f52e3cc1e
+  RNFBApp: 06c8447270d295edc431bccd55970d8711a07a42
+  RNFBAuth: e248a56b1d28d3b53b54b72a296cf9270df1d96e
+  RNFBMessaging: 8e3575bb0303b43a852bf5decbe99c3272035048
+  RNFBStorage: e061bbb005be42225e95cb62af7768bda4d24e3a
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: e8afbe2a9e08e9e778ea72ddb1a8533445812621
   RNScreens: 4d83613b50b74ed277026375dc0810893b0c347f

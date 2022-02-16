@@ -9,6 +9,7 @@ import {
   View,
   Image,
 } from 'react-native';
+import webrecipeStyle from './webrecipeStyle';
 import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
@@ -28,7 +29,7 @@ export default function webrecipe({navigation}) {
     return (
       <SafeAreaView style={{flex: 1}}>
         <View>
-             <Text> New Recipe </Text>
+             <Text style={webrecipeStyle.Title}> Web Recipe </Text>
         </View>
       </SafeAreaView>
     );

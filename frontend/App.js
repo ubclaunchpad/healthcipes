@@ -105,12 +105,6 @@ function ProfileScreen() {
 const SignUpLoginStack = createNativeStackNavigator();
 const MasterStack = createNativeStackNavigator();
 
-
-// useEffect so recipe id that is taking in will navigate?
-// parse recipe id into recipe object (look at other examples)
-//    - done in recipe.js wherre it checks if param is id or object, if id then find object
-//    - navigation.push('Recipe', {recipe: item});
-
 const linking = {
   prefixes: ["umami://"],
   config: {

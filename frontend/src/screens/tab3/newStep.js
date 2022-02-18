@@ -10,6 +10,7 @@ import {
   Platform,
   FlatList,
 } from 'react-native';
+import {API_URL} from '@env';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {v4 as uuidv4} from 'uuid';
@@ -22,6 +23,7 @@ import {
   REPLACE_RECIPE_STEP,
 } from '../../actions/recipeActions';
 import GoButton from '../../components/goButton';
+import axios from 'axios';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
@@ -97,7 +99,18 @@ export default function NewStep({navigation, route}) {
   }
 
   function parseIngredients(desc) {
-    console.log(desc);
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/recipe/ingredients?text=${desc}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig).then(res => {
+      console.log(res.data);
+      setIngredients([...new Set([...ingredients, ...res.data.data])]);
+    });
   }
 
   return (
@@ -113,7 +126,7 @@ export default function NewStep({navigation, route}) {
             backgroundColor: color.white,
             borderRadius: 20,
             zIndex: 2,
-            justifyContent: 'center', 
+            justifyContent: 'center',
             alignItems: 'center',
           }}>
           <TextInput
@@ -123,7 +136,7 @@ export default function NewStep({navigation, route}) {
               borderBottomWidth: 1,
               borderColor: color.gray,
               marginBottom: 50,
-              width: '80%'
+              width: '80%',
             }}
             value={newIngredient}
             onChangeText={text => {

@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';

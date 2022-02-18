@@ -5,3 +5,4 @@ sqlalchemy
 requests
 pandas
 recipe-scrapers
+spacy

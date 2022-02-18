@@ -31,11 +31,9 @@ export default function NewStep({navigation, route}) {
   const [imageURI, setImageURI] = useState('');
   const [step, setStep] = useState('');
   const [time, setTime] = useState(0);
-  const [ingredients, setIngredients] = useState([
-    'Apple',
-    'Banana',
-    'Pickles',
-  ]);
+  const [ingredients, setIngredients] = useState([]);
+  const [addIngredient, setAddIngredient] = useState(false);
+  const [newIngredient, setNewIngredient] = useState('');
 
   useEffect(() => {
     console.log(steps[index]);
@@ -98,10 +96,54 @@ export default function NewStep({navigation, route}) {
     }
   }
 
+  function parseIngredients(desc) {
+    console.log(desc);
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
+      {addIngredient && (
+        <View
+          style={{
+            width: '80%',
+            height: '30%',
+            position: 'absolute',
+            alignSelf: 'center',
+            top: '35%',
+            backgroundColor: color.white,
+            borderRadius: 20,
+            zIndex: 2,
+            justifyContent: 'center', 
+            alignItems: 'center',
+          }}>
+          <TextInput
+            style={{
+              marginTop: 10,
+              height: 50,
+              borderBottomWidth: 1,
+              borderColor: color.gray,
+              marginBottom: 50,
+              width: '80%'
+            }}
+            value={newIngredient}
+            onChangeText={text => {
+              setNewIngredient(text);
+            }}
+            placeholder="Add Ingredient"
+          />
+          {GoButton('Add', () => {
+            if (newIngredient !== '') {
+              setIngredients([...ingredients, newIngredient]);
+              setNewIngredient('');
+            }
+            setAddIngredient(false);
+          })}
+        </View>
+      )}
       <ScrollView
-        style={{paddingHorizontal: '5%'}}
+        style={{paddingHorizontal: '5%', opacity: addIngredient ? 0.2 : 1}}
+        scrollEnabled={!addIngredient}
+        onTouchStart={() => setAddIngredient(false)}
         contentContainerStyle={{paddingBottom: '50%'}}>
         <View
           style={{
@@ -199,6 +241,9 @@ export default function NewStep({navigation, route}) {
             onChangeText={text => {
               setStep(text);
             }}
+            onEndEditing={event => {
+              parseIngredients(event.nativeEvent.text);
+            }}
             placeholder="Write the step here..."
             multiline
           />
@@ -260,6 +305,33 @@ export default function NewStep({navigation, route}) {
               </TouchableOpacity>
             );
           })}
+          <TouchableOpacity
+            key={'Add'}
+            onPress={() => {
+              setAddIngredient(true);
+            }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: color.lightGreen,
+              borderRadius: 20,
+              marginTop: 10,
+              width: '25%',
+              justifyContent: 'space-evenly',
+              paddingHorizontal: 10,
+            }}>
+            <Text style={{fontSize: 14}}>Add</Text>
+            <Image
+              source={require('../../assets/Plus.png')}
+              style={{
+                height: 16,
+                width: 16,
+                resizeMode: 'contain',
+                marginVertical: 10,
+                tintColor: color.black,
+              }}
+            />
+          </TouchableOpacity>
         </View>
         <View style={{marginTop: 50}}>
           {GoButton('Remove Step', () => {

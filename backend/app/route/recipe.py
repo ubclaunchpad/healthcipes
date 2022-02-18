@@ -6,7 +6,8 @@ import logging
 import requests
 from app.indexer.tools import init_conn
 from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
-from app.scraper.scraper import scraper
+from app.functions.scraper import scraper
+from app.functions.ingredient import parse_ingredients_from_text
 from functools import reduce
 
 defaultRecipe = {
@@ -189,6 +190,20 @@ def create_recipe(url: str = ""):
             "status_code": 400
         }
 
+@router.post("/ingredients")
+def parse_ingredients(text: str = ""):
+    try:
+        res = parse_ingredients_from_text(text)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
 
 @router.get("/scrape")
 async def auto_scrape_recipe():

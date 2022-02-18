@@ -312,7 +312,7 @@ export default function EditProfile({navigation}) {
                   <Text
                     style={{
                       paddingTop: '20%',
-                      paddingBottom: '40%',
+                      paddingBottom: '30%',
                       color: color.black,
                       alignSelf: 'center',
                       fontSize: 16,

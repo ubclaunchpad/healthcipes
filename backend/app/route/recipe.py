@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlite3 import Timestamp
 from fastapi import APIRouter
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 from pydantic import BaseModel
 import logging
 import requests
@@ -168,11 +168,13 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         return "Error with {}".format(e), 400
 
 @router.post("/video")
-def create_recipe(url: str = ""):
+def create_recipe(url: Dict):
     try:
+        print(url)
         conn, cursor = init_conn()
-        if (url != ""):
-            res = recipe_from_video_url(conn, cursor, url)
+        res = ''
+        if (url != url['url']):
+            res = recipe_from_video_url(conn, cursor, url['url'])
         return {
             "data": res,
             "status_code": 200

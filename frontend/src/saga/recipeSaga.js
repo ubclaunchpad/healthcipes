@@ -11,6 +11,7 @@ import {
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
   POST_RECIPE,
+  POST_VIDEO_URL,
 } from '../actions/recipeActions';
 
 function* postRecipeCall(param) {
@@ -35,6 +36,32 @@ function* postRecipeCall(param) {
     console.log(results);
   } catch (e) {
     console.log('Post Recipe Failed: ' + e);
+  }
+}
+
+function* postVideoURLCall(param) {
+  try {
+    console.log('THIS IS THE PARM')
+    console.log(param.payload.url)
+    console.log('END OF PARAM')
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/recipe/video`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        url: param.payload.url
+      }
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: POST VIDEO URL API:');
+
+    console.log(results);
+  } catch (e) {
+    console.log('Post Video URL Failed: ' + e);
   }
 }
 
@@ -130,6 +157,8 @@ function* postRecipeViewCall(data) {
   }
 }
 
+
+
 export function* postRecipe() {
   yield takeLatest(POST_RECIPE, postRecipeCall);
 }
@@ -148,4 +177,8 @@ export function* getRecipeLike() {
 
 export function* postRecipeView() {
   yield takeLatest(POST_RECIPE_VIEW, postRecipeViewCall);
+}
+
+export function* postVideoURL() {
+  yield takeLatest(POST_VIDEO_URL, postVideoURLCall);
 }

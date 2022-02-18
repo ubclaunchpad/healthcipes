@@ -13,6 +13,7 @@ import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
+import {POST_VIDEO_URL} from '../../actions/recipeActions'
 import videorecipeStyle from './videorecipeStyle';
 import newrecipeStyle from './newrecipeStyle';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -155,7 +156,12 @@ export default function Post({navigation}) {
                     marginBottom: 100,
                 }}>
                     {GoButton('Submit', () => {
-                        console.log(URL, Description, RecipeName);
+                        dispatch({
+                            type: POST_VIDEO_URL,
+                            payload: {
+                              url: URL,
+                            },
+                        });
                     })}
                 </View>
             </View>

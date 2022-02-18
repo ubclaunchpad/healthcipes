@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   Platform,
+  FlatList,
 } from 'react-native';
 import {API_URL} from '@env';
 import auth from '@react-native-firebase/auth';
@@ -70,7 +71,6 @@ export default function NewStep({navigation, route}) {
         if (imageURI !== '') {
           storageRef = storage().refFromURL(imageURI);
         }
-
         const pattern = /^((http|https|ftp):\/\/)/;
 
         if (pattern.test(uploadUri)) {

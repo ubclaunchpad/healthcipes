@@ -53,8 +53,23 @@ export default function webrecipe({ navigation }) {
                 </TouchableOpacity>
                 <Text style={webrecipeStyle.Title}> New Recipe </Text>
               </View>
-              <View style={webrecipeStyle.textBox}>
-                <TextInput style={webrecipeStyle.textInput} />
+              <View style={{
+                flexDirection: 'row'
+              }}>
+                <View style={webrecipeStyle.textBox}>
+                  <TextInput style={webrecipeStyle.textInput} />
+                </View>
+                <TouchableOpacity>
+                    <Image 
+                    source={require("../../assets/Filter.png")} 
+                    style={{
+                      height: 40,
+                      width: 40,
+                      resizeMode: 'contain',
+                      marginRight: 25,
+                      marginTop: 33,
+                    }}/>
+                  </TouchableOpacity>
               </View>
             </View>} />
       </SafeAreaView>

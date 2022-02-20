@@ -19,7 +19,10 @@ export default StyleSheet.create({
         borderColor: color.textGray,
         borderRadius: 35,
         paddingHorizontal: 18,
-        paddingVertical: 16
+        paddingVertical: 16,
+        marginHorizontal: 30,
+        alignSelf: 'center',
+        width: 300
     },
     textInput: {
         height: 16,

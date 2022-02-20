@@ -53,6 +53,9 @@ export default function webrecipe({ navigation }) {
                 </TouchableOpacity>
                 <Text style={webrecipeStyle.Title}> New Recipe </Text>
               </View>
+              <View style={webrecipeStyle.textBox}>
+                <TextInput style={webrecipeStyle.textInput} />
+              </View>
             </View>} />
       </SafeAreaView>
     );

@@ -14,7 +14,7 @@ export default StyleSheet.create({
         marginRight: 118
     },
     textBox: {
-        marginTop: 20,
+        marginTop: 30,
         borderWidth: 1,
         borderColor: color.textGray,
         borderRadius: 35,

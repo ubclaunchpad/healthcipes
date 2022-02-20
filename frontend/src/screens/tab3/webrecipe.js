@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   TextInput,
@@ -11,26 +11,44 @@ import {
 } from 'react-native';
 import webrecipeStyle from './webrecipeStyle';
 import auth from '@react-native-firebase/auth';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import GoButton from '../../components/goButton';
-import {GET_USER} from '../../actions/accountActions';
+import { GET_USER } from '../../actions/accountActions';
+import { FlatList } from 'react-native-gesture-handler';
 
-export default function webrecipe({navigation}) {
+export default function webrecipe({ navigation }) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
 
   useEffect(() => {
-    dispatch({type: GET_USER, userID: auth().currentUser.uid});
+    dispatch({ type: GET_USER, userID: auth().currentUser.uid });
   }, [dispatch]);
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <View>
-             <Text style={webrecipeStyle.Title}> Web Recipe </Text>
-        </View>
+      <SafeAreaView>
+        <FlatList
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <View>
+            <View style={webrecipeStyle.Title}>
+              <Text> New Recipe </Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.pop()}>
+              <Image
+                source={require("../../assets/Back.png")}
+                style={{
+                  tintColor: 'black',
+                  height: 30,
+                  width: 30,
+                  resizeMode: 'contain',
+                  marginLeft: 25
+                }}
+              />
+            </TouchableOpacity>
+          </View>} />
       </SafeAreaView>
     );
   }

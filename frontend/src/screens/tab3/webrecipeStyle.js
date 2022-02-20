@@ -20,7 +20,7 @@ export default StyleSheet.create({
         borderRadius: 35,
         paddingHorizontal: 18,
         paddingVertical: 16,
-        marginHorizontal: 30,
+        marginHorizontal: 16,
         alignSelf: 'center',
         width: 300
     },

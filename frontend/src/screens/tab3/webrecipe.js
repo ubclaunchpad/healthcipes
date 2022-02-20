@@ -63,11 +63,11 @@ export default function webrecipe({ navigation }) {
                     <Image 
                     source={require("../../assets/Filter.png")} 
                     style={{
+                      flex: 1,
                       height: 40,
                       width: 40,
                       resizeMode: 'contain',
-                      marginRight: 25,
-                      marginTop: 33,
+                      marginTop: 30,
                     }}/>
                   </TouchableOpacity>
               </View>

@@ -30,25 +30,30 @@ export default function webrecipe({ navigation }) {
     return (
       <SafeAreaView>
         <FlatList
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <View>
-            <View style={webrecipeStyle.Title}>
-              <Text> New Recipe </Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.pop()}>
-              <Image
-                source={require("../../assets/Back.png")}
-                style={{
-                  tintColor: 'black',
-                  height: 30,
-                  width: 30,
-                  resizeMode: 'contain',
-                  marginLeft: 25
-                }}
-              />
-            </TouchableOpacity>
-          </View>} />
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={
+            <View>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: 20
+              }}>
+                <TouchableOpacity onPress={() => navigation.pop()}>
+                  <Image
+                    source={require("../../assets/Back.png")}
+                    style={{
+                      tintColor: 'black',
+                      height: 30,
+                      width: 30,
+                      resizeMode: 'contain',
+                      marginLeft: 25
+                    }}
+                  />
+                </TouchableOpacity>
+                <Text style={webrecipeStyle.Title}> New Recipe </Text>
+              </View>
+            </View>} />
       </SafeAreaView>
     );
   }

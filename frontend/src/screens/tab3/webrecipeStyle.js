@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import color from '../../styles/color';
+
+const screenWidth = Dimensions.get('screen').width;
 
 export default StyleSheet.create({
     Title: {
@@ -9,6 +11,7 @@ export default StyleSheet.create({
         alignSelf: 'center',
         color: color.black,
         marginLeft: 15,
+        marginRight: 118
     },
     textBox: {
         marginTop: 20,

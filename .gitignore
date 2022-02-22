@@ -3,3 +3,4 @@ certbot/
 database/data/
 deploy/*.csv
 *.env
+*.p8

@@ -174,7 +174,7 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         return "Error with {}".format(e), 400
 
 @router.post("/video")
-def create_recipe(url: str = ""):
+def create_recipe_video(url: str = ""):
     try:
         conn, cursor = init_conn()
         if (url != ""):

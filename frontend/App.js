@@ -26,6 +26,7 @@ import Recipe from './src/screens/tab1/recipe';
 import EditPantry from './src/screens/tab2/editPantry';
 import EditProfile from './src/screens/tab5/editprofile';
 import NewStep from './src/screens/tab3/newStep';
+import groceryList from './src/screens/tab2/groceryList'
 
 enableScreens();
 
@@ -78,12 +79,13 @@ const PantryStack = createNativeStackNavigator();
 function PantryScreen() {
   return (
     <PantryStack.Navigator
-      initialRouteName="Pantry"
+      initialRouteName="Grocery"
       screenOptions={{
         headerShown: false,
       }}>
       <PantryStack.Screen name="Pantry" component={Pantry} />
       <PantryStack.Screen name="EditPantry" component={EditPantry} />
+      <PantryStack.Screen name="Grocery" component={groceryList} />
     </PantryStack.Navigator>
   );
 }

@@ -7,6 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SplashScreen from 'react-native-splash-screen';
 import { useDispatch } from 'react-redux';
 import SignUp from './src/screens/login/signup';
 import Login from './src/screens/login/login';
@@ -223,6 +224,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    SplashScreen.hide();
     // Handle user state changes
     function onAuthStateChanged(newUser) {
       setUser(newUser);

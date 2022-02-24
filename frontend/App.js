@@ -1,11 +1,14 @@
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import auth from '@react-native-firebase/auth';
-
+import messaging from '@react-native-firebase/messaging';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SplashScreen from 'react-native-splash-screen';
+import { useDispatch } from 'react-redux';
 import SignUp from './src/screens/login/signup';
 import Login from './src/screens/login/login';
 import Forgot from './src/screens/login/forgot';
@@ -27,6 +30,7 @@ import EditPantry from './src/screens/tab2/editPantry';
 import EditProfile from './src/screens/tab5/editprofile';
 import NewStep from './src/screens/tab3/newStep';
 import groceryList from './src/screens/tab2/groceryList'
+import { GET_USER, POST_USER_TOKEN } from './src/actions/accountActions';
 
 enableScreens();
 
@@ -141,6 +145,7 @@ const linking = {
 }
 
 export default function App() {
+  const dispatch = useDispatch();
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
@@ -196,12 +201,41 @@ export default function App() {
     );
   }
 
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      await messaging()
+        .getToken()
+        .then(token => {
+          dispatch({
+            type: POST_USER_TOKEN,
+            payload: {
+              userID: auth().currentUser.uid,
+              token: token,
+            },
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
   useEffect(() => {
+    SplashScreen.hide();
     // Handle user state changes
     function onAuthStateChanged(newUser) {
       setUser(newUser);
       if (initializing) {
         setInitializing(false);
+        if (newUser) {
+          dispatch({type: GET_USER, userID: auth().currentUser.uid});
+          requestUserPermission();
+        }
       }
     }
 

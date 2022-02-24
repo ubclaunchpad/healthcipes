@@ -147,7 +147,7 @@ def post_recipe(conn, cursor, recipe):
 def recipe_from_video_url(conn, cursor, url):
     return url
 
-def post_steps(conn, cursor, stepList, recipe):
+def post_scrape_steps(conn, cursor, stepList, recipe):
     sql_proc = 'addSteps'
 
     try:
@@ -155,10 +155,44 @@ def post_steps(conn, cursor, stepList, recipe):
             cursor.callproc(sql_proc, (
                 recipe,
                 step,
-                0
+                0,
+                "",
             ))
             conn.commit()
             cursor.nextset()
+        return stepList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def post_steps(conn, cursor, stepList, recipe):
+    sql_proc = 'addSteps'
+    sql_ingredient_proc = 'addIngredients'
+
+    try:
+        for step in stepList:
+            cursor.callproc(sql_proc, (
+                recipe,
+                step["step_text"],
+                step["step_time"],
+                step["step_image"],
+            ))
+            conn.commit()
+            cursor.nextset()
+
+            cursor.execute('SELECT LAST_INSERT_ID()')
+            cursor.lastrowid = cursor.fetchone()[0] 
+
+            for ingredient in step["step_ingredients"]:
+                cursor.callproc(sql_ingredient_proc, (
+                    ingredient,
+                    recipe,
+                    cursor.lastrowid,
+                    ingredient,
+                    "Other"
+                ))
+                conn.commit()
+                cursor.nextset()
         return stepList
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
@@ -172,6 +206,7 @@ def post_ingredients(conn, cursor, ingredientList, recipe):
             cursor.callproc(sql_proc, (
                 "MagicID",
                 recipe,
+                0,
                 ingredient,
                 "Other"
             ))
@@ -283,6 +318,7 @@ def get_recipe_by_id(conn, cursor, recipe_id):
                             "step_id": result[16],
                             "description": result[17],
                             "time": result[18],
+                            "header_image": result[19],
                         }
                     )
                     step_ids.add(result[14])
@@ -290,12 +326,13 @@ def get_recipe_by_id(conn, cursor, recipe_id):
                 if (result[17]) and (result[17] not in ingredient_ids):
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[19],
-                            "ingredient_name": result[20],
-                            "category": result[21]
+                            "ingredient_id": result[20],
+                            "ingredient_name": result[21],
+                            "category": result[22],
+                            "step_id": result[23]
                         }
                     )
-                    ingredient_ids.add(result[19])
+                    ingredient_ids.add(result[20])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])

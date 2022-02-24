@@ -116,7 +116,7 @@ export default function Profile({navigation}) {
             bottomSheetRef.current.close();
           }}
           numColumns={2}
-          contentContainerStyle={{paddingBottom: '15%'}}
+          contentContainerStyle={{paddingBottom: '100%'}}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           style={{marginTop: 20}}
           renderItem={({item, index}) => {
@@ -181,7 +181,7 @@ export default function Profile({navigation}) {
             bottomSheetRef.current.close();
           }}
           numColumns={2}
-          contentContainerStyle={{paddingBottom: '15%'}}
+          contentContainerStyle={{paddingBottom: '100%'}}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           style={{marginTop: 20}}
           renderItem={({item, index}) => {
@@ -287,6 +287,9 @@ export default function Profile({navigation}) {
           ref={bottomSheetRef}
           index={0}
           snapPoints={snapPoints}
+          onClose={() => {
+            bottomSheetRef.current.snapToIndex(0)
+          }}
           enablePanDownToClose={false}>
           <View style={{flex: 1, paddingHorizontal: '3%'}}>
             <View

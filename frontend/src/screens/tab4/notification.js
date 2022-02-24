@@ -1,42 +1,112 @@
-import React, {useEffect} from 'react';
-import {
-  Text,
-  TextInput,
-  SafeAreaView,
-  TouchableOpacity,
-  Keyboard,
-  TouchableWithoutFeedback,
-  View,
+import React from "react";
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  SafeAreaView, 
+  SectionList, 
+  StatusBar, 
   Image,
-} from 'react-native';
-import auth from '@react-native-firebase/auth';
-import {useDispatch, useSelector} from 'react-redux';
-import GoButton from '../../components/goButton';
-import {GET_USER} from '../../actions/accountActions';
+  FlatList } from "react-native";
 
-export default function Notification({navigation}) {
-  const dispatch = useDispatch();
-  const onboarded = useSelector(state => state.globalReducer.onboardReducer);
+export const dummyData = [
+  {
+    /*name: "Mike",
+    recipe: "Strawberry Cake",
+    time: "10:26",*/
+    title: "Today",
+    data: [
+      "Mike",
+      "Strawberry Cake",
+      "10:26",
+    ]
+  },
+  {
+    title: "Today",
+    data: [
+      "Mike",
+      "Pasta",
+      "10:26",
+    ]
+  },
+  {
+    title: "Tommorow",
+    data: [
+      "Sarah",
+      "Strawberry Cake",
+      "10:26",
+    ]
+  },
+  {
+    title: "Wednesday",
+    data: [
+      "Mike",
+      "Lasagna",
+      "10:20",
+    ]
+  },
+];
 
-  useEffect(() => {
-    dispatch({type: GET_USER, userID: auth().currentUser.uid});
-  }, [dispatch]);
+const DATA = dummyData.map((data, key) => {
+    return {
+        key: key,
+        title: data.title,
+        /*name: data.data[0],
+        recipe: data.data[1],
+        time: data.data[2],*/ 
+        data: data.data,
+    };
+});
 
-  if (!onboarded) {
-    navigation.replace('ShoppingStyle');
-  } else {
-    return (
-      <SafeAreaView style={{flex: 1}}>
-        <Text>Notification</Text>
-        {GoButton('Logout', () => {
-          auth().signOut();
-        })}
-        {GoButton('Onboard (DEV)', () => {
-          navigation.replace('ShoppingStyle');
-        })}
-      </SafeAreaView>
-    );
-  }
+export default function notification() {
+  return (
+    <SafeAreaView style = {{flex: 1}}>
+      <View
+        style = {{
+          flex: 0.5,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}  
+      >
+      </View>
+      <View>
+        <SectionList
+          sections = {DATA}
+          keyExtractor = {item => item.key}
+          renderItem = {({item, index}) => {
+            return (
+              <View 
+                style = {{
+                  flexDirection: 'row',
+                  padding: 20,
+                  }}>
+              <Image
+                source = {require('../../assets/Profilepicture.png')}
+                style = {{
+                  width: 70,
+                  height: 70,
+                  borderRadius: 70,
+                }}
+              >
+              </Image>
+              <View>
+                <Text>{item + " liked your recipe"}</Text>
+                
+              </View>
+            </View>
+            )}}
+          renderSectionHeader={({ section: { title} }) => (
+            <Text style={{fontSize:32}}>{title}</Text>
+          )}
+          
+        >
 
-  return null;
+        </SectionList>
+      </View>
+
+
+    </SafeAreaView>
+  )
+
 }

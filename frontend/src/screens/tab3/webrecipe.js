@@ -57,19 +57,30 @@ export default function webrecipe({ navigation }) {
                 flexDirection: 'row'
               }}>
                 <View style={webrecipeStyle.textBox}>
-                  <TextInput style={webrecipeStyle.textInput} placeholder="Search Web"/>
+                  <TextInput style={webrecipeStyle.textInput} placeholder="Search Web" />
+                  <TouchableOpacity>
+                    <Image
+                      source={require("../../assets/Search.png")}
+                      style={{
+                        height: 20,
+                        width: 20,
+                        resizeMode: 'contain',
+                        marginLeft: 25
+                      }}
+                    />
+                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity>
-                    <Image 
-                    source={require("../../assets/Filter.png")} 
+                  <Image
+                    source={require("../../assets/Filter.png")}
                     style={{
                       flex: 1,
                       height: 40,
                       width: 40,
                       resizeMode: 'contain',
                       marginTop: 30,
-                    }}/>
-                  </TouchableOpacity>
+                    }} />
+                </TouchableOpacity>
               </View>
             </View>} />
       </SafeAreaView>

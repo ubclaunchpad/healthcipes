@@ -22,7 +22,10 @@ export default StyleSheet.create({
         paddingVertical: 16,
         marginHorizontal: 16,
         alignSelf: 'center',
-        width: 300
+        width: 300,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     textInput: {
         height: 16,

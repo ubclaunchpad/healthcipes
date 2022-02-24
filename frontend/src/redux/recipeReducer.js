@@ -9,6 +9,9 @@ import {
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
+  REMOVE_RECIPE_STEP,
+  REPLACE_RECIPE_STEP,
+  RECIPE_STEP,
 } from '../actions/recipeActions';
 
 const defaultRecipe = {
@@ -31,6 +34,8 @@ const defaultRecipe = {
   steps: [],
   ingredients: [],
 };
+
+const defaultSteps = [{step_index: 0, step_image: ''}];
 
 const featureFeedReducer = (state = [], action) => {
   switch (action.type) {
@@ -95,6 +100,26 @@ const registerRecipeViewReducer = (state = defaultRecipe, action) => {
   }
 };
 
+// Recipe Creation
+const recipeStepsReducer = (state = defaultSteps, action) => {
+  switch (action.type) {
+    case RECIPE_STEP:
+      return action.payload;
+    case REMOVE_RECIPE_STEP:
+      state.splice(action.payload.index, 1);
+      return state;
+    case REPLACE_RECIPE_STEP:
+      if (state.length > action.payload.index) {
+        state[action.payload.index] = action.payload.step;
+      } else {
+        state.push(action.payload.step);
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
@@ -103,4 +128,5 @@ export default combineReducers({
   registerRecipeLikeReducer,
   registerRecipeViewReducer,
   recipeLikeGetReducer,
+  recipeStepsReducer,
 });

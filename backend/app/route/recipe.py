@@ -1,17 +1,20 @@
+from datetime import datetime
 from fastapi import APIRouter
 from typing import List, Optional, Union
 from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes
-from app.scraper.scraper import scraper
+from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
+from app.functions.scraper import scraper
+from app.functions.ingredient import parse_ingredients_from_text
 from functools import reduce
 
 defaultRecipe = {
     "recipe_id": "",
     "name": "testRecipeId",
     "recipe_description": "A delicious vegan tofu scramble to beat the Mondays",
+    "header_image": "",
     # NOTE: need to create default user before default recipe can be made
     "user_id": "testID",
     "creator_username": "VeganDaddy",
@@ -30,18 +33,22 @@ class RecipeStep(BaseModel):
     step_id: int
     description: str
     time: Optional[int] = None
+    header_image: str
 
 class RecipeIngredient(BaseModel):
     ingredient_id: str
     ingredient_name: str
     category: str
+    step_id: int
 
 class RecipeDetails(BaseModel):
     recipe_id: int
     name: str
     recipe_description: str
+    created_time: Optional[datetime] = None
     user_id: str
     creator_username: str
+    header_image: str
     protein: int
     carbs: int
     fat: int
@@ -153,13 +160,50 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         if (url != ""):
             recipe, steps, ingredients = scraper(url)
         res = post_recipe(conn, cursor, recipe)
-        _ = post_steps(conn, cursor, steps[0].split("\n"), res[0])
-        _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+        if (len(steps) > 0):
+            if (url != ""):
+                _ = post_scrape_steps(conn, cursor, steps[0].split("\n"), res[0])
+            else:
+                _ = post_steps(conn, cursor, steps, res[0])
+        if (len(ingredients) > 0):
+            if (url != ""):
+                _ = post_ingredients(conn, cursor, ingredients[0], res[0])
         return res, 200
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
 
+@router.post("/video")
+def create_recipe_video(url: str = ""):
+    try:
+        conn, cursor = init_conn()
+        if (url != ""):
+            res = recipe_from_video_url(conn, cursor, url)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
+
+@router.post("/ingredients")
+def parse_ingredients(text: str = ""):
+    try:
+        res = parse_ingredients_from_text(text)
+        return {
+            "data": res,
+            "status_code": 200
+        }
+    except Exception as e:
+        logging.error(e)
+        return {
+            "data": "Error with {}".format(e),
+            "status_code": 400
+        }
 
 @router.get("/scrape")
 async def auto_scrape_recipe():

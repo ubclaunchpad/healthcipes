@@ -6,6 +6,7 @@ import {
   POST_USER,
   PUT_USER,
   USER_INFO,
+  POST_USER_TOKEN,
 } from '../actions/accountActions';
 
 function* signUpCall(param) {
@@ -88,7 +89,7 @@ function* getUserCall(param) {
 
     const response = yield call(axios, apiConfig);
     const results = response.data[0];
-    console.log('[INFO]: GET USER API:');
+    console.log(`[INFO]: GET USER API: ${results[0][0]} and ${results[0][4]}`);
     const userObj = {
       user_id: results[0][0],
       username: results[0][1],
@@ -108,10 +109,27 @@ function* getUserCall(param) {
       style: results[0][15],
       experience: results[0][16],
     };
-    console.log(userObj);
     yield put({type: USER_INFO, payload: userObj});
   } catch (e) {
     console.log('Signup Failed');
+  }
+}
+
+function* registerUserTokenCall(param) {
+  try {
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/user/token?userID=${param.payload.userID}&token=${param.payload.token}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    console.log(`[INFO]: POST USER TOKEN API: ${param.payload.token}`);
+    yield call(axios, apiConfig);
+  } catch (e) {
+    console.log(e);
+    console.log('User token registeration failed');
   }
 }
 
@@ -125,4 +143,8 @@ export function* getUser() {
 
 export function* updateUser() {
   yield takeLatest(PUT_USER, updateUserCall);
+}
+
+export function* registerUserToken() {
+  yield takeLatest(POST_USER_TOKEN, registerUserTokenCall);
 }

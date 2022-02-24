@@ -1,5 +1,5 @@
 import {all, fork} from 'redux-saga/effects';
-import {getUser, signUp, updateUser} from './accountSaga';
+import {getUser, signUp, updateUser, registerUserToken} from './accountSaga';
 import {getFeed, searchFeed} from './feedSaga';
 import {
   addIngredient,
@@ -34,5 +34,6 @@ export default function* rootSaga() {
     fork(getLikedRecipes),
     fork(searchIngredients),
     fork(getMyRecipes),
+    fork(registerUserToken),
   ]);
 }

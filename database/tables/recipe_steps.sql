@@ -16,6 +16,7 @@ CREATE TABLE `recipe_steps_table` (
   `recipe_id` INT NOT NULL,
   `description` VARCHAR(255),
   `time` INT,
+  `header_image` VARCHAR(255),
   PRIMARY KEY (`step_id`),
   CONSTRAINT fk_recipe_recipe_steps FOREIGN KEY (`recipe_id`)
   REFERENCES `recipes_table`(`recipe_id`)

@@ -83,7 +83,7 @@ const PantryStack = createNativeStackNavigator();
 function PantryScreen() {
   return (
     <PantryStack.Navigator
-      initialRouteName="Grocery"
+      initialRouteName="Pantry"
       screenOptions={{
         headerShown: false,
       }}>

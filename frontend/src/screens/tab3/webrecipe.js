@@ -57,7 +57,7 @@ export default function webrecipe({ navigation }) {
                 flexDirection: 'row'
               }}>
                 <View style={webrecipeStyle.textBox}>
-                  <TextInput style={webrecipeStyle.textInput} />
+                  <TextInput style={webrecipeStyle.textInput} placeholder="Search Web"/>
                 </View>
                 <TouchableOpacity>
                     <Image 

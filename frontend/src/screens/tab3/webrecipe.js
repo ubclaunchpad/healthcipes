@@ -82,6 +82,15 @@ export default function webrecipe({ navigation }) {
                     }} />
                 </TouchableOpacity>
               </View>
+              <View style={{
+                auto: 1,
+                marginLeft: 18,
+                marginTop: 20
+                }}>
+                <Text>
+                  Search Results for "Healthy Chicken Recipes"
+                </Text>
+              </View>
             </View>} />
       </SafeAreaView>
     );

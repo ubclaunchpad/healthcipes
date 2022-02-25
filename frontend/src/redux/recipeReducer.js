@@ -34,24 +34,9 @@ const defaultRecipe = {
 };
 
 const videoRecipe = {
-  recipe_id: 0,
   name: '',
   recipe_description: '',
   url: '',
-  user_id: '',
-  creator_username: '',
-  header_image: '',
-  protein: 0,
-  carbs: 0,
-  fat: 0,
-  fiber: 0,
-  calories: 0,
-  servings: 0,
-  vegetarian: false,
-  vegan: false,
-  cooking_time: 0,
-  steps: [],
-  ingredients: [],
 };
 
 const featureFeedReducer = (state = [], action) => {

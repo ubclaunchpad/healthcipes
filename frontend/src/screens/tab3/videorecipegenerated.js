@@ -23,14 +23,12 @@ import { FlatList } from 'react-native-gesture-handler';
 export default function Post({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
+  const videoRecipe = useSelector(state => state.recipeReducer.videoRecipeReducer)
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
 
-  const [RecipeName, SetRecipeName] = useState('')
-  const [URL, SetURL] = useState('')
-  const [Description, SetDescription] = useState('')
   const [recipeImage, setrecipeImage] = useState('');
 
   if (!onboarded) {
@@ -110,62 +108,15 @@ export default function Post({navigation}) {
                             ]}
                         />
                     </TouchableOpacity>
-                </View>
-                <View style={{
-                    marginTop: 10,
-                }}>
+                </View>    
+                <View>
                     <View style={videorecipeStyle.textBox}>
-                        <TextInput
-                                textContentType="firstname"
-                                placeholder="Recipe Name"
-                                autoCorrect={false}
-                                onChangeText={text => SetRecipeName(text)}
-                                value={RecipeName}
-                                style={videorecipeStyle.textInput}
-                                placeholderTextColor={color.gray}
-                        />
-                    </View>
-                    <View style={videorecipeStyle.textBox}>
-                        <TextInput
-                                textContentType="firstname"
-                                placeholder="Video URL"
-                                autoCorrect={false}
-                                onChangeText={text => SetURL(text)}
-                                value={URL}
-                                style={videorecipeStyle.textInput}
-                                placeholderTextColor={color.gray}
-                        />
+                        <Text> {videoRecipe['name']} </Text>
                     </View>
                     <View style={[videorecipeStyle.textBox, videorecipeStyle.description]}>
-                        <TextInput
-                            textContentType="firstname"
-                            placeholder="Description"
-                            autoCorrect={false}
-                            multiline={true}
-                            numberOfLines={10}
-                            onChangeText={text => SetDescription(text)}
-                            value={Description}
-                            style={[videorecipeStyle.textInput, videorecipeStyle.descriptionText]}
-                            placeholderTextColor={color.gray}
-                    />
+                        <Text> {videoRecipe['recipe_description']} </Text>
                     </View>
-                </View>
-                <View style={{
-                    paddingHorizontal: 60,
-                    marginTop: 20,
-                    marginBottom: 100,
-                }}>
-                    {GoButton('Submit', () => {
-                        dispatch({
-                            type: POST_VIDEO_URL,
-                            payload: {
-                              recipe_name: RecipeName,
-                              url: URL,
-                              recipe_description: Description,
-                            },
-                        });
-                    })}
-                </View>
+                </View>    
             </View>
         }
         />

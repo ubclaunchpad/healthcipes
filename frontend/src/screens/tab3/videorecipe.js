@@ -158,6 +158,7 @@ export default function Post({navigation}) {
                     marginBottom: 100,
                 }}>
                     {GoButton('Submit', () => {
+                        navigation.push('VideoRecipeGenerated')
                         dispatch({
                             type: POST_VIDEO_URL,
                             payload: {

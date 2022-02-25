@@ -61,11 +61,9 @@ export default function Post({navigation}) {
                             }}
                         />
                     </TouchableOpacity>
-                    <Text style={videorecipeStyle.Title}> New Recipe </Text>
-                    <TouchableOpacity
-                        onPress={() => {navigation.push('VideoRecipeGenerated')}}
-                    >
-                        <Text style={videorecipeStyle.Next}> Next </Text>
+                    <Text style={videorecipeStyle.Title}> THIS IS DIFFERENT </Text>
+                    <TouchableOpacity>
+                    <Text style={videorecipeStyle.Next}> Next </Text>
                     </TouchableOpacity>
                 </View>
                 <View>

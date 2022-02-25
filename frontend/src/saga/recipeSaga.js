@@ -5,13 +5,13 @@ import {
   GET_RECIPE_LIKE,
   GET_RECIPE,
   RECIPE,
+  VIDEO_RECIPE,
   POST_RECIPE_LIKE,
   POST_RECIPE_VIEW,
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
   POST_RECIPE,
-  VIDEO_RECIPE,
   POST_VIDEO_URL,
 } from '../actions/recipeActions';
 
@@ -59,8 +59,8 @@ function* postVideoURLCall(param) {
     const results = response.data;
     console.log('[INFO]: POST VIDEO URL API:');
 
-    //console.log(results);
-    yield put({type: RECIPE, payload: results.data});
+    console.log(results);
+    yield put({type: VIDEO_RECIPE, payload: results});
   } catch (e) {
     console.log('Post Video URL Failed: ' + e);
   }

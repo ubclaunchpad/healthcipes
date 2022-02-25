@@ -23,6 +23,13 @@ export default StyleSheet.create({
         paddingHorizontal: 18,
         paddingVertical: 16
     },
+    numberBox: {
+        borderWidth: 1,
+        borderColor: color.textGray,
+        borderRadius: 35,
+        paddingHorizontal: 30,
+        paddingVertical: 8,
+    },
     textInput: {
         height: 16,
         borderColor: color.gray,
@@ -40,9 +47,8 @@ export default StyleSheet.create({
     tabtext: {
         fontSize: 20,
         fontWeight: 'bold',
-        alignSelf: 'center',
         color: color.black,
-        marginHorizontal: 15,
+        alignSelf: 'center',
     }
 
 })

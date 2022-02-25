@@ -19,6 +19,8 @@ import newrecipeStyle from './newrecipeStyle';
 import {launchImageLibrary} from 'react-native-image-picker';
 import color from '../../styles/color';
 import { FlatList } from 'react-native-gesture-handler';
+import BatchedBridge from 'react-native/Libraries/BatchedBridge/BatchedBridge';
+import { black, green100 } from 'react-native-paper/lib/typescript/styles/colors';
 
 export default function Post({navigation}) {
     const dispatch = useDispatch();
@@ -30,7 +32,7 @@ export default function Post({navigation}) {
     }, [dispatch]);
 
     const [recipeImage, setrecipeImage] = useState('');
-    const [page, setPage] = useState('fnfo')
+    const [page, setPage] = useState('Info')
 
     function recipeTab(tab) {
         if (tab === 'Info') {
@@ -46,7 +48,7 @@ export default function Post({navigation}) {
                 alignItems: 'center',
                 flex: 1,
               }}>
-            <Text> Info </Text>
+            <Text style={videorecipeStyle.tabtext}> Info </Text>
             </TouchableOpacity>
           );
         }
@@ -63,7 +65,7 @@ export default function Post({navigation}) {
                 alignItems: 'center',
                 flex: 1,
               }}>
-              <Text> Ingredients </Text>
+              <Text style={videorecipeStyle.tabtext}> Ingredients </Text>
             </TouchableOpacity>
           );
         }
@@ -80,11 +82,75 @@ export default function Post({navigation}) {
                         alignItems: 'center',
                         flex: 1,
                     }}>
-                    <Text> Steps </Text>
+                    <Text style={videorecipeStyle.tabtext}> Steps </Text>
                 </TouchableOpacity>
             );
         }
-      }
+    }
+
+    function infoTab() {
+        return(
+            <View>
+                <View style={videorecipeStyle.textBox}>
+                    <Text> {videoRecipe['name']} </Text>
+                </View>
+                <View style={[videorecipeStyle.textBox, videorecipeStyle.description]}>
+                    <Text> {videoRecipe['recipe_description']} </Text>
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    marginTop: 30,
+                }}>
+                    <Text style={videorecipeStyle.tabtext}> Servings </Text>
+                    <View style={{
+                        borderWidth: 1,
+                        borderColor: color.textGray,
+                        borderRadius: 35,
+                        paddingHorizontal: 30,
+                        paddingVertical: 8,
+                        marginLeft: 20,
+                    }}>
+                        <Text> 4 </Text>
+                    </View>
+                </View>
+                <Text style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: color.black,
+                    marginTop: 24, 
+                }}> Time </Text>
+                <View style={{
+                    flexDirection: 'row',
+                    flex: 1,
+                }}>
+                    <View style={{
+                         alignItems: 'center',
+                    }}>
+                        <Text> Preparation </Text>
+                    </View>
+                    <View style={{
+                         alignItems: 'center',
+                    }}>
+                        <Text> Cooking Time</Text>
+                    </View>
+                </View>
+
+                
+            </View>    
+        );
+    }
+
+    function ingredientsTab() {
+        return (
+            <Text> No ingredients here :)</Text>
+        );
+    }
+
+    function stepsTab() {
+        return (
+            <Text> No steps here :)</Text>
+        );
+    }
 
     if (!onboarded) {
         navigation.replace('ShoppingStyle');
@@ -165,7 +231,7 @@ export default function Post({navigation}) {
                             />
                         </TouchableOpacity>
                     </View>    
-                    <View style={{marginTop: 20}}>
+                    <View style={{marginTop: 20, marginBottom: 300}}>
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -176,14 +242,9 @@ export default function Post({navigation}) {
                             {recipeTab('Ingredients')}
                             {recipeTab('Steps')}
                         </View>
-                        <View>
-                            <View style={videorecipeStyle.textBox}>
-                                <Text> {videoRecipe['name']} </Text>
-                            </View>
-                            <View style={[videorecipeStyle.textBox, videorecipeStyle.description]}>
-                                <Text> {videoRecipe['recipe_description']} </Text>
-                            </View>
-                        </View>    
+                            {page === "Info" && infoTab()}
+                            {page === "Ingredients" && ingredientsTab()}
+                            {page === "Steps" && stepsTab()}
                     </View>
                 </View>
             }

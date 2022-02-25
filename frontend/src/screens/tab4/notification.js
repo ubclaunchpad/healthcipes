@@ -1,112 +1,104 @@
-import React from "react";
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  SafeAreaView, 
-  SectionList, 
-  StatusBar, 
-  Image,
-  FlatList } from "react-native";
+import React, {useEffect, useState} from 'react';
+import {Text, View, SafeAreaView, SectionList, Image} from 'react-native';
 
-export const dummyData = [
-  {
-    /*name: "Mike",
-    recipe: "Strawberry Cake",
-    time: "10:26",*/
-    title: "Today",
-    data: [
-      "Mike",
-      "Strawberry Cake",
-      "10:26",
-    ]
-  },
-  {
-    title: "Today",
-    data: [
-      "Mike",
-      "Pasta",
-      "10:26",
-    ]
-  },
-  {
-    title: "Tommorow",
-    data: [
-      "Sarah",
-      "Strawberry Cake",
-      "10:26",
-    ]
-  },
-  {
-    title: "Wednesday",
-    data: [
-      "Mike",
-      "Lasagna",
-      "10:20",
-    ]
-  },
-];
+export default function Notification() {
+  const [data, setData] = useState([]);
+  const dayMap = {};
+  const fakeData = [
+    {
+      name: 'Mike',
+      recipe: 'Strawberry Cake',
+      time: '10:26',
+      img: require('../../assets/Profilepicture.png'),
+    },
+    {
+      name: 'Mikey',
+      recipe: 'Strawberry Cake',
+      time: 'Today',
+      img: require('../../assets/Profilepicture.png'),
+    },
+    {
+      name: 'Miket',
+      recipe: 'Strawberry Cake',
+      time: 'Yesterday',
+      img: require('../../assets/Profilepicture.png'),
+    },
+    {
+      name: 'Mikeel',
+      recipe: 'Strawberry Cake',
+      time: 'Yesterday',
+      img: require('../../assets/Profilepicture.png'),
+    },
+    {
+      name: 'Miker',
+      recipe: 'Strawberry Cake Bananas',
+      time: 'Wednesday',
+      img: require('../../assets/Profilepicture.png'),
+    },
+  ];
 
-const DATA = dummyData.map((data, key) => {
-    return {
-        key: key,
-        title: data.title,
-        /*name: data.data[0],
-        recipe: data.data[1],
-        time: data.data[2],*/ 
-        data: data.data,
-    };
-});
+  useEffect(() => {
+    const dataObj = [];
+    fakeData.forEach(item => {
+      if (dayMap[item.time]) {
+        dayMap[item.time].push(item);
+      } else {
+        dayMap[item.time] = [item];
+      }
+    });
+    Object.keys(dayMap).forEach(key => {
+      dataObj.push({key: key, title: key, data: dayMap[key]});
+    });
+    setData(dataObj);
+  }, []);
 
-export default function notification() {
   return (
-    <SafeAreaView style = {{flex: 1}}>
-      <View
-        style = {{
-          flex: 0.5,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}  
-      >
-      </View>
-      <View>
-        <SectionList
-          sections = {DATA}
-          keyExtractor = {item => item.key}
-          renderItem = {({item, index}) => {
-            return (
-              <View 
-                style = {{
-                  flexDirection: 'row',
-                  padding: 20,
-                  }}>
-              <Image
-                source = {require('../../assets/Profilepicture.png')}
-                style = {{
-                  width: 70,
-                  height: 70,
-                  borderRadius: 70,
-                }}
-              >
-              </Image>
-              <View>
-                <Text>{item + " liked your recipe"}</Text>
-                
+    <SafeAreaView style={{flex: 1}}>
+      <SectionList
+        sections={data}
+        keyExtractor={item => item.name + item.recipe}
+        contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: '50%'}}
+        stickySectionHeadersEnabled={false}
+        ItemSeparatorComponent={() => (
+          <View style={{height: 1, backgroundColor: '#CED0CE'}} />
+        )}
+        renderItem={({item}) => {
+          return (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                paddingVertical: 10,
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}>
+              <View
+                style={{
+                  flex: 1,
+                }}>
+                <Image
+                  source={item.img}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 70,
+                  }}
+                />
+              </View>
+              <View style={{flex: 3}}>
+                <Text style={{fontSize: 16}}>
+                  {item.name + ' liked your recipe ' + item.recipe}
+                </Text>
               </View>
             </View>
-            )}}
-          renderSectionHeader={({ section: { title} }) => (
-            <Text style={{fontSize:32}}>{title}</Text>
-          )}
-          
-        >
-
-        </SectionList>
-      </View>
-
-
+          );
+        }}
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={{fontSize: 20, fontWeight: 'bold', marginTop: 20}}>
+            {title}
+          </Text>
+        )}
+      />
     </SafeAreaView>
-  )
-
+  );
 }

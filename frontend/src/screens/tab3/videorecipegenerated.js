@@ -121,21 +121,46 @@ export default function Post({navigation}) {
                 }}> Time </Text>
                 <View style={{
                     flexDirection: 'row',
-                    flex: 1,
+                    justifyContent: 'space-between',
+                    marginTop: 23
                 }}>
                     <View style={{
                          alignItems: 'center',
+                         flex: 1,
                     }}>
-                        <Text> Preparation </Text>
+                        <Text style={{
+                            fontSize: 16,
+                        }}> Preparation </Text>
+                        <View style={{
+                            borderWidth: 1,
+                            borderColor: color.textGray,
+                            borderRadius: 35,
+                            paddingHorizontal: 30,
+                            paddingVertical: 8,
+                            marginTop: 20
+                        }}>
+                            <Text> 1:50 hrs </Text>
+                        </View>
                     </View>
                     <View style={{
-                         alignItems: 'center',
+                        alignItems: 'center',
+                        flex: 1,
                     }}>
-                        <Text> Cooking Time</Text>
+                        <Text style={{
+                            fontSize: 16,
+                        }}> Cooking Time</Text>
+                        <View style={{
+                            borderWidth: 1,
+                            borderColor: color.textGray,
+                            borderRadius: 35,
+                            paddingHorizontal: 30,
+                            paddingVertical: 8,
+                            marginTop: 20
+                        }}>
+                            <Text> 4:50 hrs </Text>
+                        </View>
                     </View>
-                </View>
-
-                
+                </View>             
             </View>    
         );
     }
@@ -181,7 +206,7 @@ export default function Post({navigation}) {
                                 }}
                             />
                         </TouchableOpacity>
-                        <Text style={videorecipeStyle.Title}> THIS IS DIFFERENT </Text>
+                        <Text style={videorecipeStyle.Title}> New Recipe </Text>
                         <TouchableOpacity>
                         <Text style={videorecipeStyle.Next}> Next </Text>
                         </TouchableOpacity>

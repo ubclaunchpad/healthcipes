@@ -11,6 +11,7 @@ import {
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
   POST_RECIPE,
+  VIDEO_RECIPE,
   POST_VIDEO_URL,
 } from '../actions/recipeActions';
 
@@ -41,9 +42,6 @@ function* postRecipeCall(param) {
 
 function* postVideoURLCall(param) {
   try {
-    console.log('THIS IS THE PARM')
-    console.log(param.payload.url)
-    console.log('END OF PARAM')
     const apiConfig = {
       method: 'post',
       url: `${API_URL}/recipe/video`,
@@ -51,7 +49,9 @@ function* postVideoURLCall(param) {
         'Content-Type': 'application/json',
       },
       data: {
-        url: param.payload.url
+        name: param.payload.recipe_name,
+        url: param.payload.url,
+        recipe_description: param.payload.recipe_description
       }
     };
 
@@ -59,7 +59,8 @@ function* postVideoURLCall(param) {
     const results = response.data;
     console.log('[INFO]: POST VIDEO URL API:');
 
-    console.log(results);
+    //console.log(results);
+    yield put({type: RECIPE, payload: results.data});
   } catch (e) {
     console.log('Post Video URL Failed: ' + e);
   }

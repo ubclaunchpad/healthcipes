@@ -6,6 +6,7 @@ import {
 } from '../actions/feedActions';
 import {
   RECIPE,
+  VIDEO_RECIPE,
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
@@ -16,6 +17,27 @@ const defaultRecipe = {
   name: '',
   recipe_description: '',
   created_time: new Date(),
+  user_id: '',
+  creator_username: '',
+  header_image: '',
+  protein: 0,
+  carbs: 0,
+  fat: 0,
+  fiber: 0,
+  calories: 0,
+  servings: 0,
+  vegetarian: false,
+  vegan: false,
+  cooking_time: 0,
+  steps: [],
+  ingredients: [],
+};
+
+const videoRecipe = {
+  recipe_id: 0,
+  name: '',
+  recipe_description: '',
+  url: '',
   user_id: '',
   creator_username: '',
   header_image: '',
@@ -68,6 +90,15 @@ const recipeReducer = (state = defaultRecipe, action) => {
   }
 };
 
+const videoRecipeReducer = (state = videoRecipe, action) => {
+  switch (action.type) {
+    case VIDEO_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 const registerRecipeLikeReducer = (state = defaultRecipe, action) => {
   switch (action.type) {
     case REGISTER_LIKE_RECIPE:
@@ -100,6 +131,7 @@ export default combineReducers({
   forYouFeedReducer,
   searchResultReducer,
   recipeReducer,
+  videoRecipeReducer,
   registerRecipeLikeReducer,
   registerRecipeViewReducer,
   recipeLikeGetReducer,

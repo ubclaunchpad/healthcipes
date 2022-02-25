@@ -168,15 +168,17 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         return "Error with {}".format(e), 400
 
 @router.post("/video")
-def create_recipe(url: Dict):
+def create_recipe(recipe: Dict):
     try:
-        print(url)
         conn, cursor = init_conn()
         res = ''
-        if (url != url['url']):
-            res = recipe_from_video_url(conn, cursor, url['url'])
+        if (recipe != recipe['url']):
+            res = recipe_from_video_url(conn, cursor, recipe)
+            print(res)
         return {
-            "data": res,
+            "recipe_description": res['recipe_description'],
+            "name": res['name'],
+            "url": res['url'],
             "status_code": 200
         }
     except Exception as e:

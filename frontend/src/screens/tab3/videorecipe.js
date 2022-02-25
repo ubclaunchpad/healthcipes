@@ -159,7 +159,9 @@ export default function Post({navigation}) {
                         dispatch({
                             type: POST_VIDEO_URL,
                             payload: {
+                              recipe_name: RecipeName,
                               url: URL,
+                              recipe_description: Description,
                             },
                         });
                     })}

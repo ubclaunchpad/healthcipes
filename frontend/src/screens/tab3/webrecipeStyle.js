@@ -10,8 +10,12 @@ export default StyleSheet.create({
         fontWeight: 'bold',
         alignSelf: 'center',
         color: color.black,
-        marginLeft: 15,
-        marginRight: 118
+        marginLeft: 18,
+    },
+    Next: {
+        fontSize: 18,
+        color: color.lightGey,
+        marginRight: 18,
     },
     textBox: {
         marginTop: 30,

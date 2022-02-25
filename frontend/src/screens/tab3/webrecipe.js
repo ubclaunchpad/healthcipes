@@ -47,11 +47,14 @@ export default function webrecipe({ navigation }) {
                       height: 30,
                       width: 30,
                       resizeMode: 'contain',
-                      marginLeft: 25
+                      marginLeft: 18
                     }}
                   />
                 </TouchableOpacity>
                 <Text style={webrecipeStyle.Title}> New Recipe </Text>
+                <TouchableOpacity>
+                  <Text style={webrecipeStyle.Next}> Next </Text>
+                </TouchableOpacity>
               </View>
               <View style={{
                 flexDirection: 'row'
@@ -86,7 +89,7 @@ export default function webrecipe({ navigation }) {
                 auto: 1,
                 marginLeft: 18,
                 marginTop: 20
-                }}>
+              }}>
                 <Text>
                   Search Results for "Healthy Chicken Recipes"
                 </Text>
@@ -95,6 +98,5 @@ export default function webrecipe({ navigation }) {
       </SafeAreaView>
     );
   }
-
   return null;
 }

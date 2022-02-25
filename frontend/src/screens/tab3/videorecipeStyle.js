@@ -36,6 +36,13 @@ export default StyleSheet.create({
         paddingTop: 0,
         paddingBottom: 0,
         height: 150,
+    },
+    tabtext: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        color: color.black,
+        marginHorizontal: 15,
     }
 
 })

@@ -24,11 +24,14 @@ import {
 } from '../../actions/recipeActions';
 import GoButton from '../../components/goButton';
 import axios from 'axios';
+import Loader from '../../components/Loader';
+import { SET_LOADING } from '../../actions/globalActions';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
   const dispatch = useDispatch();
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
+  const loading = useSelector(state => state.globalReducer.loadingReducer);
   const [stepImage, setStepImage] = useState('');
   const [imageURI, setImageURI] = useState('');
   const [step, setStep] = useState('');
@@ -51,6 +54,7 @@ export default function NewStep({navigation, route}) {
   function save() {
     if (stepImage && stepImage !== '') {
       if (time > 0) {
+        dispatch({type: SET_LOADING, loading: true});
         const uploadUri =
           Platform.OS === 'ios'
             ? stepImage.uri.replace('file://', '')
@@ -88,7 +92,10 @@ export default function NewStep({navigation, route}) {
                 step: stepObj,
               },
             });
+            dispatch({type: SET_LOADING, loading: false});
             navigation.pop();
+          }).catch(() => {
+            dispatch({type: SET_LOADING, loading: false});
           });
       } else {
         console.log('Cooking Time Has To Be Greater Than 0');
@@ -115,6 +122,7 @@ export default function NewStep({navigation, route}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Loader(loading, 'fade')}
       {addIngredient && (
         <View
           style={{

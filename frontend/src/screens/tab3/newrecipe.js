@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
+import {TabActions} from '@react-navigation/native';
 import {v4 as uuidv4} from 'uuid';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,11 +24,14 @@ import GoButton from '../../components/goButton';
 import {POST_RECIPE, RECIPE_STEP} from '../../actions/recipeActions';
 import NutritionChips from '../../components/nutritionChips';
 import newrecipeStyle from './newrecipeStyle';
+import {SET_LOADING} from '../../actions/globalActions';
+import Loader from '../../components/Loader';
 
 export default function NewRecipe({navigation}) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
+  const loading = useSelector(state => state.globalReducer.loadingReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
   const [recipeImage, setRecipeImage] = useState('');
@@ -122,6 +126,7 @@ export default function NewRecipe({navigation}) {
   function save() {
     if (recipeName !== '') {
       if (recipeImage !== '') {
+        dispatch({type: SET_LOADING, loading: true});
         const uploadUri =
           Platform.OS === 'ios'
             ? recipeImage.uri.replace('file://', '')
@@ -174,6 +179,19 @@ export default function NewRecipe({navigation}) {
               steps: steps,
               ingredients: ingredients,
             });
+
+            dispatch({type: SET_LOADING, loading: false});
+
+            dispatch({
+              type: RECIPE_STEP,
+              payload: [{step_index: 0, step_image: ''}],
+            });
+            navigation.replace('NewRecipe');
+            const jumpToAction = TabActions.jumpTo('FeedTab');
+            navigation.dispatch(jumpToAction);
+          })
+          .catch(() => {
+            dispatch({type: SET_LOADING, loading: false});
           });
       } else {
         console.log('Image Cannot Be Empty');
@@ -185,6 +203,7 @@ export default function NewRecipe({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Loader(loading, 'fade')}
       <View style={{paddingHorizontal: '5%', flex: 2}}>
         <TextInput
           placeholder="Recipe Name"

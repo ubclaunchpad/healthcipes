@@ -1,5 +1,7 @@
 import logging
 
+from app.route.pantry import get_all_ingredients
+
 # TODO: should abstract into a function that just takes sql_proc as input
 def get_recipe_by_keyword(cursor, keyword):
     sql_proc = 'getRecipeKeywordSearch'
@@ -165,14 +167,14 @@ def post_scrape_steps(conn, cursor, stepList, recipe):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
-def post_steps(conn, cursor, stepList, recipe):
+def post_steps(conn, cursor, stepList, recipeID):
     sql_proc = 'addSteps'
     sql_ingredient_proc = 'addIngredients'
 
     try:
         for step in stepList:
             cursor.callproc(sql_proc, (
-                recipe,
+                recipeID,
                 step["step_text"],
                 step["step_time"],
                 step["step_image"],
@@ -182,12 +184,15 @@ def post_steps(conn, cursor, stepList, recipe):
 
             cursor.execute('SELECT LAST_INSERT_ID()')
             cursor.lastrowid = cursor.fetchone()[0] 
+            stepID = cursor.lastrowid
 
             for ingredient in step["step_ingredients"]:
+                res = get_all_ingredients(ingredient)
+
                 cursor.callproc(sql_ingredient_proc, (
-                    ingredient,
-                    recipe,
-                    cursor.lastrowid,
+                    res['data'][0][0],
+                    recipeID,
+                    stepID,
                     ingredient,
                     "Other"
                 ))

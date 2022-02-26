@@ -37,14 +37,14 @@ export default function Recipe({navigation, route}) {
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
-  
+
   const open = useSelector(state => state.accordionReducer.accordionReducer);
   const stepIndex = useSelector(
     state => state.accordionStepReducer.accordionStepReducer,
   );
 
   useEffect(() => {
-    if(route.params.recipe_id) {
+    if (route.params.recipe_id) {
       getRecipeFromID(parseInt(route.params.recipe_id));
     }
   }, []);
@@ -140,32 +140,33 @@ export default function Recipe({navigation, route}) {
   }
 
   useEffect(() => {
-    if(recipe) {
-    storage()
-      .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
-      .getDownloadURL()
-      .then(res => {
-        setImage({uri: res});
-      })
-      .catch(e => {
-        console.log('No User Image: ' + e);
-      });
+    if (recipe) {
+      storage()
+        .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
+        .getDownloadURL()
+        .then(res => {
+          setImage({uri: res});
+        })
+        .catch(e => {
+          console.log('[INFO]: No User Image: ' + e);
+        });
     }
   }, [recipe]);
 
   useEffect(() => {
-    if(recipe) {
-    dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
-    dispatch({
-      type: POST_RECIPE_VIEW,
-      user_id: auth().currentUser.uid,
-      recipe_id: recipe.recipe_id,
-    });
-    checkLike(recipe.recipe_id);
-  }
+    if (recipe) {
+      dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
+      dispatch({
+        type: POST_RECIPE_VIEW,
+        user_id: auth().currentUser.uid,
+        recipe_id: recipe.recipe_id,
+      });
+      checkLike(recipe.recipe_id);
+    }
   }, [dispatch, recipe]);
 
   useEffect(() => {
+    console.log(recipeInfo);
     setIngredients(recipeInfo.ingredients);
     setSteps(recipeInfo.steps);
   }, [recipeInfo]);
@@ -368,7 +369,7 @@ export default function Recipe({navigation, route}) {
       />
     );
   }
-  if(!recipe) {
+  if (!recipe) {
     return null;
   }
   return (

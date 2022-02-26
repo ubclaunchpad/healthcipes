@@ -321,23 +321,23 @@ def get_recipe_by_id(conn, cursor, recipe_id):
                     res["steps"].append(
                         {
                             "step_id": result[16],
-                            "description": result[17],
-                            "time": result[18],
-                            "header_image": result[19],
+                            "description": result[18],
+                            "time": result[19],
+                            "header_image": result[20],
                         }
                     )
-                    step_ids.add(result[14])
+                    step_ids.add(result[16])
 
-                if (result[17]) and (result[17] not in ingredient_ids):
+                if (result[21]) and (result[21] not in ingredient_ids):
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[20],
-                            "ingredient_name": result[21],
-                            "category": result[22],
-                            "step_id": result[23]
+                            "ingredient_id": result[21],
+                            "ingredient_name": result[22],
+                            "category": result[23],
+                            "step_id": result[24]
                         }
                     )
-                    ingredient_ids.add(result[20])
+                    ingredient_ids.add(result[21])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])

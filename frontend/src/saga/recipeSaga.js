@@ -83,7 +83,7 @@ function* getRecipeCall(param) {
     // console.log(results);
     yield put({type: RECIPE, payload: results.data});
   } catch (e) {
-    console.log('Get Feed Failed: ' + e);
+    console.log('Get Recipe Failed: ' + e);
   }
 }
 
@@ -123,7 +123,7 @@ function* postRecipeLikeCall(data) {
 
     const response = yield call(axios, apiConfig);
     const results = response.data;
-    console.log('[INFO]: POST USER ACTIVITY API:');
+    console.log('[INFO]: POST RECIPE LIKE');
 
     yield put({type: REGISTER_LIKE_RECIPE, payload: results.data});
     yield put({type: LIKE_RECIPE, payload: results.data});
@@ -149,7 +149,7 @@ function* postRecipeViewCall(data) {
 
     const response = yield call(axios, apiConfig);
     const results = response.data;
-    console.log('[INFO]: POST USER ACTIVITY API:');
+    console.log('[INFO]: POST RECIPE VIEW:');
     // console.log(results);
     yield put({type: REGISTER_VIEW_RECIPE, payload: results.data});
     // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this

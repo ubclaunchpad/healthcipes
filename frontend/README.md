@@ -28,3 +28,8 @@ export PATH=$ANDROID_HOME/tools:$PATH`
 ### Android:
 1. open umami/frontend/android in android studios
 2. run using the play button in android studios
+
+#### NOTES
+- Might have to run `adb reverse tcp:8080 tcp:8080` to map local machine and emulator port to 8080
+so you can access local api at port 8080
+

@@ -6,6 +6,7 @@ import {
 } from '../actions/feedActions';
 import {
   RECIPE,
+  VIDEO_RECIPE,
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
@@ -33,6 +34,12 @@ const defaultRecipe = {
   cooking_time: 0,
   steps: [],
   ingredients: [],
+};
+
+const videoRecipe = {
+  name: '',
+  recipe_description: '',
+  url: '',
 };
 
 const defaultSteps = [{step_index: 0, step_image: ''}];
@@ -67,6 +74,15 @@ const searchResultReducer = (state = [], action) => {
 const recipeReducer = (state = defaultRecipe, action) => {
   switch (action.type) {
     case RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const videoRecipeReducer = (state = videoRecipe, action) => {
+  switch (action.type) {
+    case VIDEO_RECIPE:
       return action.payload;
     default:
       return state;
@@ -125,6 +141,7 @@ export default combineReducers({
   forYouFeedReducer,
   searchResultReducer,
   recipeReducer,
+  videoRecipeReducer,
   registerRecipeLikeReducer,
   registerRecipeViewReducer,
   recipeLikeGetReducer,

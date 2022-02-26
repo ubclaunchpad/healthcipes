@@ -19,6 +19,7 @@ import Pantry from './src/screens/tab2/pantry';
 import Post from './src/screens/tab3/post';
 import NewRecipe from './src/screens/tab3/newrecipe'
 import VideoRecipe from './src/screens/tab3/videorecipe'
+import VideoRecipeGenerated from './src/screens/tab3/videorecipegenerated'
 import WebRecipe from './src/screens/tab3/webrecipe'
 import Notification from './src/screens/tab4/notification';
 import Profile from './src/screens/tab5/profile';
@@ -74,6 +75,7 @@ function CreateScreen() {
       <CreateStack.Screen name="NewRecipe" component={NewRecipe} />
       <CreateStack.Screen name="NewStep" component={NewStep} />
       <CreateStack.Screen name="VideoRecipe" component={VideoRecipe} />
+      <CreateStack.Screen name="VideoRecipeGenerated" component={VideoRecipeGenerated} />
       <CreateStack.Screen name="WebRecipe" component={WebRecipe} />
     </CreateStack.Navigator>
   );

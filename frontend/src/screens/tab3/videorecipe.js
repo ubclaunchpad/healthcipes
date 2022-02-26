@@ -13,7 +13,10 @@ import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import GoButton from '../../components/goButton';
 import {GET_USER} from '../../actions/accountActions';
+import {POST_VIDEO_URL} from '../../actions/recipeActions'
 import videorecipeStyle from './videorecipeStyle';
+import newrecipeStyle from './newrecipeStyle';
+import {launchImageLibrary} from 'react-native-image-picker';
 import color from '../../styles/color';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -28,7 +31,7 @@ export default function Post({navigation}) {
   const [RecipeName, SetRecipeName] = useState('')
   const [URL, SetURL] = useState('')
   const [Description, SetDescription] = useState('')
-  const [profPic, setProfPic] = useState('');
+  const [recipeImage, setrecipeImage] = useState('');
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -59,20 +62,56 @@ export default function Post({navigation}) {
                         />
                     </TouchableOpacity>
                     <Text style={videorecipeStyle.Title}> New Recipe </Text>
-                    <TouchableOpacity>
-                    <Text style={videorecipeStyle.Next}> Next </Text>
+                    <TouchableOpacity
+                        onPress={() => {navigation.push('VideoRecipeGenerated')}}
+                    >
+                        <Text style={videorecipeStyle.Next}> Next </Text>
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Image
-                        source={require("../../assets/BestSpaghettiInItaly.png")}
+                    <TouchableOpacity
                         style={{
-                            marginTop: 20,
-                            borderRadius: 35,
-                            height: 300,
-                            width: "100%",
+                            aspectRatio: 1.2,
+                            marginTop: '7%',
+                            width: '100%',
+                            backgroundColor: color.gray,
+                            borderRadius: 20,
+                            justifyContent: 'flex-end',
+                            alignItems: 'flex-end',
+                            padding: recipeImage !== '' ? 0 : 20,
                         }}
-                    />
+                        onPress={() => {
+                        launchImageLibrary({
+                            selectionLimit: 1,
+                            mediaType: 'photo',
+                            includeBase64: false,
+                        }).then(res => {
+                            setrecipeImage({uri: res?.assets[0].uri});
+                        });
+                    }}>
+                        <Image
+                            source={
+                                recipeImage !== '' ? recipeImage : require('../../assets/Logo.png')
+                            }
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: 20,
+                                resizeMode: recipeImage !== '' ? 'cover' : 'contain',
+                            }}
+                         />
+                        <Image
+                            source={require('../../assets/EditStep.png')}
+                            style={[
+                                newrecipeStyle.EditStepIcon,
+                                {
+                                position: 'absolute',
+                                bottom: 10,
+                                right: 10,
+                                },
+                            ]}
+                        />
+                    </TouchableOpacity>
                 </View>
                 <View style={{
                     marginTop: 10,
@@ -119,7 +158,15 @@ export default function Post({navigation}) {
                     marginBottom: 100,
                 }}>
                     {GoButton('Submit', () => {
-                        navigation.push('VideoRecipe');
+                        navigation.push('VideoRecipeGenerated')
+                        dispatch({
+                            type: POST_VIDEO_URL,
+                            payload: {
+                              recipe_name: RecipeName,
+                              url: URL,
+                              recipe_description: Description,
+                            },
+                        });
                     })}
                 </View>
             </View>

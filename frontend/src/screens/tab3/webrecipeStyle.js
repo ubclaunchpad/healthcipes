@@ -29,12 +29,12 @@ export default StyleSheet.create({
         width: 300,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     textInput: {
         height: 16,
         borderColor: color.gray,
-        paddingTop: 0,
-        paddingBottom: 0,
+        alignSelf: 'center',
+        marginLeft: 10
     },
 });

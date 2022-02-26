@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TextInput,
@@ -19,10 +19,15 @@ import { FlatList } from 'react-native-gesture-handler';
 export default function webrecipe({ navigation }) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
+  const [URL, setURL] = useState("");
 
   useEffect(() => {
     dispatch({ type: GET_USER, userID: auth().currentUser.uid });
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log("URL INPUTTED");
+  }, [URL]);
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -60,20 +65,22 @@ export default function webrecipe({ navigation }) {
                 flexDirection: 'row'
               }}>
                 <View style={webrecipeStyle.textBox}>
-                  <TextInput style={webrecipeStyle.textInput} placeholder="Search Web" />
-                  <TouchableOpacity>
+                <TouchableOpacity onPress={() => console.log("SEARCH URL")}>
                     <Image
                       source={require("../../assets/Search.png")}
                       style={{
                         height: 20,
                         width: 20,
                         resizeMode: 'contain',
-                        marginLeft: 25
                       }}
                     />
                   </TouchableOpacity>
+                  <TextInput
+                    style={webrecipeStyle.textInput}
+                    placeholder="Search Web"
+                    onChangeText={(URL) => setURL(URL)} />
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => console.log("FILTER")}>
                   <Image
                     source={require("../../assets/Filter.png")}
                     style={{
@@ -86,13 +93,14 @@ export default function webrecipe({ navigation }) {
                 </TouchableOpacity>
               </View>
               <View style={{
-                auto: 1,
-                marginLeft: 18,
-                marginTop: 20
+                paddingHorizontal: 60,
+                marginTop: 20,
+                marginBottom: 100,
               }}>
-                <Text>
-                  Search Results for "Healthy Chicken Recipes"
-                </Text>
+                {GoButton('Submit', () => {
+                  // save to DB
+                  navigation.pop();
+                })}
               </View>
             </View>} />
       </SafeAreaView>

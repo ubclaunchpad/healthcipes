@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Alert,
   StyleSheet,
+  Linking,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {Chip} from 'react-native-paper';
@@ -312,7 +313,7 @@ export default function EditProfile({navigation}) {
                   <Text
                     style={{
                       paddingTop: '20%',
-                      paddingBottom: '30%',
+                      paddingBottom: '10%',
                       color: color.black,
                       alignSelf: 'center',
                       fontSize: 16,
@@ -321,6 +322,31 @@ export default function EditProfile({navigation}) {
                     Log Out
                   </Text>
                 </TouchableOpacity>
+                <Text
+                  style={{
+                    marginVertical: 10,
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                    textAlign: 'center'
+                  }}
+                  onPress={() => {
+                    Linking.openURL('https://hungrii.com/privacy/');
+                  }}>
+                  Privacy Policy
+                </Text>
+                <Text
+                  style={{
+                    marginVertical: 10,
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                    textAlign: 'center',
+                    paddingBottom: '40%',
+                  }}
+                  onPress={() => {
+                    Linking.openURL('https://hungrii.com/terms-conditions/');
+                  }}>
+                  Terms of Service
+                </Text>
               </View>
             </View>
           }

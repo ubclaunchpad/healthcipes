@@ -89,7 +89,7 @@ function* getUserCall(param) {
 
     const response = yield call(axios, apiConfig);
     const results = response.data[0];
-    console.log('[INFO]: GET USER API:');
+    console.log(`[INFO]: GET USER API: ${results[0][0]} and ${results[0][4]}`);
     const userObj = {
       user_id: results[0][0],
       username: results[0][1],
@@ -109,7 +109,6 @@ function* getUserCall(param) {
       style: results[0][15],
       experience: results[0][16],
     };
-    console.log(userObj);
     yield put({type: USER_INFO, payload: userObj});
   } catch (e) {
     console.log('Signup Failed');
@@ -126,7 +125,7 @@ function* registerUserTokenCall(param) {
       },
     };
 
-    console.log('[INFO]: POST USER TOKEN API:');
+    console.log(`[INFO]: POST USER TOKEN API: ${param.payload.token}`);
     yield call(axios, apiConfig);
   } catch (e) {
     console.log(e);

@@ -7,8 +7,8 @@
 import requests
 import json
 
-serverToken = 'AAAAg7rOhRA:APA91bE2Wk_Ly0trmeTXKSgL3Epo-bo2G8A4TyaWETuTnFBZGZGNsQAnOIGJBQl9CBcpknooEM0vPOKOzsn5qEHfnupluWt8qe3Cx9IccQN0FXCwqk6grRKRKg-wsqRGNWmFmlaC1o6z'
-deviceToken = 'd6fao-1Rmk5DorCUCtcy_O:APA91bG1jc985c2jmBgCSZXM3dz0v6u71UQGhlJDpexIet2cy8ifjsNLW85nBlPW6m_s7Xqb2KxFWi7IDeDthZljGJfqFAMP1G0T6axzDMnIkY0oNMXeeFyK1XzYl88oeCRRbt7jhITE'
+serverToken = 'AAAAg7rOhRA:APA91bGnlpmOHIRIMQ97jeFYRaJzvz6SnAsdcziGuXF61sMMavsq0g3WOTqZVKcRYSS6u9fZV7FVo2j9VTB5lNIu0j3Nxi7l8zmSpBKes3Hd2PJJbq7Tl7TsHbdCvwcyjV2VvPfXYYXq'
+deviceToken = 'djjDCPhBTy69sl4l5-IHdQ:APA91bET76UbACbvoChaoRQgd3UHL340pQMvFQJKvh9RLir8HoUpK_X7gFp1vkyr0F1sC3xFC4xhVY8DsbSiqD27RIVk92aMhlSkciwZ3_H60eUEl7I_vb13JcDTDVWQFBJODYqRmG3q'
 
 headers = {
         'Content-Type': 'application/json',
@@ -16,15 +16,14 @@ headers = {
       }
 
 body = {
-          'notification': {'title': 'Sending push form python script',
-                            'body': 'New Message'
+          "notification": {"title": "Sending push from python script",
+                            "body": "New Message"
                             },
-          'to':
+          "to":
               deviceToken,
-          'priority': 'high',
-        #   'data': dataPayLoad,
+          "priority": "high",
+        #   "data": dataPayLoad,
         }
 response = requests.post("https://fcm.googleapis.com/fcm/send",headers = headers, data=json.dumps(body))
 print(response.status_code)
-
 print(response.json())

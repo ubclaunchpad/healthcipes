@@ -9,7 +9,6 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -24,7 +23,6 @@ import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 import Loader from '../../components/Loader';
 import {SET_LOADING} from '../../actions/globalActions';
-import messaging from '@react-native-firebase/messaging';
 
 export default function Feed({navigation}) {
   const dispatch = useDispatch();
@@ -76,14 +74,11 @@ export default function Feed({navigation}) {
   }
 
   useEffect(() => {
-    dispatch({type: GET_USER, userID: auth().currentUser.uid});
-    requestUserPermission();
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch({type: SET_LOADING, loading: true});
-    dispatch({type: GET_FEED, user: user});
-  }, [dispatch, user]);
+    if (user.user_id !== '') {
+      dispatch({type: SET_LOADING, loading: true});
+      dispatch({type: GET_FEED, user: user});
+    }
+  }, [user]);
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');

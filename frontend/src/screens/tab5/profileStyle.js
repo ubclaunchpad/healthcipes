@@ -33,7 +33,7 @@ export default StyleSheet.create({
     marginVertical: '6%',
   },
   editprofilePicture: {
-    width: '100%',
+    width: '110%',
     height: '100%',
     borderRadius: 150 / 2,
     overflow: 'hidden',
@@ -44,7 +44,7 @@ export default StyleSheet.create({
     left: 19,
   },
   textInput: {
-    height: 12,
+    height: 20,
     marginLeft: 60,
     marginRight: 60,
     borderBottomWidth: 1,
@@ -56,7 +56,7 @@ export default StyleSheet.create({
     color: color.gray,
     marginLeft: 60,
     marginTop: '5%',
-    marginBottom: '5%',
+    marginBottom: '3%',
   },
   dietarybutton: {
     borderRadius: 16,

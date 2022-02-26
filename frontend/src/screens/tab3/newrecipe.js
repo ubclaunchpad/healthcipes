@@ -8,32 +8,49 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
+import {TabActions} from '@react-navigation/native';
+import {v4 as uuidv4} from 'uuid';
+import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
 import GoButton from '../../components/goButton';
-import {POST_RECIPE} from '../../actions/recipeActions';
+import {POST_RECIPE, RECIPE_STEP} from '../../actions/recipeActions';
 import NutritionChips from '../../components/nutritionChips';
 import newrecipeStyle from './newrecipeStyle';
+import {SET_LOADING} from '../../actions/globalActions';
+import Loader from '../../components/Loader';
 
 export default function NewRecipe({navigation}) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.accountReducer.userInfoReducer);
+  const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
+  const loading = useSelector(state => state.globalReducer.loadingReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
   const [recipeImage, setRecipeImage] = useState('');
-  const [steps, setSteps] = useState(['NEW']);
   const [servings, setServings] = useState(0);
   const [prepTime, setPrepTime] = useState(0);
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
   }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let prepTimeCalc = 0;
+      steps.forEach(step => {
+        prepTimeCalc += step.step_time ? step.step_time : 0;
+      });
+      setPrepTime(prepTimeCalc);
+    }, [steps]),
+  );
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -63,12 +80,15 @@ export default function NewRecipe({navigation}) {
         />
         {index % 2 === 0 ? (
           <View style={{alignItems: 'center', marginBottom: '120%'}}>
-            <View style={newrecipeStyle.StepImageContainer}>
+            <ImageBackground
+              imageStyle={{borderRadius: 20}}
+              style={newrecipeStyle.StepImageContainer}
+              source={item.image_cache}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
               />
-            </View>
+            </ImageBackground>
             <Image
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
@@ -80,12 +100,15 @@ export default function NewRecipe({navigation}) {
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
             />
-            <View style={newrecipeStyle.StepImageContainer}>
+            <ImageBackground
+              imageStyle={{borderRadius: 20}}
+              style={newrecipeStyle.StepImageContainer}
+              source={item.image_cache}>
               <Image
                 source={require('../../assets/EditStep.png')}
                 style={newrecipeStyle.EditStepIcon}
               />
-            </View>
+            </ImageBackground>
           </View>
         )}
         <View
@@ -103,6 +126,7 @@ export default function NewRecipe({navigation}) {
   function save() {
     if (recipeName !== '') {
       if (recipeImage !== '') {
+        dispatch({type: SET_LOADING, loading: true});
         const uploadUri =
           Platform.OS === 'ios'
             ? recipeImage.uri.replace('file://', '')
@@ -138,14 +162,36 @@ export default function NewRecipe({navigation}) {
               vegan: false,
               cooking_time: prepTime,
             };
-            const finalSteps = [];
             const ingredients = [];
+
+            steps.forEach(step => {
+              ingredientList = step.step_ingredients;
+              ingredientList.forEach(ingredient => {
+                if (!ingredients.includes(ingredient)) {
+                  ingredients.push(ingredient);
+                }
+              });
+            });
+
             dispatch({
               type: POST_RECIPE,
               recipeObj: recipeObj,
-              steps: finalSteps,
+              steps: steps,
               ingredients: ingredients,
             });
+
+            dispatch({type: SET_LOADING, loading: false});
+
+            dispatch({
+              type: RECIPE_STEP,
+              payload: [{step_index: 0, step_image: ''}],
+            });
+            navigation.replace('NewRecipe');
+            const jumpToAction = TabActions.jumpTo('FeedTab');
+            navigation.dispatch(jumpToAction);
+          })
+          .catch(() => {
+            dispatch({type: SET_LOADING, loading: false});
           });
       } else {
         console.log('Image Cannot Be Empty');
@@ -157,6 +203,7 @@ export default function NewRecipe({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Loader(loading, 'fade')}
       <View style={{paddingHorizontal: '5%', flex: 2}}>
         <TextInput
           placeholder="Recipe Name"
@@ -174,9 +221,14 @@ export default function NewRecipe({navigation}) {
       </View>
       <DraggableFlatList
         data={steps}
-        onDragEnd={({data}) => setSteps(data)}
+        onDragEnd={({data}) =>
+          dispatch({
+            type: RECIPE_STEP,
+            payload: data,
+          })
+        }
         horizontal
-        keyExtractor={item => item.key}
+        keyExtractor={() => uuidv4()}
         renderItem={renderItem}
         containerStyle={{flex: 18}}
         style={{height: '100%'}}
@@ -185,7 +237,13 @@ export default function NewRecipe({navigation}) {
           <View style={{flexDirection: 'row', height: '100%'}}>
             <TouchableOpacity
               onPress={() => {
-                setSteps([...steps, 'NEW']);
+                dispatch({
+                  type: RECIPE_STEP,
+                  payload: [
+                    ...steps,
+                    {step_index: steps.length, step_image: ''},
+                  ],
+                });
               }}
               style={[
                 {
@@ -315,7 +373,7 @@ export default function NewRecipe({navigation}) {
                           width: 50,
                           textAlign: 'center',
                         }}
-                        value={servings}
+                        value={servings.toString()}
                         onChangeText={text => {
                           setServings(Number(text));
                         }}

@@ -1,11 +1,14 @@
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import auth from '@react-native-firebase/auth';
-
+import messaging from '@react-native-firebase/messaging';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SplashScreen from 'react-native-splash-screen';
+import { useDispatch } from 'react-redux';
 import SignUp from './src/screens/login/signup';
 import Login from './src/screens/login/login';
 import Forgot from './src/screens/login/forgot';
@@ -16,6 +19,7 @@ import Pantry from './src/screens/tab2/pantry';
 import Post from './src/screens/tab3/post';
 import NewRecipe from './src/screens/tab3/newrecipe'
 import VideoRecipe from './src/screens/tab3/videorecipe'
+import VideoRecipeGenerated from './src/screens/tab3/videorecipegenerated'
 import WebRecipe from './src/screens/tab3/webrecipe'
 import Notification from './src/screens/tab4/notification';
 import Profile from './src/screens/tab5/profile';
@@ -26,6 +30,8 @@ import Recipe from './src/screens/tab1/recipe';
 import EditPantry from './src/screens/tab2/editPantry';
 import EditProfile from './src/screens/tab5/editprofile';
 import NewStep from './src/screens/tab3/newStep';
+import groceryList from './src/screens/tab2/groceryList'
+import { GET_USER, POST_USER_TOKEN } from './src/actions/accountActions';
 
 enableScreens();
 
@@ -69,6 +75,7 @@ function CreateScreen() {
       <CreateStack.Screen name="NewRecipe" component={NewRecipe} />
       <CreateStack.Screen name="NewStep" component={NewStep} />
       <CreateStack.Screen name="VideoRecipe" component={VideoRecipe} />
+      <CreateStack.Screen name="VideoRecipeGenerated" component={VideoRecipeGenerated} />
       <CreateStack.Screen name="WebRecipe" component={WebRecipe} />
     </CreateStack.Navigator>
   );
@@ -84,6 +91,7 @@ function PantryScreen() {
       }}>
       <PantryStack.Screen name="Pantry" component={Pantry} />
       <PantryStack.Screen name="EditPantry" component={EditPantry} />
+      <PantryStack.Screen name="Grocery" component={groceryList} />
     </PantryStack.Navigator>
   );
 }
@@ -105,7 +113,41 @@ function ProfileScreen() {
 const SignUpLoginStack = createNativeStackNavigator();
 const MasterStack = createNativeStackNavigator();
 
+
+// useEffect so recipe id that is taking in will navigate?
+// parse recipe id into recipe object (look at other examples)
+//    - done in recipe.js wherre it checks if param is id or object, if id then find object
+//    - navigation.push('Recipe', {recipe: item});
+
+const linking = {
+  prefixes: ["umami://"],
+  config: {
+    screens: {
+      MainTabs: {
+        screens: {
+          FeedTab: {
+            path: 'feed',
+            screens: {
+              Recipe: {
+                path: 'recipe/:recipe_id?',
+                parse: {
+                  id: (id) => `${id}`
+                }
+            }
+          }
+          },
+          PantryTab: 'pantry',
+          CreateTab: 'create',
+          NotificationTab: 'noti',
+          ProfileTab: 'profile',
+        }
+      }
+    }
+  }
+}
+
 export default function App() {
+  const dispatch = useDispatch();
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
@@ -161,12 +203,41 @@ export default function App() {
     );
   }
 
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      await messaging()
+        .getToken()
+        .then(token => {
+          dispatch({
+            type: POST_USER_TOKEN,
+            payload: {
+              userID: auth().currentUser.uid,
+              token: token,
+            },
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
   useEffect(() => {
+    SplashScreen.hide();
     // Handle user state changes
     function onAuthStateChanged(newUser) {
       setUser(newUser);
       if (initializing) {
         setInitializing(false);
+        if (newUser) {
+          dispatch({type: GET_USER, userID: auth().currentUser.uid});
+          requestUserPermission();
+        }
       }
     }
 
@@ -192,7 +263,7 @@ export default function App() {
     );
   }
   return (
-    <NavigationContainer ref={navigation}>
+    <NavigationContainer ref={navigation} linking={linking}>
       <MasterStack.Navigator
         initialRouteName="MainTabs"
         screenOptions={{

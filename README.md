@@ -94,19 +94,20 @@ MySQL will be exposed on port 3306
 ## Further deployment changes 
 Inide of Production machine from root umami folder
 1. On a local device, run `bash ./export.sh` to save a csv copy of data
-2. sudo rm -rf ./database/data
-3. sudo ./init-letsencrypt.sh
-4. run `docker-compose up --build -d` 
-5. On a local device, run `bash ./import.sh` to re-upload saved data
+2. `docker-compose down`
+3. sudo rm -rf ./database/data
+4. sudo ./init-letsencrypt.sh
+5. run `docker-compose up --build -d` 
+6. On a local device, run `bash ./import.sh` to re-upload saved data
 
 ## Database Backup & Restore
 ### Backup
-1. Run `mysqldump -u root -p -h umami.ubclaunchpad.com -P 3306 -R umami_db > umami.sql`
+1. Run `mysqldump -u root -p -h umami.harinwu.com -P 3306 -R umami_db > umami.sql`
 
 ### Restore
 1. Drop database with `drop database umami_db`
 2. Create database with `create database umami_db`
-3. Run `mysql -u root -p -h umami.ubclaunchpad.com -P 3306 umami_db < umami.sql`
+3. Run `mysql -u root -p -h umami.harinwu.com -P 3306 umami_db < umami.sql`
 
 <!-- CONTRIBUTING -->
 ## Contributing

@@ -28,7 +28,7 @@ import {
 
 
 
-export default function groceryList({ navigation }) {
+export default function GroceryList({ navigation }) {
     const dispatch = useDispatch();
     const grocerylist = useSelector(state => state.pantryReducer.pantryReducer);
     const [ingredientIds, setingredientIds] = useState([]);

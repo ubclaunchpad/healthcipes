@@ -27,7 +27,7 @@ export default function Profile({navigation}) {
   const myRecipeFeed = useSelector(
     state => state.profileReducer.myRecipeReducer,
   );
-  const [page, setPage] = useState('Liked');
+  const [page, setPage] = useState('Myrecipes');
   const [profPic, setProfPic] = useState('');
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);

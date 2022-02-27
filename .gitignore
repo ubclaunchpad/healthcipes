@@ -4,3 +4,4 @@ database/data/
 deploy/*.csv
 *.env
 *.p8
+deploy/umami.sql

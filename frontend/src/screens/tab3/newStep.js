@@ -25,7 +25,7 @@ import {
 import GoButton from '../../components/goButton';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import { SET_LOADING } from '../../actions/globalActions';
+import {SET_LOADING} from '../../actions/globalActions';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
@@ -94,7 +94,8 @@ export default function NewStep({navigation, route}) {
             });
             dispatch({type: SET_LOADING, loading: false});
             navigation.pop();
-          }).catch(() => {
+          })
+          .catch(() => {
             dispatch({type: SET_LOADING, loading: false});
           });
       } else {
@@ -212,7 +213,7 @@ export default function NewStep({navigation, route}) {
               aspectRatio: 1,
               marginTop: '5%',
               width: '100%',
-              backgroundColor: color.gray,
+              backgroundColor: color.appPrimaryLight,
               borderRadius: 20,
               justifyContent: 'flex-end',
               alignItems: 'flex-end',
@@ -235,7 +236,7 @@ export default function NewStep({navigation, route}) {
                 width: '100%',
                 height: '100%',
                 borderRadius: 20,
-                resizeMode: stepImage !== '' ? 'cover' : 'contain',
+                resizeMode: stepImage !== '' && stepImage ? 'cover' : 'contain',
               }}
             />
             <Image
@@ -281,7 +282,7 @@ export default function NewStep({navigation, route}) {
               marginLeft: 10,
               fontSize: 16,
             }}
-            value={time.toString()}
+            value={time !== 0 ? time.toString() : ''}
             onChangeText={text => {
               setTime(Number(text));
             }}

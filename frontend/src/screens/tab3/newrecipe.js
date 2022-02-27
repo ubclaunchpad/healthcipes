@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   TextInput,
@@ -18,7 +18,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {GET_USER} from '../../actions/accountActions';
 import color from '../../styles/color';
 import GoButton from '../../components/goButton';
 import {POST_RECIPE, RECIPE_STEP} from '../../actions/recipeActions';
@@ -37,10 +36,6 @@ export default function NewRecipe({navigation}) {
   const [recipeImage, setRecipeImage] = useState('');
   const [servings, setServings] = useState(0);
   const [prepTime, setPrepTime] = useState(0);
-
-  useEffect(() => {
-    dispatch({type: GET_USER, userID: auth().currentUser.uid});
-  }, [dispatch]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -70,7 +65,7 @@ export default function NewRecipe({navigation}) {
         ]}>
         <View
           style={{
-            backgroundColor: color.textGray,
+            backgroundColor: color.appPrimary,
             width: 20,
             height: 20,
             borderRadius: 20,
@@ -80,15 +75,26 @@ export default function NewRecipe({navigation}) {
         />
         {index % 2 === 0 ? (
           <View style={{alignItems: 'center', marginBottom: '120%'}}>
-            <ImageBackground
-              imageStyle={{borderRadius: 20}}
-              style={newrecipeStyle.StepImageContainer}
-              source={item.image_cache}>
-              <Image
-                source={require('../../assets/EditStep.png')}
-                style={newrecipeStyle.EditStepIcon}
-              />
-            </ImageBackground>
+            <View
+              style={{
+                padding: 5,
+                backgroundColor: color.appPrimaryLight,
+                borderRadius: item.image_cache ? 20 : 100,
+              }}>
+              <ImageBackground
+                imageStyle={{borderRadius: 20}}
+                style={
+                  item.image_cache
+                    ? newrecipeStyle.StepImageContainer
+                    : newrecipeStyle.StepImageRoundContainer
+                }
+                source={item.image_cache}>
+                <Image
+                  source={require('../../assets/EditStep.png')}
+                  style={newrecipeStyle.EditStepIcon}
+                />
+              </ImageBackground>
+            </View>
             <Image
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
@@ -100,20 +106,31 @@ export default function NewRecipe({navigation}) {
               source={require('../../assets/DashLine.png')}
               style={newrecipeStyle.StepDashLine}
             />
-            <ImageBackground
-              imageStyle={{borderRadius: 20}}
-              style={newrecipeStyle.StepImageContainer}
-              source={item.image_cache}>
-              <Image
-                source={require('../../assets/EditStep.png')}
-                style={newrecipeStyle.EditStepIcon}
-              />
-            </ImageBackground>
+            <View
+              style={{
+                padding: 5,
+                backgroundColor: color.appPrimaryLight,
+                borderRadius: item.image_cache ? 20 : 100,
+              }}>
+              <ImageBackground
+                imageStyle={{borderRadius: 20}}
+                style={
+                  item.image_cache
+                    ? newrecipeStyle.StepImageContainer
+                    : newrecipeStyle.StepImageRoundContainer
+                }
+                source={item.image_cache}>
+                <Image
+                  source={require('../../assets/EditStep.png')}
+                  style={newrecipeStyle.EditStepIcon}
+                />
+              </ImageBackground>
+            </View>
           </View>
         )}
         <View
           style={{
-            backgroundColor: color.textGray,
+            backgroundColor: color.appPrimary,
             width: '100%',
             height: 3,
             position: 'absolute',
@@ -204,7 +221,21 @@ export default function NewRecipe({navigation}) {
   return (
     <SafeAreaView style={{flex: 1}}>
       {Loader(loading, 'fade')}
-      <View style={{paddingHorizontal: '5%', flex: 2}}>
+      <View style={{paddingHorizontal: '5%', flex: 2, flexDirection: 'row', alignItems: 'flex-end'}}>
+        <TouchableOpacity
+          style={{flex: 1, marginBottom: 10, marginRight: 10}}
+          onPress={() => {
+            navigation.pop();
+          }}>
+          <Image
+            source={require('../../assets/Back.png')}
+            style={{
+              width: 24,
+              height: 24,
+              resizeMode: 'contain'
+            }}
+          />
+        </TouchableOpacity>
         <TextInput
           placeholder="Recipe Name"
           autoCorrect={false}
@@ -215,9 +246,11 @@ export default function NewRecipe({navigation}) {
             borderBottomWidth: 1,
             height: '100%',
             paddingTop: 20,
+            flex: 8
           }}
           placeholderTextColor={color.gray}
         />
+        <View style={{flex: 1}}/>
       </View>
       <DraggableFlatList
         data={steps}
@@ -256,7 +289,6 @@ export default function NewRecipe({navigation}) {
               <Image
                 source={require('../../assets/AddStep.png')}
                 style={{
-                  backgroundColor: color.textGray,
                   width: 40,
                   height: 40,
                   borderRadius: 40,
@@ -266,7 +298,7 @@ export default function NewRecipe({navigation}) {
               />
               <View
                 style={{
-                  backgroundColor: color.textGray,
+                  backgroundColor: color.appPrimary,
                   width: '50%',
                   height: 3,
                   alignSelf: 'flex-start',
@@ -288,7 +320,7 @@ export default function NewRecipe({navigation}) {
                   flex: 2,
                   marginTop: '5%',
                   width: '80%',
-                  backgroundColor: color.gray,
+                  backgroundColor: color.appPrimaryLight,
                   borderRadius: 20,
                   justifyContent: 'flex-end',
                   alignItems: 'flex-end',
@@ -330,19 +362,17 @@ export default function NewRecipe({navigation}) {
               </TouchableOpacity>
               <View style={{flex: 1.2}}>{NutritionChips({})}</View>
               <View style={{flex: 1.5, width: '80%'}}>
+              <Text style={newrecipeStyle.InputPromptText}>Description</Text>
                 <TextInput
                   style={{
-                    paddingHorizontal: '5%',
                     height: '100%',
                     borderRadius: 20,
-                    borderWidth: 1,
-                    borderColor: color.gray,
                   }}
                   value={recipeDescription}
                   onChangeText={text => {
                     setRecipeDescription(text);
                   }}
-                  placeholder="Description"
+                  placeholder="Start typing..."
                   multiline
                 />
               </View>
@@ -373,7 +403,7 @@ export default function NewRecipe({navigation}) {
                           width: 50,
                           textAlign: 'center',
                         }}
-                        value={servings.toString()}
+                        value={servings !== 0 ? servings.toString() : ''}
                         onChangeText={text => {
                           setServings(Number(text));
                         }}

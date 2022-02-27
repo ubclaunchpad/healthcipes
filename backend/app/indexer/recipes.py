@@ -13,10 +13,10 @@ def get_recipe_by_keyword(cursor, keyword):
         logging.error(e)
 
 
-def get_all_recipes(cursor):
-    sql_proc = 'getAllRecipes'
+def get_all_recipes(cursor, startIndex, numOnPage):
+    sql_proc = 'getRecipePage'
     try:
-        cursor.callproc(sql_proc)
+        cursor.callproc(sql_proc, (startIndex, numOnPage,))
         return cursor.fetchall()
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)

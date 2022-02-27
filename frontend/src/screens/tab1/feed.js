@@ -38,7 +38,7 @@ export default function Feed({navigation}) {
   useEffect(() => {
     if (user.user_id !== '') {
       dispatch({type: SET_LOADING, loading: true});
-      dispatch({type: GET_FEED, user: user});
+      dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
     }
   }, [user]);
 
@@ -169,6 +169,10 @@ export default function Feed({navigation}) {
             bottomSheetRef.current.close();
           }}
           numColumns={2}
+          onEndReached={() => {
+            dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
+          }}
+          onEndReachedThreshold={0.2}
           contentContainerStyle={{paddingBottom: '15%'}}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           renderItem={({item, index}) => {

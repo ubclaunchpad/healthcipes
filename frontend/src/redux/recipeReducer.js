@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import {
   FEATURED_FEED,
   FORYOU_FEED,
+  REPLACE_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
 import {
@@ -56,6 +57,8 @@ const featureFeedReducer = (state = [], action) => {
 const forYouFeedReducer = (state = [], action) => {
   switch (action.type) {
     case FORYOU_FEED:
+      return state.concat(action.payload);
+    case REPLACE_FEED:
       return action.payload;
     default:
       return state;

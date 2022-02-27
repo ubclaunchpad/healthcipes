@@ -1,6 +1,7 @@
 USE `umami_db`;
 
 DROP procedure IF EXISTS `getAllRecipes`;
+DROP procedure IF EXISTS `getRecipePage`;
 DROP procedure IF EXISTS `getFeaturedRecipes`;
 
 DELIMITER $$
@@ -8,7 +9,21 @@ USE `umami_db`$$
 CREATE PROCEDURE `getAllRecipes` ()
 BEGIN
 
-SELECT * FROM `recipes_table`;
+SELECT * FROM `recipes_table`
+ORDER BY `created_time` DESC;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `getRecipePage` (IN `start_index` INT(8), IN `numOnPage` INT(8))
+BEGIN
+
+SELECT * FROM `recipes_table`
+ORDER BY `created_time` DESC
+LIMIT `start_index`, `numOnPage`;
 
 END$$
 

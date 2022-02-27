@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import read
 from fastapi import APIRouter
 from typing import List, Optional, Union, Dict
 from pydantic import BaseModel
@@ -83,10 +84,10 @@ async def recipe_by_keyword(keyword: str = ""):
         return "Error with {}".format(e), 400
 
 
-async def read_all_recipes():
+async def read_all_recipes(startIndex, limit):
     try:
         _, cursor = init_conn()
-        res = get_all_recipes(cursor)
+        res = get_all_recipes(cursor, startIndex, limit)
         return res, 200
     except Exception as e:
         logging.error(e)
@@ -105,11 +106,11 @@ async def read_featured_recipes():
 ######### ENDPOINTS START #########
 
 @router.get("/")
-async def read_recipe(keyword: str = ""):
+async def read_recipe(keyword: str = "", start: int = 0, limit: int = 5):
     if keyword:
         return await recipe_by_keyword(keyword)
     else:
-        return await read_all_recipes()
+        return await read_all_recipes(start, limit)
 
 @router.get("/featured")
 async def read_featured_recipe():

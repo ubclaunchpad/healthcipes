@@ -393,3 +393,12 @@ def get_createdrecipe_by_userid(cursor, user_id):
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
+
+def delete_recipe_by_id(conn, cursor, recipe_id):
+    sql = 'deleteRecipe'
+    try:
+        cursor.callproc(sql, (recipe_id, ))
+        conn.commit()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)

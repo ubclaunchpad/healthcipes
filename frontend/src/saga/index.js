@@ -9,11 +9,13 @@ import {
   searchIngredients,
 } from './pantrySaga';
 import {
+  deleteRecipe,
   getRecipe,
   postRecipe,
   postRecipeLike,
   postRecipeView,
   postVideoURL,
+  putRecipe,
 } from './recipeSaga';
 import {getLikedRecipes, getMyRecipes} from './profileSaga';
 
@@ -26,6 +28,8 @@ export default function* rootSaga() {
     fork(searchFeed),
     fork(postRecipe),
     fork(getRecipe),
+    fork(deleteRecipe),
+    fork(putRecipe),
     fork(postRecipeLike),
     fork(postRecipeView),
     fork(postVideoURL),

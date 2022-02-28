@@ -11,6 +11,8 @@ export const REPLACE_RECIPE_STEP = 'REPLACE_RECIPE_STEP';
 // Saga
 export const POST_RECIPE = 'POST_RECIPE';
 export const GET_RECIPE = 'GET_RECIPE';
+export const DELETE_RECIPE = 'DELETE_RECIPE';
+export const PUT_RECIPE = 'PUT_RECIPE';
 export const POST_RECIPE_LIKE = 'POST_RECIPE_LIKE';
 export const GET_RECIPE_LIKE = 'GET_RECIPE_LIKE';
 export const POST_RECIPE_VIEW = 'POST_RECIPE_VIEW';

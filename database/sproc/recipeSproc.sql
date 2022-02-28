@@ -5,6 +5,7 @@ DROP procedure IF EXISTS `createRecipeAutoID`;
 DROP procedure IF EXISTS `addSteps`;
 DROP procedure IF EXISTS `addIngredients`;
 DROP procedure IF EXISTS `getRecipe`;
+DROP procedure IF EXISTS `deleteRecipe`;
 DROP procedure IF EXISTS `updateRecipeMacros`;
 DROP procedure IF EXISTS `getIngredientInfo`;
 DROP procedure IF EXISTS `addMockRecipe`;
@@ -41,6 +42,27 @@ SELECT r.*
 FROM `recipes_table` r
 WHERE r.user_id = `_user_id`
 ;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `deleteRecipe` (IN `_recipe_id` VARCHAR(255))
+BEGIN
+
+DELETE FROM `user_activity_table`
+WHERE recipe_view_id = `_recipe_id` OR recipe_like_id = `_recipe_id`;
+
+DELETE FROM `recipe_steps_table`
+WHERE `recipe_id` = `_recipe_id`;
+
+DELETE FROM `ingredients_table`
+WHERE `recipe_id` = `_recipe_id`;
+
+DELETE FROM `recipes_table`
+WHERE recipe_id = `_recipe_id`;
 
 END$$
 

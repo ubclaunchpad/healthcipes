@@ -46,6 +46,8 @@ function FeedScreen() {
       <FeedStack.Screen name="Feed" component={Feed} />
       <FeedStack.Screen name="Search" component={Search} />
       <FeedStack.Screen name="Recipe" component={Recipe} />
+      <FeedStack.Screen name="NewRecipe" component={NewRecipe} />
+      <FeedStack.Screen name="NewStep" component={NewStep} />
     </FeedStack.Navigator>
   );
 }

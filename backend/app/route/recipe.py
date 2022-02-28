@@ -1,12 +1,11 @@
 from datetime import datetime
-from os import read
 from fastapi import APIRouter
 from typing import List, Optional, Union, Dict
 from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
+from app.indexer.recipes import delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
 from app.functions.scraper import scraper
 from app.functions.ingredient import parse_ingredients_from_text
 from functools import reduce
@@ -247,3 +246,13 @@ async def read_recipe_by_id(recipe_id: int):
             "data": "Error with {}".format(e),
             "status_code": 400
         }
+
+@router.delete("/{recipe_id}")
+async def remove_recipe_by_id(recipe_id: int):
+    try:
+        conn, cursor = init_conn()
+        res = delete_recipe_by_id(conn, cursor, recipe_id)
+        return res, 200
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400

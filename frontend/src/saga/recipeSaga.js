@@ -13,7 +13,10 @@ import {
   LIKE_RECIPE,
   POST_RECIPE,
   POST_VIDEO_URL,
+  PUT_RECIPE,
+  DELETE_RECIPE,
 } from '../actions/recipeActions';
+import { GET_FEED } from '../actions/feedActions';
 
 function* postRecipeCall(param) {
   try {
@@ -84,6 +87,47 @@ function* getRecipeCall(param) {
     yield put({type: RECIPE, payload: results.data});
   } catch (e) {
     console.log('Get Recipe Failed: ' + e);
+  }
+}
+
+function* deleteRecipeCall(param) {
+  try {
+    const apiConfig = {
+      method: 'delete',
+      url: `${API_URL}/recipe/${param.recipe_id}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    yield call(axios, apiConfig);
+    console.log('[INFO]: DELETE RECIPE API:');
+
+    // console.log(results);
+    yield put({type: GET_FEED, user: param.user, startIndex: param.startIndex});
+  } catch (e) {
+    console.log('Delete Recipe Failed: ' + e);
+  }
+}
+
+function* putRecipeCall(param) {
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/recipe/${param.recipe_id}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: PUT RECIPE API:');
+
+    // console.log(results);
+    yield put({type: RECIPE, payload: results.data});
+  } catch (e) {
+    console.log('Put Recipe Failed: ' + e);
   }
 }
 
@@ -166,6 +210,14 @@ export function* postRecipe() {
 
 export function* getRecipe() {
   yield takeLatest(GET_RECIPE, getRecipeCall);
+}
+
+export function* deleteRecipe() {
+  yield takeLatest(DELETE_RECIPE, deleteRecipeCall);
+}
+
+export function* putRecipe() {
+  yield takeLatest(PUT_RECIPE, putRecipeCall);
 }
 
 export function* postRecipeLike() {

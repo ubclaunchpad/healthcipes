@@ -113,10 +113,14 @@ function* deleteRecipeCall(param) {
 function* putRecipeCall(param) {
   try {
     const apiConfig = {
-      method: 'get',
-      url: `${API_URL}/recipe/${param.recipe_id}`,
+      method: 'put',
+      url: `${API_URL}/recipe`,
       headers: {
         'Content-Type': 'application/json',
+      },
+      data: {
+        recipe: param.recipeObj,
+        steps: param.steps,
       },
     };
 
@@ -124,8 +128,7 @@ function* putRecipeCall(param) {
     const results = response.data;
     console.log('[INFO]: PUT RECIPE API:');
 
-    // console.log(results);
-    yield put({type: RECIPE, payload: results.data});
+    console.log(results);
   } catch (e) {
     console.log('Put Recipe Failed: ' + e);
   }

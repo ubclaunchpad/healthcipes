@@ -395,12 +395,12 @@ export default function Recipe({navigation, route}) {
             borderRadius: 20,
             padding: 20,
           }}>
-          {recipe.user_id === auth().currentUser.uid && (
+          {recipe.user_id !== auth().currentUser.uid && (
             <View>
               <TouchableOpacity
                 style={{padding: 10}}
                 onPress={() => {
-                  navigation.push('NewRecipe');
+                  navigation.push('NewRecipe', {recipe: recipe, recipeInfo: recipeInfo});
                 }}>
                 <Text style={{fontSize: 16, fontWeight: '500'}}>
                   Edit Recipe

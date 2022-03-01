@@ -8,7 +8,6 @@ import {
   Image,
   ScrollView,
   Platform,
-  FlatList,
 } from 'react-native';
 import {API_URL} from '@env';
 import auth from '@react-native-firebase/auth';
@@ -49,6 +48,9 @@ export default function NewStep({navigation, route}) {
     setIngredients(
       steps[index].step_ingredients ? steps[index].step_ingredients : [],
     );
+    if (steps[index].step_text !== '' && steps[index].step_ingredients) {
+      parseIngredients(steps[index].step_text);
+    }
   }, [steps]);
 
   function save() {
@@ -69,35 +71,59 @@ export default function NewStep({navigation, route}) {
           storageRef = storage().refFromURL(imageURI);
         }
 
-        storageRef
-          .putFile(uploadUri, {
-            customMetadata: {
-              Owner: auth().currentUser.uid,
+        const pattern = /^((http|https|ftp):\/\/)/;
+
+        if (pattern.test(uploadUri)) {
+          console.log('Skip Image Uploaded');
+          const stepObj = {
+            step_index: index,
+            step_image: storageRef.toString(),
+            step_text: step,
+            step_time: time,
+            step_ingredients: ingredients,
+            image_cache: stepImage,
+          };
+          dispatch({
+            type: REPLACE_RECIPE_STEP,
+            payload: {
+              index: index,
+              step: stepObj,
             },
-          })
-          .then(() => {
-            console.log('Uploaded');
-            const stepObj = {
-              step_index: index,
-              step_image: storageRef.toString(),
-              step_text: step,
-              step_time: time,
-              step_ingredients: ingredients,
-              image_cache: stepImage,
-            };
-            dispatch({
-              type: REPLACE_RECIPE_STEP,
-              payload: {
-                index: index,
-                step: stepObj,
-              },
-            });
-            dispatch({type: SET_LOADING, loading: false});
-            navigation.pop();
-          })
-          .catch(() => {
-            dispatch({type: SET_LOADING, loading: false});
           });
+          dispatch({type: SET_LOADING, loading: false});
+          navigation.pop();
+        } else {
+          storageRef
+            .putFile(uploadUri, {
+              customMetadata: {
+                Owner: auth().currentUser.uid,
+              },
+            })
+            .then(() => {
+              console.log('Uploaded');
+              const stepObj = {
+                step_index: index,
+                step_image: storageRef.toString(),
+                step_text: step,
+                step_time: time,
+                step_ingredients: ingredients,
+                image_cache: stepImage,
+              };
+              dispatch({
+                type: REPLACE_RECIPE_STEP,
+                payload: {
+                  index: index,
+                  step: stepObj,
+                },
+              });
+              dispatch({type: SET_LOADING, loading: false});
+              navigation.pop();
+            })
+            .catch(() => {
+              console.log('No Image Update Uploaded');
+              dispatch({type: SET_LOADING, loading: false});
+            });
+        }
       } else {
         console.log('Cooking Time Has To Be Greater Than 0');
       }

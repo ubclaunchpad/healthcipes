@@ -402,3 +402,12 @@ def delete_recipe_by_id(conn, cursor, recipe_id):
     except Exception as e:
         print("MYSQL ERROR:", sql)
         logging.error(e)
+
+def soft_delete_recipe_by_id(conn, cursor, recipe_id):
+    sql = 'softDeleteRecipe'
+    try:
+        cursor.callproc(sql, (recipe_id, ))
+        conn.commit()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)

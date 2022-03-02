@@ -32,12 +32,7 @@ export default function Search({navigation}) {
   const snapPoints = useMemo(() => ['80%'], []);
 
   useEffect(() => {
-    dispatch({type: GET_USER, userID: auth().currentUser.uid});
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch({type: SEARCH_FEED, keyword: search, user: user});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

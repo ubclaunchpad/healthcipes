@@ -42,7 +42,7 @@ BEGIN
 SELECT r.*
 FROM `recipes_table` r
 WHERE r.user_id = `_user_id`
-;
+ORDER BY `created_time` DESC;
 
 END$$
 

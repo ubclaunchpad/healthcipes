@@ -46,6 +46,8 @@ function FeedScreen() {
       <FeedStack.Screen name="Feed" component={Feed} />
       <FeedStack.Screen name="Search" component={Search} />
       <FeedStack.Screen name="Recipe" component={Recipe} />
+      <FeedStack.Screen name="NewRecipe" component={NewRecipe} />
+      <FeedStack.Screen name="NewStep" component={NewStep} />
     </FeedStack.Navigator>
   );
 }
@@ -59,6 +61,9 @@ function NotificationScreen() {
         headerShown: false,
       }}>
       <NotificationStack.Screen name="Notification" component={Notification} />
+      <NotificationStack.Screen name="Recipe" component={Recipe} />
+      <NotificationStack.Screen name="NewRecipe" component={NewRecipe} />
+      <NotificationStack.Screen name="NewStep" component={NewStep} />
     </NotificationStack.Navigator>
   );
 }
@@ -106,6 +111,9 @@ function ProfileScreen() {
       }}>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="EditProfile" component={EditProfile} />
+      <ProfileStack.Screen name="Recipe" component={Recipe} />
+      <ProfileStack.Screen name="NewRecipe" component={NewRecipe} />
+      <ProfileStack.Screen name="NewStep" component={NewStep} />
     </ProfileStack.Navigator>
   );
 }

@@ -13,7 +13,10 @@ import {
   LIKE_RECIPE,
   POST_RECIPE,
   POST_VIDEO_URL,
+  PUT_RECIPE,
+  DELETE_RECIPE,
 } from '../actions/recipeActions';
+import { GET_FEED } from '../actions/feedActions';
 
 function* postRecipeCall(param) {
   try {
@@ -83,7 +86,51 @@ function* getRecipeCall(param) {
     // console.log(results);
     yield put({type: RECIPE, payload: results.data});
   } catch (e) {
-    console.log('Get Feed Failed: ' + e);
+    console.log('Get Recipe Failed: ' + e);
+  }
+}
+
+function* deleteRecipeCall(param) {
+  try {
+    const apiConfig = {
+      method: 'delete',
+      url: `${API_URL}/recipe/${param.recipe_id}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    yield call(axios, apiConfig);
+    console.log('[INFO]: DELETE RECIPE API:');
+
+    // console.log(results);
+    yield put({type: GET_FEED, user: param.user, startIndex: param.startIndex});
+  } catch (e) {
+    console.log('Delete Recipe Failed: ' + e);
+  }
+}
+
+function* putRecipeCall(param) {
+  try {
+    const apiConfig = {
+      method: 'put',
+      url: `${API_URL}/recipe`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        recipe: param.recipeObj,
+        steps: param.steps,
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: PUT RECIPE API:');
+
+    console.log(results);
+  } catch (e) {
+    console.log('Put Recipe Failed: ' + e);
   }
 }
 
@@ -123,7 +170,7 @@ function* postRecipeLikeCall(data) {
 
     const response = yield call(axios, apiConfig);
     const results = response.data;
-    console.log('[INFO]: POST USER ACTIVITY API:');
+    console.log('[INFO]: POST RECIPE LIKE');
 
     yield put({type: REGISTER_LIKE_RECIPE, payload: results.data});
     yield put({type: LIKE_RECIPE, payload: results.data});
@@ -149,7 +196,7 @@ function* postRecipeViewCall(data) {
 
     const response = yield call(axios, apiConfig);
     const results = response.data;
-    console.log('[INFO]: POST USER ACTIVITY API:');
+    console.log('[INFO]: POST RECIPE VIEW:');
     // console.log(results);
     yield put({type: REGISTER_VIEW_RECIPE, payload: results.data});
     // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
@@ -166,6 +213,14 @@ export function* postRecipe() {
 
 export function* getRecipe() {
   yield takeLatest(GET_RECIPE, getRecipeCall);
+}
+
+export function* deleteRecipe() {
+  yield takeLatest(DELETE_RECIPE, deleteRecipeCall);
+}
+
+export function* putRecipe() {
+  yield takeLatest(PUT_RECIPE, putRecipeCall);
 }
 
 export function* postRecipeLike() {

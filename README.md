@@ -71,17 +71,18 @@ MySQL will be exposed on port 3306
 #### React Native Frontend
 
 1. `cd` into umami/frontend
-2. start server with `npx react-native start`
-3. open a new cli window in the same folder
+2. run `yarn`
+3. start server with `npx react-native start`
+4. open a new cli window in the same folder
 
 ##### iOS:
 
-4. `cd` into ios and run `pod install`
-5. run `npx react-native run-ios`
+5. `cd` into ios and run `pod install`
+6. run `npx react-native run-ios`
 
 ##### Android: 
 
-4. run `npx react-native run-android`
+5. run `npx react-native run-android`
 
 <!-- DEPLOYMENT -->
 ## Deployment

@@ -8,7 +8,6 @@ import {
   Image,
   ScrollView,
   Platform,
-  FlatList,
 } from 'react-native';
 import {API_URL} from '@env';
 import auth from '@react-native-firebase/auth';
@@ -25,7 +24,7 @@ import {
 import GoButton from '../../components/goButton';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import { SET_LOADING } from '../../actions/globalActions';
+import {SET_LOADING} from '../../actions/globalActions';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
@@ -49,6 +48,9 @@ export default function NewStep({navigation, route}) {
     setIngredients(
       steps[index].step_ingredients ? steps[index].step_ingredients : [],
     );
+    if (steps[index].step_text !== '' && steps[index].step_ingredients) {
+      parseIngredients(steps[index].step_text);
+    }
   }, [steps]);
 
   function save() {
@@ -69,34 +71,59 @@ export default function NewStep({navigation, route}) {
           storageRef = storage().refFromURL(imageURI);
         }
 
-        storageRef
-          .putFile(uploadUri, {
-            customMetadata: {
-              Owner: auth().currentUser.uid,
+        const pattern = /^((http|https|ftp):\/\/)/;
+
+        if (pattern.test(uploadUri)) {
+          console.log('Skip Image Uploaded');
+          const stepObj = {
+            step_index: index,
+            step_image: storageRef.toString(),
+            step_text: step,
+            step_time: time,
+            step_ingredients: ingredients,
+            image_cache: stepImage,
+          };
+          dispatch({
+            type: REPLACE_RECIPE_STEP,
+            payload: {
+              index: index,
+              step: stepObj,
             },
-          })
-          .then(() => {
-            console.log('Uploaded');
-            const stepObj = {
-              step_index: index,
-              step_image: storageRef.toString(),
-              step_text: step,
-              step_time: time,
-              step_ingredients: ingredients,
-              image_cache: stepImage,
-            };
-            dispatch({
-              type: REPLACE_RECIPE_STEP,
-              payload: {
-                index: index,
-                step: stepObj,
-              },
-            });
-            dispatch({type: SET_LOADING, loading: false});
-            navigation.pop();
-          }).catch(() => {
-            dispatch({type: SET_LOADING, loading: false});
           });
+          dispatch({type: SET_LOADING, loading: false});
+          navigation.pop();
+        } else {
+          storageRef
+            .putFile(uploadUri, {
+              customMetadata: {
+                Owner: auth().currentUser.uid,
+              },
+            })
+            .then(() => {
+              console.log('Uploaded');
+              const stepObj = {
+                step_index: index,
+                step_image: storageRef.toString(),
+                step_text: step,
+                step_time: time,
+                step_ingredients: ingredients,
+                image_cache: stepImage,
+              };
+              dispatch({
+                type: REPLACE_RECIPE_STEP,
+                payload: {
+                  index: index,
+                  step: stepObj,
+                },
+              });
+              dispatch({type: SET_LOADING, loading: false});
+              navigation.pop();
+            })
+            .catch(() => {
+              console.log('No Image Update Uploaded');
+              dispatch({type: SET_LOADING, loading: false});
+            });
+        }
       } else {
         console.log('Cooking Time Has To Be Greater Than 0');
       }
@@ -212,7 +239,7 @@ export default function NewStep({navigation, route}) {
               aspectRatio: 1,
               marginTop: '5%',
               width: '100%',
-              backgroundColor: color.gray,
+              backgroundColor: color.appPrimaryLight,
               borderRadius: 20,
               justifyContent: 'flex-end',
               alignItems: 'flex-end',
@@ -235,7 +262,7 @@ export default function NewStep({navigation, route}) {
                 width: '100%',
                 height: '100%',
                 borderRadius: 20,
-                resizeMode: stepImage !== '' ? 'cover' : 'contain',
+                resizeMode: stepImage !== '' && stepImage ? 'cover' : 'contain',
               }}
             />
             <Image
@@ -281,7 +308,7 @@ export default function NewStep({navigation, route}) {
               marginLeft: 10,
               fontSize: 16,
             }}
-            value={time.toString()}
+            value={time !== 0 ? time.toString() : ''}
             onChangeText={text => {
               setTime(Number(text));
             }}

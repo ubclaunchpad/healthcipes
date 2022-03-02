@@ -11,11 +11,7 @@ import {
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  GET_USER,
-  PUT_USER,
-  POST_USER_TOKEN,
-} from '../../actions/accountActions';
+import {PUT_USER} from '../../actions/accountActions';
 import {GET_FEED} from '../../actions/feedActions';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
@@ -38,40 +34,6 @@ export default function Feed({navigation}) {
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
   const snapPoints = useMemo(() => ['80%'], []);
-
-  async function requestUserPermission() {
-    console.log('requesting permission ahh');
-    const authStatus = await messaging().requestPermission();
-    const enabled = true;
-    // authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    // authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      // if (!messaging().isDeviceRegisteredForRemoteMessages) {
-      //   await messaging()
-      //     .registerDeviceForRemoteMessages()
-      //     .catch(error => {
-      //       console.log(error);
-      //     });
-      // }
-
-      await messaging()
-        .getToken()
-        .then(token => {
-          dispatch({
-            type: POST_USER_TOKEN,
-            payload: {
-              userID: auth().currentUser.uid,
-              token: token,
-            },
-          });
-          console.log(`token is ${token}`);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  }
 
   useEffect(() => {
     if (user.user_id !== '') {
@@ -109,8 +71,7 @@ export default function Feed({navigation}) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                }}
-              >
+                }}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: color.lightGray,
@@ -123,8 +84,7 @@ export default function Feed({navigation}) {
                   }}
                   onPress={() => {
                     navigation.push('Search');
-                  }}
-                >
+                  }}>
                   <Image
                     source={require('../../assets/Search.png')}
                     style={{
@@ -137,8 +97,7 @@ export default function Feed({navigation}) {
                 <TouchableOpacity
                   onPress={() => {
                     bottomSheetRef.current.snapToIndex(0);
-                  }}
-                >
+                  }}>
                   <Image
                     source={require('../../assets/Filter.png')}
                     style={{
@@ -168,8 +127,7 @@ export default function Feed({navigation}) {
                           height: 250,
                           borderRadius: 20,
                           marginRight: 10,
-                        }}
-                      >
+                        }}>
                         <ImageBackground
                           source={{uri: item.header_image}}
                           resizeMode="cover"
@@ -178,8 +136,7 @@ export default function Feed({navigation}) {
                             width: '100%',
                             height: '100%',
                             justifyContent: 'flex-end',
-                          }}
-                        >
+                          }}>
                           <View
                             style={{
                               backgroundColor: 'rgba(0,0,0,0.5)',
@@ -188,15 +145,13 @@ export default function Feed({navigation}) {
                               paddingVertical: 10,
                               borderBottomRightRadius: 20,
                               borderBottomLeftRadius: 20,
-                            }}
-                          >
+                            }}>
                             <Text
                               style={{
                                 color: color.white,
                                 fontWeight: 'bold',
                                 fontSize: 16,
-                              }}
-                            >
+                              }}>
                               {item.name}
                             </Text>
                           </View>
@@ -215,7 +170,11 @@ export default function Feed({navigation}) {
           }}
           numColumns={2}
           onEndReached={() => {
-            dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
+            dispatch({
+              type: GET_FEED,
+              user: user,
+              startIndex: forYouFeed.length,
+            });
           }}
           onEndReachedThreshold={0.2}
           contentContainerStyle={{paddingBottom: '15%'}}
@@ -233,8 +192,7 @@ export default function Feed({navigation}) {
                   marginBottom: 10,
                   marginLeft: index % 2 === 0 ? '5%' : 0,
                   marginRight: index % 2 === 0 ? 0 : '5%',
-                }}
-              >
+                }}>
                 <ImageBackground
                   source={{uri: item.header_image}}
                   resizeMode="cover"
@@ -243,8 +201,7 @@ export default function Feed({navigation}) {
                     width: '100%',
                     height: '100%',
                     justifyContent: 'flex-end',
-                  }}
-                >
+                  }}>
                   <View
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.5)',
@@ -253,15 +210,13 @@ export default function Feed({navigation}) {
                       paddingVertical: 10,
                       borderBottomRightRadius: 20,
                       borderBottomLeftRadius: 20,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         color: color.white,
                         fontWeight: 'bold',
                         fontSize: 16,
-                      }}
-                    >
+                      }}>
                       {item.name}
                     </Text>
                   </View>
@@ -275,8 +230,7 @@ export default function Feed({navigation}) {
           ref={bottomSheetRef}
           enablePanDownToClose={true}
           index={-1}
-          snapPoints={snapPoints}
-        >
+          snapPoints={snapPoints}>
           <View style={{flex: 1, paddingHorizontal: '7%'}}>
             <Text style={feedStyle.filterTitle}>Refine Results</Text>
             {FilterChips()}

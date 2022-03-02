@@ -31,7 +31,16 @@ def get_user_notification(cursor, userID):
     # join userID to recipe tables
     # for those recipes join with all recipe like user actions
     # return in chronological order of actions where userId "owns" recipe 
-    return
+    sql = 'getUserNotifications'
+    try:
+        cursor.callproc(sql, (userID, ))
+        return cursor.fetchall()
+
+    except Exception as e:
+        logging.error(e)
+        return False
+
+
 
     # sql = 'getUserNotification'
     # try:

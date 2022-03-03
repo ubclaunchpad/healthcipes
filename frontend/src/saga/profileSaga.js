@@ -7,6 +7,8 @@ import {
   LIKED_RECIPES,
   GET_MYRECIPES,
   MY_RECIPES,
+  GET_NOTIFICATIONS,
+  MY_NOTIFICATIONS,
 } from '../actions/profileActions';
 
 function* getLikedRecipesCall(param) {
@@ -159,10 +161,103 @@ function* getMyRecipesCall(param) {
   }
 }
 
+function* getMyNotificationsCall(param) {
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/user/notifications?userID=${param.user.user_id}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const notificationArray = response.data[0];
+    console.log(
+      '[INFO]: GET MY NOTIFICATIONS FEED API: Notifications obtained = ' +
+        notificationArray.length.toString(),
+    );
+
+    // console.log(resultsArray);
+
+    const weekday = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+    const dayMap = {};
+    const dataObj = [];
+    const promises = [];
+    for (const item of notificationArray) {
+      const d = new Date(item[3]);
+      let dayTitle;
+      if (d.getDate() === new Date().getDate()) {
+        dayTitle = 'Today';
+      } else if (d.getDate() === new Date().getDate() - 1) {
+        dayTitle = 'Yesterday';
+      } else {
+        const day = d.getDay();
+        dayTitle = weekday[day];
+      }
+
+      yield storage()
+        .refFromURL(`gs://umami-2021.appspot.com/Users/${item[1]}.jpg`)
+        .getDownloadURL()
+        .then(res => {
+          const notificationObj = {
+            name: item[8],
+            recipe: item[7],
+            recipeid: item[5],
+            time: dayTitle,
+            img: {uri: res},
+          };
+
+          if (dayMap[dayTitle]) {
+            dayMap[dayTitle].push(notificationObj);
+          } else {
+            dayMap[dayTitle] = [notificationObj];
+          }
+        })
+        .catch(e => {
+          console.log('No User Image: ' + e);
+          const notificationObj = {
+            name: item[8],
+            recipe: item[7],
+            recipeid: item[5],
+            time: dayTitle,
+            img: require('../assets/Profilepicture.png'),
+          };
+
+          if (dayMap[dayTitle]) {
+            dayMap[dayTitle].push(notificationObj);
+          } else {
+            dayMap[dayTitle] = [notificationObj];
+          }
+        });
+    }
+
+    Object.keys(dayMap).forEach(key => {
+      dataObj.push({key: key, title: key, data: dayMap[key]});
+    });
+
+    yield put({type: MY_NOTIFICATIONS, payload: dataObj});
+  } catch (e) {
+    console.log('Get My Notifications Failed: ' + e);
+  }
+}
+
 export function* getLikedRecipes() {
   yield takeLatest(GET_LIKEDRECIPES, getLikedRecipesCall);
 }
 
 export function* getMyRecipes() {
   yield takeLatest(GET_MYRECIPES, getMyRecipesCall);
+}
+
+export function* getMyNotifications() {
+  yield takeLatest(GET_NOTIFICATIONS, getMyNotificationsCall);
 }

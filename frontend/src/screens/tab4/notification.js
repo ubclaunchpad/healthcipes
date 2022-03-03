@@ -1,61 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Text, View, SafeAreaView, SectionList, Image} from 'react-native';
+import {useSelector} from 'react-redux';
+import color from '../../styles/color';
 
-export default function Notification() {
-  const [data, setData] = useState([]);
-  const dayMap = {};
-  const fakeData = [
-    {
-      name: 'Mike',
-      recipe: 'Strawberry Cake',
-      time: '10:26',
-      img: require('../../assets/Profilepicture.png'),
-    },
-    {
-      name: 'Mikey',
-      recipe: 'Strawberry Cake',
-      time: 'Today',
-      img: require('../../assets/Profilepicture.png'),
-    },
-    {
-      name: 'Miket',
-      recipe: 'Strawberry Cake',
-      time: 'Yesterday',
-      img: require('../../assets/Profilepicture.png'),
-    },
-    {
-      name: 'Mikeel',
-      recipe: 'Strawberry Cake',
-      time: 'Yesterday',
-      img: require('../../assets/Profilepicture.png'),
-    },
-    {
-      name: 'Miker',
-      recipe: 'Strawberry Cake Bananas',
-      time: 'Wednesday',
-      img: require('../../assets/Profilepicture.png'),
-    },
-  ];
-
-  useEffect(() => {
-    const dataObj = [];
-    fakeData.forEach(item => {
-      if (dayMap[item.time]) {
-        dayMap[item.time].push(item);
-      } else {
-        dayMap[item.time] = [item];
-      }
-    });
-    Object.keys(dayMap).forEach(key => {
-      dataObj.push({key: key, title: key, data: dayMap[key]});
-    });
-    setData(dataObj);
-  }, []);
+export default function Notification({navigation}) {
+  const notifications = useSelector(
+    state => state.profileReducer.myNotificationReducer,
+  );
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <SectionList
-        sections={data}
+        sections={notifications}
         keyExtractor={item => item.name + item.recipe}
         contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: '50%'}}
         stickySectionHeadersEnabled={false}
@@ -87,7 +43,10 @@ export default function Notification() {
               </View>
               <View style={{flex: 3}}>
                 <Text style={{fontSize: 16}}>
-                  {item.name + ' liked your recipe ' + item.recipe}
+                  {item.name + ' liked your recipe '}
+                  <Text style={{fontWeight: 'bold', color: color.appPrimary}} onPress={() => {
+                    navigation.push('Recipe', {recipe_id: item.recipeid});
+                  }}>{item.recipe}</Text>
                 </Text>
               </View>
             </View>

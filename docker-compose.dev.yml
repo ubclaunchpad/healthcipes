@@ -18,6 +18,7 @@ services:
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
+      TZ: 'America/Los_Angeles'
     ports:
       - '3306:3306'
     expose:

@@ -180,18 +180,8 @@ function* getMyNotificationsCall(param) {
 
     // console.log(resultsArray);
 
-    const weekday = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
     const dayMap = {};
     const dataObj = [];
-    const promises = [];
     for (const item of notificationArray) {
       const d = new Date(item[3]);
       let dayTitle;
@@ -200,8 +190,7 @@ function* getMyNotificationsCall(param) {
       } else if (d.getDate() === new Date().getDate() - 1) {
         dayTitle = 'Yesterday';
       } else {
-        const day = d.getDay();
-        dayTitle = weekday[day];
+        dayTitle = "Earlier";
       }
 
       yield storage()

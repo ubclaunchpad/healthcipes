@@ -190,7 +190,7 @@ function* getMyNotificationsCall(param) {
       } else if (d.getDate() === new Date().getDate() - 1) {
         dayTitle = 'Yesterday';
       } else {
-        dayTitle = "Earlier";
+        dayTitle = 'Earlier';
       }
 
       yield storage()
@@ -229,9 +229,21 @@ function* getMyNotificationsCall(param) {
         });
     }
 
-    Object.keys(dayMap).forEach(key => {
-      dataObj.push({key: key, title: key, data: dayMap[key]});
-    });
+    if (dayMap['Today']) {
+      dataObj.push({key: 'Today', title: 'Today', data: dayMap['Today']});
+    }
+
+    if (dayMap['Yesterday']) {
+      dataObj.push({
+        key: 'Yesterday',
+        title: 'Yesterday',
+        data: dayMap['Yesterday'],
+      });
+    }
+
+    if (dayMap['Earlier']) {
+      dataObj.push({key: 'Earlier', title: 'Earlier', data: dayMap['Earlier']});
+    }
 
     yield put({type: MY_NOTIFICATIONS, payload: dataObj});
   } catch (e) {

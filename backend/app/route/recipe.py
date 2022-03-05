@@ -162,12 +162,12 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         res = post_recipe(conn, cursor, recipe)
         if (len(steps) > 0):
             if (url != ""):
-                _ = post_scrape_steps(conn, cursor, steps[0].split("\n"), res[0])
+                _ = post_scrape_steps(conn, cursor, steps, res[0])
             else:
                 _ = post_steps(conn, cursor, steps, res[0])
         if (len(ingredients) > 0):
             if (url != ""):
-                _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+                _ = post_ingredients(conn, cursor, ingredients, res[0])
         return res, 200
     except Exception as e:
         logging.error(e)
@@ -216,7 +216,17 @@ async def scrape_recipe_url(url: str = ""):
 
     try:
         recipe, steps, ingredients = scraper(url)
-        return recipe, steps, ingredients, 200
+
+        response = {
+            "recipe": recipe,
+            "steps": steps,
+            "ingredients": ingredients
+        }
+
+        return {
+            "data": response,
+            "status_code": 200
+        }
 
     except Exception as e:
         return "Error with {}".format(e), 400

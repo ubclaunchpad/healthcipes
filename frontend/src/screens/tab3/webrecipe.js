@@ -15,19 +15,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import GoButton from '../../components/goButton';
 import { GET_USER } from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
+import { POST_RECIPE_URL } from '../../actions/recipeActions';
 
 export default function webrecipe({ navigation }) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
-  const [URL, setURL] = useState("");
+  const [writeURL, setWriteURL] = useState("");
+  const [URL, setURL] = useState(writeURL);
 
   useEffect(() => {
     dispatch({ type: GET_USER, userID: auth().currentUser.uid });
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("URL INPUTTED");
-  }, [URL]);
+    console.log(URL);
+    dispatch({ type: POST_RECIPE_URL, url: URL });
+  }, [dispatch, URL]);
+
+  // saga function to get recipe body from URL (scraper)
+  // search console logs body onPress
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -57,7 +63,8 @@ export default function webrecipe({ navigation }) {
                   />
                 </TouchableOpacity>
                 <Text style={webrecipeStyle.Title}> New Recipe </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => console.log("NEXT")}>
                   <Text style={webrecipeStyle.Next}> Next </Text>
                 </TouchableOpacity>
               </View>
@@ -65,7 +72,10 @@ export default function webrecipe({ navigation }) {
                 flexDirection: 'row'
               }}>
                 <View style={webrecipeStyle.textBox}>
-                <TouchableOpacity onPress={() => console.log("SEARCH URL")}>
+                  <TouchableOpacity onPress={() => {
+                    setURL(writeURL);
+                    console.log(URL);
+                  }}>
                     <Image
                       source={require("../../assets/Search.png")}
                       style={{
@@ -78,7 +88,10 @@ export default function webrecipe({ navigation }) {
                   <TextInput
                     style={webrecipeStyle.textInput}
                     placeholder="Search Web"
-                    onChangeText={(URL) => setURL(URL)} />
+                    onChangeText={(changedURL) => {
+                      setWriteURL(changedURL);
+                      console.log(writeURL);
+                    }} />
                 </View>
                 <TouchableOpacity onPress={() => console.log("FILTER")}>
                   <Image

@@ -1,4 +1,4 @@
-import {takeLatest, call, put} from 'redux-saga/effects';
+import {takeLatest, call, put, take} from 'redux-saga/effects';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
@@ -11,6 +11,7 @@ import {
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
   POST_RECIPE,
+  POST_RECIPE_URL,
 } from '../actions/recipeActions';
 
 function* postRecipeCall(param) {
@@ -73,6 +74,26 @@ function* getRecipeLikeCall(param) {
     const results = response.data;
     console.log('[INFO]: GET USER ACTIVITY API:');
     yield put({type: LIKE_RECIPE, payload: results.data});
+  } catch (e) {
+    console.log('Registering like failed: ' + e);
+  }
+}
+
+function* postRecipeURLCall(param) {
+  try {
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/recipe/${param.url}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    console.log(apiConfig);
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: POST RECIPE URL API:');
+    yield put({type: POST_RECIPE_URL, payload: results.data});
+    console.log(results);
   } catch (e) {
     console.log('Registering like failed: ' + e);
   }
@@ -148,4 +169,8 @@ export function* getRecipeLike() {
 
 export function* postRecipeView() {
   yield takeLatest(POST_RECIPE_VIEW, postRecipeViewCall);
+}
+
+export function* getRecipeURL() {
+  yield takeLatest(POST_RECIPE_URL, postRecipeURLCall);
 }

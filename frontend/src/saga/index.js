@@ -13,6 +13,7 @@ import {
   postRecipe,
   postRecipeLike,
   postRecipeView,
+  getRecipeURL,
 } from './recipeSaga';
 import {getLikedRecipes, getMyRecipes} from './profileSaga';
 
@@ -35,5 +36,6 @@ export default function* rootSaga() {
     fork(searchIngredients),
     fork(getMyRecipes),
     fork(registerUserToken),
+    fork(getRecipeURL),
   ]);
 }

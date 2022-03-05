@@ -16,6 +16,8 @@ def scraper (url):
 
     nutrients.update(scraper.nutrients())
     ingredients.append(scraper.ingredients())
+    # NOTE: could instead just be a string of the ingredients
+    # NOTE: or split by newline here instead
     steps.append(scraper.instructions())
 
     if 'Vegan' in recipename:

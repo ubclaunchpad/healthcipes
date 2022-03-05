@@ -209,6 +209,21 @@ def parse_ingredients(text: str = ""):
             "status_code": 400
         }
 
+@router.post("/scrape-url")
+async def scrape_recipe_url(url: str = ""):
+    if url == "":
+        return "Error: no url given", 400
+    try:
+        conn, cursor = init_conn()
+
+        recipe, steps, ingredients = scraper(url)
+
+        return recipe, steps, ingredients, 200
+        
+
+    except Exception as e:
+        return "Error with {}".format(e), 400
+
 @router.get("/scrape")
 async def auto_scrape_recipe():
     try:

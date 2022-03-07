@@ -15,22 +15,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import GoButton from '../../components/goButton';
 import { GET_USER } from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
-import { GET_RECIPE, POST_RECIPE_URL } from '../../actions/recipeActions';
+import { POST_RECIPE_URL } from '../../actions/recipeActions';
 
 export default function webrecipe({ navigation }) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
-  const [writeURL, setWriteURL] = useState("");
-  const [URL, setURL] = useState(writeURL);
+  const [URL, setURL] = useState("");
 
   useEffect(() => {
     dispatch({ type: GET_USER, userID: auth().currentUser.uid });
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log(URL);
-    dispatch({ type: POST_RECIPE_URL, url: URL });
-  }, [dispatch, URL]);
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -70,8 +64,8 @@ export default function webrecipe({ navigation }) {
               }}>
                 <View style={webrecipeStyle.textBox}>
                   <TouchableOpacity onPress={() => {
-                    setURL(writeURL);
                     console.log(URL);
+                    dispatch({ type: POST_RECIPE_URL, url: URL });
                   }}>
                     <Image
                       source={require("../../assets/Search.png")}
@@ -85,9 +79,8 @@ export default function webrecipe({ navigation }) {
                   <TextInput
                     style={webrecipeStyle.textInput}
                     placeholder="Search Web"
-                    onChangeText={(changedURL) => {
-                      setWriteURL(changedURL);
-                      console.log(writeURL);
+                    onChangeText={(URL) => {
+                      setURL(URL);
                     }} />
                 </View>
                 <TouchableOpacity onPress={() => console.log("FILTER")}>

@@ -48,7 +48,6 @@ function* getRecipeCall(param) {
         'Content-Type': 'application/json',
       },
     };
-
     const response = yield call(axios, apiConfig);
     const results = response.data;
     console.log('[INFO]: GET RECIPE API:');

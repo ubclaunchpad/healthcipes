@@ -3,7 +3,7 @@ import color from '../../styles/color';
 
 export default StyleSheet.create({
   StepImageContainer: {
-    backgroundColor: color.gray,
+    backgroundColor: color.appPrimary,
     width: 150,
     height: 150,
     borderRadius: 20,
@@ -11,16 +11,27 @@ export default StyleSheet.create({
     alignItems: 'flex-end',
     zIndex: 2,
   },
+  StepImageRoundContainer: {
+    backgroundColor: color.appPrimary,
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
   StepDashLine: {
     height: 100,
     width: 3,
     resizeMode: 'cover',
+    tintColor: color.appPrimary,
   },
   EditStepIcon: {
-    height: 20,
-    width: 20,
+    height: 24,
+    width: 24,
     resizeMode: 'contain',
     margin: 10,
+    tintColor: color.white,
   },
   InputPromptText: {
     marginBottom: 10,

@@ -2,13 +2,18 @@ import {combineReducers} from 'redux';
 import {
   FEATURED_FEED,
   FORYOU_FEED,
+  REPLACE_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
 import {
   RECIPE,
+  VIDEO_RECIPE,
   REGISTER_LIKE_RECIPE,
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
+  REMOVE_RECIPE_STEP,
+  REPLACE_RECIPE_STEP,
+  RECIPE_STEP,
 } from '../actions/recipeActions';
 
 const defaultRecipe = {
@@ -32,6 +37,14 @@ const defaultRecipe = {
   ingredients: [],
 };
 
+const videoRecipe = {
+  name: '',
+  recipe_description: '',
+  url: '',
+};
+
+const defaultSteps = [{step_index: 0, step_image: ''}];
+
 const featureFeedReducer = (state = [], action) => {
   switch (action.type) {
     case FEATURED_FEED:
@@ -44,6 +57,8 @@ const featureFeedReducer = (state = [], action) => {
 const forYouFeedReducer = (state = [], action) => {
   switch (action.type) {
     case FORYOU_FEED:
+      return state.concat(action.payload);
+    case REPLACE_FEED:
       return action.payload;
     default:
       return state;
@@ -62,6 +77,15 @@ const searchResultReducer = (state = [], action) => {
 const recipeReducer = (state = defaultRecipe, action) => {
   switch (action.type) {
     case RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const videoRecipeReducer = (state = videoRecipe, action) => {
+  switch (action.type) {
+    case VIDEO_RECIPE:
       return action.payload;
     default:
       return state;
@@ -95,12 +119,34 @@ const registerRecipeViewReducer = (state = defaultRecipe, action) => {
   }
 };
 
+// Recipe Creation
+const recipeStepsReducer = (state = defaultSteps, action) => {
+  switch (action.type) {
+    case RECIPE_STEP:
+      return action.payload;
+    case REMOVE_RECIPE_STEP:
+      state.splice(action.payload.index, 1);
+      return state;
+    case REPLACE_RECIPE_STEP:
+      if (state.length > action.payload.index) {
+        state[action.payload.index] = action.payload.step;
+      } else {
+        state.push(action.payload.step);
+      }
+      return state;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   featureFeedReducer,
   forYouFeedReducer,
   searchResultReducer,
   recipeReducer,
+  videoRecipeReducer,
   registerRecipeLikeReducer,
   registerRecipeViewReducer,
   recipeLikeGetReducer,
+  recipeStepsReducer,
 });

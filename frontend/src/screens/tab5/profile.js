@@ -27,7 +27,7 @@ export default function Profile({navigation}) {
   const myRecipeFeed = useSelector(
     state => state.profileReducer.myRecipeReducer,
   );
-  const [page, setPage] = useState('Liked');
+  const [page, setPage] = useState('Myrecipes');
   const [profPic, setProfPic] = useState('');
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
@@ -112,11 +112,8 @@ export default function Profile({navigation}) {
           ref={flatListRef}
           data={likedFeed}
           showsVerticalScrollIndicator={false}
-          onResponderEnd={() => {
-            bottomSheetRef.current.close();
-          }}
           numColumns={2}
-          contentContainerStyle={{paddingBottom: '15%'}}
+          contentContainerStyle={{paddingBottom: '100%'}}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           style={{marginTop: 20}}
           renderItem={({item, index}) => {
@@ -177,11 +174,8 @@ export default function Profile({navigation}) {
           ref={flatListRef}
           data={myRecipeFeed}
           showsVerticalScrollIndicator={false}
-          onResponderEnd={() => {
-            bottomSheetRef.current.close();
-          }}
           numColumns={2}
-          contentContainerStyle={{paddingBottom: '15%'}}
+          contentContainerStyle={{paddingBottom: '100%'}}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           style={{marginTop: 20}}
           renderItem={({item, index}) => {
@@ -295,8 +289,8 @@ export default function Profile({navigation}) {
                 justifyContent: 'space-between',
                 marginTop: 8,
               }}>
-              {profileTab('Liked')}
               {profileTab('Myrecipes')}
+              {profileTab('Liked')}
             </View>
             {page === 'Liked' && likedTab()}
             {page === 'Myrecipes' && myRecipes()}

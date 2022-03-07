@@ -5,6 +5,8 @@ services:
     # <Port exposed>: <FastAPI port running inside backend container>
     ports:
       - "8080:8080"
+    environment:
+      MYSQL_PWD: 'password'
     depends_on: 
       - db
   db:
@@ -18,6 +20,7 @@ services:
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
+      TZ: 'America/Los_Angeles'
     ports:
       - '3306:3306'
     expose:

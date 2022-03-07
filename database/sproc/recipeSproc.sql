@@ -5,6 +5,8 @@ DROP procedure IF EXISTS `createRecipeAutoID`;
 DROP procedure IF EXISTS `addSteps`;
 DROP procedure IF EXISTS `addIngredients`;
 DROP procedure IF EXISTS `getRecipe`;
+DROP procedure IF EXISTS `deleteRecipe`;
+DROP procedure IF EXISTS `softDeleteRecipe`;
 DROP procedure IF EXISTS `updateRecipeMacros`;
 DROP procedure IF EXISTS `getIngredientInfo`;
 DROP procedure IF EXISTS `addMockRecipe`;
@@ -20,8 +22,8 @@ CREATE PROCEDURE `getRecipe` (IN `_recipe_id` INT)
 BEGIN
 
 SELECT r.*,
-rs.step_id, rs.description, rs.time,
-i.ingredient_id, i.ingredient_name, i.category
+rs.*,
+i.ingredient_id, i.ingredient_name, i.category, i.step_id
 FROM `recipes_table` r
 LEFT JOIN `recipe_steps_table` rs ON r.recipe_id = rs.recipe_id
 LEFT JOIN `ingredients_table` i ON r.recipe_id = i.recipe_id
@@ -40,7 +42,46 @@ BEGIN
 SELECT r.*
 FROM `recipes_table` r
 WHERE r.user_id = `_user_id`
-;
+ORDER BY `created_time` DESC;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `deleteRecipe` (IN `_recipe_id` VARCHAR(255))
+BEGIN
+
+DELETE FROM `user_activity_table`
+WHERE recipe_view_id = `_recipe_id` OR recipe_like_id = `_recipe_id`;
+
+DELETE FROM `ingredients_table`
+WHERE `recipe_id` = `_recipe_id`;
+
+DELETE FROM `recipe_steps_table`
+WHERE `recipe_id` = `_recipe_id`;
+
+DELETE FROM `recipes_table`
+WHERE recipe_id = `_recipe_id`;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+USE `umami_db`$$
+CREATE PROCEDURE `softDeleteRecipe` (IN `_recipe_id` VARCHAR(255))
+BEGIN
+
+DELETE FROM `ingredients_table`
+WHERE `recipe_id` = `_recipe_id`;
+
+DELETE FROM `recipe_steps_table`
+WHERE `recipe_id` = `_recipe_id`;
+
+DELETE FROM `recipes_table`
+WHERE recipe_id = `_recipe_id`;
 
 END$$
 
@@ -195,14 +236,14 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockSteps` ()
 BEGIN
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(1, 'crack two eggs into a small bowl', NULL);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(1, 'crack two eggs into a small bowl', NULL, 'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg');
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(1, 'add salt, pepper, and crushed red pepper', NULL);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(1, 'add salt, pepper, and crushed red pepper', NULL, 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg');
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(1, 'cook in small pan on medium heat, stirring occassionally', 5);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(1, 'cook in small pan on medium heat, stirring occassionally', 5, 'gs://umami-2021.appspot.com/Recipes/Fried Chicken.jpeg');
 
 END$$
 
@@ -213,17 +254,17 @@ USE `umami_db`$$
 CREATE PROCEDURE `addMockIngredients` ()
 BEGIN
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaaa', 1, '2 eggs', 'Dairy');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaaa', 1, 1, '2 eggs', 'Dairy');
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaab', 1, 'pinch of salt', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaab', 1, 2, 'pinch of salt', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaac', 1, 'pinch of pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaac', 1, 2, 'pinch of pepper', 'Seasoning');
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES('aaad', 1, 'pinch of crushed red pepper', 'Seasoning');
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES('aaad', 1, 2, 'pinch of crushed red pepper', 'Seasoning');
 
 END$$
 
@@ -373,11 +414,11 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `addSteps` (IN `_recipe_id` INT, IN `_description` VARCHAR(255), IN `_time` INT)
+CREATE PROCEDURE `addSteps` (IN `_recipe_id` INT, IN `_description` VARCHAR(255), IN `_time` INT, IN `_header_image` VARCHAR(255))
 BEGIN
 
-INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`)
-VALUES(`_recipe_id`, `_description`, `_time`);
+INSERT INTO `recipe_steps_table` (`recipe_id`, `description`, `time`, `header_image`)
+VALUES(`_recipe_id`, `_description`, `_time`, `_header_image`);
 
 END$$
 
@@ -385,11 +426,11 @@ DELIMITER ;
 
 DELIMITER $$
 USE `umami_db`$$
-CREATE PROCEDURE `addIngredients` (IN `_ingredient_id` VARCHAR(255), IN `_recipe_id` INT, IN `_ingredient_name` VARCHAR(255), IN `_category` VARCHAR(50))
+CREATE PROCEDURE `addIngredients` (IN `_ingredient_id` VARCHAR(255), IN `_recipe_id` INT, IN `_step_id` INT, IN `_ingredient_name` VARCHAR(255), IN `_category` VARCHAR(50))
 BEGIN
 
-INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `ingredient_name`, `category`)
-VALUES(`_ingredient_id`, `_recipe_id`, `_ingredient_name`, `_category`);
+INSERT INTO `ingredients_table` (`ingredient_id`, `recipe_id`, `step_id`, `ingredient_name`, `category`)
+VALUES(`_ingredient_id`, `_recipe_id`, `_step_id`, `_ingredient_name`, `_category`);
 
 END$$
 

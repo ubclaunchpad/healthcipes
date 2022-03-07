@@ -6,6 +6,7 @@ import {
   FEATURED_FEED,
   FORYOU_FEED,
   GET_FEED,
+  REPLACE_FEED,
   SEARCH_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
@@ -95,7 +96,7 @@ function* getFeedCall(param) {
   try {
     const apiConfig = {
       method: 'get',
-      url: `${API_URL}/recipe`,
+      url: `${API_URL}/recipe?start=${param.startIndex}&limit=30`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -104,7 +105,7 @@ function* getFeedCall(param) {
     const response = yield call(axios, apiConfig);
     const resultsArray = response.data[0];
     console.log(
-      '[INFO]: GET FEED API: Recipe obtained = ' +
+      `[INFO]: GET FEED API @ Index ${param.startIndex}: Recipe obtained = ` +
         resultsArray.length.toString(),
     );
     const recipeArray = [];
@@ -160,7 +161,7 @@ function* getFeedCall(param) {
     }
 
     // console.log(recipeArray);
-    yield put({type: FORYOU_FEED, payload: recipeArray});
+    yield put({type: (param.startIndex === 0) ? REPLACE_FEED : FORYOU_FEED, payload: recipeArray});
     yield put({type: SET_LOADING, loading: false});
   } catch (e) {
     console.log('Get Feed Failed: ' + e);

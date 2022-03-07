@@ -85,7 +85,7 @@ async def delete_from_pantry(pantry: dict = defaultPantry):
         }
 
 @router.get("/ingredients")
-async def get_all_ingredients(keyword: str = None):
+def get_all_ingredients(keyword: str = None):
     try:
         if keyword: 
             conn, cursor = init_conn()

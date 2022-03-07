@@ -5,6 +5,7 @@ import {
   View,
   Image,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import moment from 'moment';
@@ -16,6 +17,7 @@ import AccordionItem from '../../components/accordionItem';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
+  DELETE_RECIPE,
   GET_RECIPE,
   POST_RECIPE_LIKE,
   POST_RECIPE_VIEW,
@@ -33,18 +35,20 @@ export default function Recipe({navigation, route}) {
   const [ingredients, setIngredients] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [editPrompt, setEditPrompt] = useState(false);
   const [steps, setSteps] = useState([]);
   const recipeInfo = useSelector(state => state.recipeReducer.recipeReducer);
+  const user = useSelector(state => state.accountReducer.userInfoReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
-  
+
   const open = useSelector(state => state.accordionReducer.accordionReducer);
   const stepIndex = useSelector(
     state => state.accordionStepReducer.accordionStepReducer,
   );
 
   useEffect(() => {
-    if(route.params.recipe_id) {
+    if (route.params.recipe_id) {
       getRecipeFromID(parseInt(route.params.recipe_id));
     }
   }, []);
@@ -140,32 +144,33 @@ export default function Recipe({navigation, route}) {
   }
 
   useEffect(() => {
-    if(recipe) {
-    storage()
-      .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
-      .getDownloadURL()
-      .then(res => {
-        setImage({uri: res});
-      })
-      .catch(e => {
-        console.log('No User Image: ' + e);
-      });
+    if (recipe) {
+      storage()
+        .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
+        .getDownloadURL()
+        .then(res => {
+          setImage({uri: res});
+        })
+        .catch(e => {
+          console.log('[INFO]: No User Image: ' + e);
+        });
     }
   }, [recipe]);
 
   useEffect(() => {
-    if(recipe) {
-    dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
-    dispatch({
-      type: POST_RECIPE_VIEW,
-      user_id: auth().currentUser.uid,
-      recipe_id: recipe.recipe_id,
-    });
-    checkLike(recipe.recipe_id);
-  }
+    if (recipe) {
+      dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
+      dispatch({
+        type: POST_RECIPE_VIEW,
+        user_id: auth().currentUser.uid,
+        recipe_id: recipe.recipe_id,
+      });
+      checkLike(recipe.recipe_id);
+    }
   }, [dispatch, recipe]);
 
   useEffect(() => {
+    console.log(recipeInfo);
     setIngredients(recipeInfo.ingredients);
     setSteps(recipeInfo.steps);
   }, [recipeInfo]);
@@ -368,11 +373,82 @@ export default function Recipe({navigation, route}) {
       />
     );
   }
-  if(!recipe) {
+  if (!recipe) {
     return null;
   }
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View
+      style={{flex: 1, backgroundColor: 'white'}}
+      onTouchEndCapture={() => {
+        if (editPrompt) {
+          setEditPrompt(false);
+        }
+      }}>
+      {editPrompt && (
+        <View
+          style={{
+            position: 'absolute',
+            backgroundColor: 'white',
+            top: '5%',
+            right: '5%',
+            zIndex: 2,
+            borderRadius: 20,
+            padding: 20,
+          }}>
+          {recipe.user_id === auth().currentUser.uid && (
+            <View>
+              <TouchableOpacity
+                style={{padding: 10}}
+                onPress={() => {
+                  navigation.push('NewRecipe', {recipe: recipe, recipeInfo: recipeInfo});
+                }}>
+                <Text style={{fontSize: 16, fontWeight: '500'}}>
+                  Edit Recipe
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{padding: 10}}
+                onPress={() => {
+                  Alert.alert(
+                    'Are you sure you want to delete this recipe?',
+                    '',
+                    [
+                      {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'Delete',
+                        onPress: () => {
+                          dispatch({
+                            type: DELETE_RECIPE,
+                            recipe_id: recipe.recipe_id,
+                            user: user,
+                            startIndex: 0,
+                          });
+                          navigation.pop();
+                        },
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}>
+                <Text style={{fontSize: 16, fontWeight: '500', color: 'red'}}>
+                  Delete Recipe
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {recipe.user_id !== auth().currentUser.uid && (
+            <TouchableOpacity style={{padding: 10}}>
+              <Text style={{fontSize: 16, fontWeight: '500'}}>
+                Report Recipe
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
       <ImageBackground
         source={{uri: recipe.header_image}}
         resizeMode="cover"
@@ -380,6 +456,7 @@ export default function Recipe({navigation, route}) {
           width: '100%',
           height: '70%',
           justifyContent: 'flex-end',
+          flexDirection: 'row',
         }}>
         <TouchableOpacity
           style={{flex: 1, width: 24, height: 24, margin: 20, marginTop: '15%'}}
@@ -391,6 +468,29 @@ export default function Recipe({navigation, route}) {
             style={{
               width: 24,
               height: 24,
+              resizeMode: 'contain',
+              tintColor: color.white,
+            }}
+          />
+        </TouchableOpacity>
+        <View style={{flex: 3}} />
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            width: 24,
+            height: 24,
+            margin: 20,
+            marginTop: '15%',
+            alignItems: 'flex-end',
+          }}
+          onPress={() => {
+            setEditPrompt(true);
+          }}>
+          <Image
+            source={require('../../assets/More.png')}
+            style={{
+              height: 24,
+              width: 24,
               resizeMode: 'contain',
               tintColor: color.white,
             }}

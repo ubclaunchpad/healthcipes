@@ -1,5 +1,7 @@
 *.DS_STORE
 certbot/
 database/data/
-*.csv
+deploy/*.csv
 *.env
+*.p8
+deploy/umami.sql

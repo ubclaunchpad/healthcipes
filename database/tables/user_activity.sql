@@ -16,7 +16,6 @@ CREATE TABLE `user_activity_table` (
   `user_id` VARCHAR(50) NOT NULL,
   `activity_type` ENUM('RECIPE_LIKE', 'USER_FOLLOW', 'RECIPE_VIEW'),
   `date_created` DATETIME,
-
   `user_follow_id` VARCHAR(50),
   `recipe_like_id` INT,
   `recipe_view_id` INT,

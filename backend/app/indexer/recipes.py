@@ -1,5 +1,7 @@
 import logging
 
+from app.route.pantry import get_all_ingredients
+
 # TODO: should abstract into a function that just takes sql_proc as input
 def get_recipe_by_keyword(cursor, keyword):
     sql_proc = 'getRecipeKeywordSearch'
@@ -11,10 +13,10 @@ def get_recipe_by_keyword(cursor, keyword):
         logging.error(e)
 
 
-def get_all_recipes(cursor):
-    sql_proc = 'getAllRecipes'
+def get_all_recipes(cursor, startIndex, numOnPage):
+    sql_proc = 'getRecipePage'
     try:
-        cursor.callproc(sql_proc)
+        cursor.callproc(sql_proc, (startIndex, numOnPage,))
         return cursor.fetchall()
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
@@ -147,7 +149,7 @@ def post_recipe(conn, cursor, recipe):
 def recipe_from_video_url(conn, cursor, url):
     return url
 
-def post_steps(conn, cursor, stepList, recipe):
+def post_scrape_steps(conn, cursor, stepList, recipe):
     sql_proc = 'addSteps'
 
     try:
@@ -155,10 +157,47 @@ def post_steps(conn, cursor, stepList, recipe):
             cursor.callproc(sql_proc, (
                 recipe,
                 step,
-                0
+                0,
+                "",
             ))
             conn.commit()
             cursor.nextset()
+        return stepList
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def post_steps(conn, cursor, stepList, recipeID):
+    sql_proc = 'addSteps'
+    sql_ingredient_proc = 'addIngredients'
+
+    try:
+        for step in stepList:
+            cursor.callproc(sql_proc, (
+                recipeID,
+                step["step_text"],
+                step["step_time"],
+                step["step_image"],
+            ))
+            conn.commit()
+            cursor.nextset()
+
+            cursor.execute('SELECT LAST_INSERT_ID()')
+            cursor.lastrowid = cursor.fetchone()[0] 
+            stepID = cursor.lastrowid
+
+            for ingredient in step["step_ingredients"]:
+                res = get_all_ingredients(ingredient)
+
+                cursor.callproc(sql_ingredient_proc, (
+                    res['data'][0][0],
+                    recipeID,
+                    stepID,
+                    ingredient,
+                    "Other"
+                ))
+                conn.commit()
+                cursor.nextset()
         return stepList
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
@@ -172,6 +211,7 @@ def post_ingredients(conn, cursor, ingredientList, recipe):
             cursor.callproc(sql_proc, (
                 "MagicID",
                 recipe,
+                0,
                 ingredient,
                 "Other"
             ))
@@ -281,21 +321,23 @@ def get_recipe_by_id(conn, cursor, recipe_id):
                     res["steps"].append(
                         {
                             "step_id": result[16],
-                            "description": result[17],
-                            "time": result[18],
+                            "description": result[18],
+                            "time": result[19],
+                            "header_image": result[20],
                         }
                     )
-                    step_ids.add(result[14])
+                    step_ids.add(result[16])
 
-                if (result[17]) and (result[17] not in ingredient_ids):
+                if (result[21]) and (result[21] not in ingredient_ids):
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[19],
-                            "ingredient_name": result[20],
-                            "category": result[21]
+                            "ingredient_id": result[21],
+                            "ingredient_name": result[22],
+                            "category": result[23],
+                            "step_id": result[24]
                         }
                     )
-                    ingredient_ids.add(result[19])
+                    ingredient_ids.add(result[21])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])
@@ -350,4 +392,22 @@ def get_createdrecipe_by_userid(cursor, user_id):
         return cursor.fetchall()
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
+def delete_recipe_by_id(conn, cursor, recipe_id):
+    sql = 'deleteRecipe'
+    try:
+        cursor.callproc(sql, (recipe_id, ))
+        conn.commit()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
+        logging.error(e)
+
+def soft_delete_recipe_by_id(conn, cursor, recipe_id):
+    sql = 'softDeleteRecipe'
+    try:
+        cursor.callproc(sql, (recipe_id, ))
+        conn.commit()
+    except Exception as e:
+        print("MYSQL ERROR:", sql)
         logging.error(e)

@@ -78,7 +78,8 @@ INNER JOIN
 (SELECT *
 FROM `user_activity_table` 
 WHERE activity_type = 'RECIPE_LIKE' and user_id = _user_id) as li
-ON li.recipe_like_id = r.recipe_id;
+ON li.recipe_like_id = r.recipe_id
+ORDER BY r.created_time DESC;
 
 END$$
 

@@ -30,7 +30,7 @@ export default function EditPantry({navigation}) {
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
   );
-
+  
   useEffect(() => {
     dispatch({type: GET_ALL_INGREDIENTS});
   }, [dispatch]);
@@ -98,7 +98,7 @@ export default function EditPantry({navigation}) {
           <FlatList
             style={{paddingHorizontal: '5%'}}
             data={ingredients}
-            ListHeaderComponent={
+            ListHeaderComponent={ 
               <View
                 style={{
                   backgroundColor: color.lightGray,
@@ -141,6 +141,7 @@ export default function EditPantry({navigation}) {
                 />
               </View>
             }
+            
             contentContainerStyle={{paddingBottom: '30%'}}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => {

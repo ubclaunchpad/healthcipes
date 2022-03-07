@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableOpacity,
   Alert,
+  Linking,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
@@ -101,6 +102,19 @@ export default function SignUp({navigation}) {
     signUp(newUsername, newEmail, newPassword, newConfirmPassword);
   };
 
+  function finePrint(text, link) {
+    return (
+      <Text
+        style={{color: color.textGray}}
+        onPress={() => {
+          Linking.openURL(link);
+        }}
+      >
+        {text}
+      </Text>
+    );
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView
@@ -183,7 +197,17 @@ export default function SignUp({navigation}) {
                 ref={confirmInput}
               />
             </View>
-            <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{flex: 1.5, justifyContent: 'center'}}>
+            <Text style={{fontSize: 10, marginBottom: 30}}>
+          {'By continuing, you agree to the '}
+          {finePrint(
+            'Terms of Service',
+            'https://hungrii.com/terms-conditions/',
+          )}
+          {' and acknowledge the '}
+          {finePrint('Privacy Policy', 'https://hungrii.com/privacy/')}
+          {'. '}
+        </Text>
               {GoButton('Sign Up', () => {
                 submitForm(username, email, password, confirmPassword);
               })}

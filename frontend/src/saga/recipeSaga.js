@@ -171,6 +171,6 @@ export function* postRecipeView() {
   yield takeLatest(POST_RECIPE_VIEW, postRecipeViewCall);
 }
 
-export function* getRecipeURL() {
+export function* postRecipeURL() {
   yield takeLatest(POST_RECIPE_URL, postRecipeURLCall);
 }

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GoButton from '../../components/goButton';
 import { GET_USER } from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
-import { POST_RECIPE_URL } from '../../actions/recipeActions';
+import { GET_RECIPE, POST_RECIPE_URL } from '../../actions/recipeActions';
 
 export default function webrecipe({ navigation }) {
   const dispatch = useDispatch();
@@ -31,9 +31,6 @@ export default function webrecipe({ navigation }) {
     console.log(URL);
     dispatch({ type: POST_RECIPE_URL, url: URL });
   }, [dispatch, URL]);
-
-  // saga function to get recipe body from URL (scraper)
-  // search console logs body onPress
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');

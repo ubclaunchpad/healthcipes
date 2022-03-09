@@ -162,12 +162,12 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         res = post_recipe(conn, cursor, recipe)
         if (len(steps) > 0):
             if (url != ""):
-                _ = post_scrape_steps(conn, cursor, steps[0].split("\n"), res[0])
+                _ = post_scrape_steps(conn, cursor, steps, res[0])
             else:
                 _ = post_steps(conn, cursor, steps, res[0])
         if (len(ingredients) > 0):
             if (url != ""):
-                _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+                _ = post_ingredients(conn, cursor, ingredients, res[0])
         return res, 200
     except Exception as e:
         logging.error(e)
@@ -208,6 +208,28 @@ def parse_ingredients(text: str = ""):
             "data": "Error with {}".format(e),
             "status_code": 400
         }
+
+@router.post("/scrape-url")
+async def scrape_recipe_url(url: str = ""):
+    if url == "":
+        return "Error: no url given", 400
+
+    try:
+        recipe, steps, ingredients = scraper(url)
+
+        response = {
+            "recipe": recipe,
+            "steps": steps,
+            "ingredients": ingredients
+        }
+
+        return {
+            "data": response,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        return "Error with {}".format(e), 400
 
 @router.get("/scrape")
 async def auto_scrape_recipe():

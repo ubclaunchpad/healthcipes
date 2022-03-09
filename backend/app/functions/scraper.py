@@ -15,8 +15,8 @@ def scraper (url):
     vegan = False
 
     nutrients.update(scraper.nutrients())
-    ingredients.append(scraper.ingredients())
-    steps.append(scraper.instructions())
+    ingredients = scraper.ingredients()
+    steps = scraper.instructions().split('\n')
 
     if 'Vegan' in recipename:
         vegetarian = True

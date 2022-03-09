@@ -15,16 +15,49 @@ import { useDispatch, useSelector } from 'react-redux';
 import GoButton from '../../components/goButton';
 import { GET_USER } from '../../actions/accountActions';
 import { FlatList } from 'react-native-gesture-handler';
-import { POST_RECIPE_URL } from '../../actions/recipeActions';
+import { POST_RECIPE } from '../../actions/recipeActions';
+import { API_URL } from '@env';
+import axios from 'axios';
 
 export default function webrecipe({ navigation }) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const [URL, setURL] = useState("");
+  const [recipe, setRecipe] = useState({});
+  const [steps, setSteps] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     dispatch({ type: GET_USER, userID: auth().currentUser.uid });
   }, [dispatch]);
+
+  function getRecipeFromURL(URL) {
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/recipe/scrape-url?url=${URL}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    axios(apiConfig)
+      .then(function (response) {
+        const result = response.data;
+        console.log(result);
+        console.log(result.data.ingredients);
+        console.log(result.data.recipe);
+        console.log(result.data.steps);
+        setRecipe(result.data.recipe);
+        setSteps(result.data.steps);
+        setIngredients(result.data.ingredients);
+        console.log(recipe);
+        console.log(ingredients);
+        console.log(steps);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
@@ -65,7 +98,7 @@ export default function webrecipe({ navigation }) {
                 <View style={webrecipeStyle.textBox}>
                   <TouchableOpacity onPress={() => {
                     console.log(URL);
-                    dispatch({ type: POST_RECIPE_URL, url: URL });
+                    getRecipeFromURL(URL);
                   }}>
                     <Image
                       source={require("../../assets/Search.png")}
@@ -95,6 +128,9 @@ export default function webrecipe({ navigation }) {
                     }} />
                 </TouchableOpacity>
               </View>
+              <View>
+                <Text>{recipe.name}</Text>
+              </View>
               <View style={{
                 paddingHorizontal: 60,
                 marginTop: 20,
@@ -102,7 +138,10 @@ export default function webrecipe({ navigation }) {
               }}>
                 {GoButton('Submit', () => {
                   // save to DB
-                  navigation.pop();
+                  console.log(recipe);
+                  console.log(steps);
+                  console.log(ingredients);
+                  dispatch({ type: POST_RECIPE, recipeObj: recipe, steps: steps, ingredients: ingredients});
                 })}
               </View>
             </View>} />

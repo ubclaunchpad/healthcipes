@@ -90,6 +90,7 @@ function* searchFeedCall(param) {
 function* getFullFeed(param) {
   yield getFeedCall(param);
   yield getFeaturedCall(param);
+  yield put({type: SET_LOADING, loading: false});
 }
 
 function* getFeedCall(param) {
@@ -162,7 +163,6 @@ function* getFeedCall(param) {
 
     // console.log(recipeArray);
     yield put({type: (param.startIndex === 0) ? REPLACE_FEED : FORYOU_FEED, payload: recipeArray});
-    yield put({type: SET_LOADING, loading: false});
   } catch (e) {
     console.log('Get Feed Failed: ' + e);
   }

@@ -56,7 +56,7 @@ def scraper (url):
     recipe = {
         'recipe_id': None,
         "name": recipename,
-        "recipe_description": "A fun auto generated recipe from the web!",
+        "recipe_description": "A fun auto generated recipe from " + url,
         "created_time": None,
         "user_id": "Qnj6AjQOLoZlJw4TZBpRE3iNz0K3",
         "creator_username": "harinwu",

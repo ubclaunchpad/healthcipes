@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Image, TouchableOpacity} from 'react-native';
+import {SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 
@@ -25,7 +25,7 @@ export default function Post({navigation}) {
           navigation.push('VideoRecipe');
         }}>
       <Image
-          source={require('../../assets/Video.png')}
+          source={require('../../assets/Link.png')}
           style={{
             width: 50,
             height: 50,

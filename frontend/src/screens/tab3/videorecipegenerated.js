@@ -22,7 +22,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import BatchedBridge from 'react-native/Libraries/BatchedBridge/BatchedBridge';
 import { black, green100 } from 'react-native-paper/lib/typescript/styles/colors';
 
-export default function Post({navigation}) {
+export default function VideoRecipeGenerated({navigation}) {
     const dispatch = useDispatch();
     const onboarded = useSelector(state => state.globalReducer.onboardReducer);
     const videoRecipe = useSelector(state => state.recipeReducer.videoRecipeReducer)

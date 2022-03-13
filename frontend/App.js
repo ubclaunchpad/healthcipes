@@ -72,7 +72,7 @@ const CreateStack = createNativeStackNavigator();
 function CreateScreen() {
   return (
     <CreateStack.Navigator
-      initialRouteName="Create"
+      initialRouteName="NewRecipe"
       screenOptions={{
         headerShown: false,
       }}>

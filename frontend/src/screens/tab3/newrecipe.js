@@ -22,6 +22,7 @@ import color from '../../styles/color';
 import GoButton from '../../components/goButton';
 import {
   POST_RECIPE,
+  POST_RECIPE_URL,
   PUT_RECIPE,
   RECIPE_STEP,
 } from '../../actions/recipeActions';
@@ -38,6 +39,7 @@ export default function NewRecipe({navigation, route}) {
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const loading = useSelector(state => state.globalReducer.loadingReducer);
+  const urlRecipe = useSelector(state => state.recipeReducer.recipeURLReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
   const [recipeImage, setRecipeImage] = useState('');
@@ -45,6 +47,7 @@ export default function NewRecipe({navigation, route}) {
   const [prepTime, setPrepTime] = useState(0);
   const [importModal, setImportModal] = useState(false);
   const [parseURL, setParseURL] = useState('');
+  const pattern = /^((http|https|ftp):\/\/)/;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -63,7 +66,7 @@ export default function NewRecipe({navigation, route}) {
       setRecipeDescription(recipe.recipe_description);
       setPrepTime(recipe.cooking_time);
       setServings(recipe.servings);
-      setRecipeImage({uri: recipe.header_image});
+      console.log(recipe.header_image);
       const editSteps = recipeInfo.steps;
       const promises = [];
       editSteps.map(step => {
@@ -89,6 +92,19 @@ export default function NewRecipe({navigation, route}) {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (urlRecipe) {
+      setRecipeName(urlRecipe.name);
+      setRecipeDescription(urlRecipe.recipe_description);
+      console.log(urlRecipe.header_image);
+      if (urlRecipe.header_image !== '') {
+        setRecipeImage({uri: urlRecipe.header_image});
+      }
+      setServings(urlRecipe.servings);
+      setPrepTime(urlRecipe.cooking_time);
+    }
+  }, [urlRecipe]);
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -195,15 +211,13 @@ export default function NewRecipe({navigation, route}) {
       .child('Recipes')
       .child(`${recipeName}_${auth().currentUser.uid}.jpeg`);
 
-    const pattern = /^((http|https|ftp):\/\/)/;
-
     if (pattern.test(uploadUri)) {
       console.log('Skip Image Uploaded');
       const recipeObj = {
         recipe_id: recipe.recipe_id,
         name: recipeName,
         recipe_description: recipeDescription,
-        header_image: storageRef.toString(),
+        header_image: uploadUri,
         user_id: auth().currentUser.uid,
         creator_username: user.username,
         protein: recipe.protein,
@@ -301,62 +315,110 @@ export default function NewRecipe({navigation, route}) {
             .child('Recipes')
             .child(`${recipeName}_${auth().currentUser.uid}.jpeg`);
 
-          storageRef
-            .putFile(uploadUri, {
-              customMetadata: {
-                Owner: auth().currentUser.uid,
-              },
-            })
-            .then(() => {
-              console.log('Uploaded');
-              const recipeObj = {
-                recipe_id: '',
-                name: recipeName,
-                recipe_description: recipeDescription,
-                header_image: storageRef.toString(),
-                user_id: auth().currentUser.uid,
-                creator_username: user.username,
-                protein: 0,
-                carbs: 0,
-                fat: 0,
-                fiber: 0,
-                calories: 0,
-                servings: servings,
-                vegetarian: false,
-                vegan: false,
-                cooking_time: prepTime,
-              };
-              const ingredients = [];
+          if (pattern.test(uploadUri)) {
+            console.log('Skip Image Upload');
+            const recipeObj = {
+              recipe_id: '',
+              name: recipeName,
+              recipe_description: recipeDescription,
+              header_image: uploadUri,
+              user_id: auth().currentUser.uid,
+              creator_username: user.username,
+              protein: 0,
+              carbs: 0,
+              fat: 0,
+              fiber: 0,
+              calories: 0,
+              servings: servings,
+              vegetarian: false,
+              vegan: false,
+              cooking_time: prepTime,
+            };
+            const ingredients = [];
 
-              steps.forEach(step => {
-                ingredientList = step.step_ingredients;
-                ingredientList.forEach(ingredient => {
-                  if (!ingredients.includes(ingredient)) {
-                    ingredients.push(ingredient);
-                  }
-                });
+            steps.forEach(step => {
+              ingredientList = step.step_ingredients;
+              ingredientList.forEach(ingredient => {
+                if (!ingredients.includes(ingredient)) {
+                  ingredients.push(ingredient);
+                }
               });
-
-              dispatch({
-                type: POST_RECIPE,
-                recipeObj: recipeObj,
-                steps: steps,
-                ingredients: ingredients,
-              });
-
-              dispatch({type: SET_LOADING, loading: false});
-
-              dispatch({
-                type: RECIPE_STEP,
-                payload: [{step_index: 0, step_image: ''}],
-              });
-              navigation.replace('NewRecipe');
-              const jumpToAction = TabActions.jumpTo('FeedTab');
-              navigation.dispatch(jumpToAction);
-            })
-            .catch(() => {
-              dispatch({type: SET_LOADING, loading: false});
             });
+
+            dispatch({
+              type: POST_RECIPE,
+              recipeObj: recipeObj,
+              steps: steps,
+              ingredients: ingredients,
+            });
+
+            dispatch({type: SET_LOADING, loading: false});
+
+            dispatch({
+              type: RECIPE_STEP,
+              payload: [{step_index: 0, step_image: ''}],
+            });
+            navigation.replace('NewRecipe');
+            const jumpToAction = TabActions.jumpTo('FeedTab');
+            navigation.dispatch(jumpToAction);
+          } else {
+            storageRef
+              .putFile(uploadUri, {
+                customMetadata: {
+                  Owner: auth().currentUser.uid,
+                },
+              })
+              .then(() => {
+                console.log('Uploaded');
+                const recipeObj = {
+                  recipe_id: '',
+                  name: recipeName,
+                  recipe_description: recipeDescription,
+                  header_image: storageRef.toString(),
+                  user_id: auth().currentUser.uid,
+                  creator_username: user.username,
+                  protein: 0,
+                  carbs: 0,
+                  fat: 0,
+                  fiber: 0,
+                  calories: 0,
+                  servings: servings,
+                  vegetarian: false,
+                  vegan: false,
+                  cooking_time: prepTime,
+                };
+                const ingredients = [];
+
+                steps.forEach(step => {
+                  ingredientList = step.step_ingredients;
+                  ingredientList.forEach(ingredient => {
+                    if (!ingredients.includes(ingredient)) {
+                      ingredients.push(ingredient);
+                    }
+                  });
+                });
+
+                dispatch({
+                  type: POST_RECIPE,
+                  recipeObj: recipeObj,
+                  steps: steps,
+                  ingredients: ingredients,
+                });
+
+                dispatch({type: SET_LOADING, loading: false});
+
+                dispatch({
+                  type: RECIPE_STEP,
+                  payload: [{step_index: 0, step_image: ''}],
+                });
+                navigation.replace('NewRecipe');
+                const jumpToAction = TabActions.jumpTo('FeedTab');
+                navigation.dispatch(jumpToAction);
+              })
+              .catch(() => {
+                dispatch({type: SET_LOADING, loading: false});
+              });
+          }
         }
       } else {
         console.log('Image Cannot Be Empty');
@@ -367,7 +429,8 @@ export default function NewRecipe({navigation, route}) {
   }
 
   function processURL(url) {
-    console.log('processing URL: ' + url);
+    dispatch({type: POST_RECIPE_URL, url: url});
+    setImportModal(false);
   }
 
   return (

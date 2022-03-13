@@ -14,6 +14,7 @@ import {
   REMOVE_RECIPE_STEP,
   REPLACE_RECIPE_STEP,
   RECIPE_STEP,
+  WEB_RECIPE,
 } from '../actions/recipeActions';
 
 const defaultRecipe = {
@@ -119,6 +120,15 @@ const registerRecipeViewReducer = (state = defaultRecipe, action) => {
   }
 };
 
+const recipeURLReducer = (state = defaultRecipe, action) => {
+  switch (action.type) {
+    case WEB_RECIPE:
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 // Recipe Creation
 const recipeStepsReducer = (state = defaultSteps, action) => {
   switch (action.type) {
@@ -149,4 +159,5 @@ export default combineReducers({
   registerRecipeViewReducer,
   recipeLikeGetReducer,
   recipeStepsReducer,
+  recipeURLReducer,
 });

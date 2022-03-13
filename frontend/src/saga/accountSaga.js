@@ -28,7 +28,7 @@ function* signUpCall(param) {
     yield put({
       type: USER_INFO,
       payload: {
-        user_id: param.payload.userID,
+        user_id: param.payload.user_id,
         username: param.payload.username,
         email: param.payload.email,
         first_name: '',
@@ -111,7 +111,7 @@ function* getUserCall(param) {
     };
     yield put({type: USER_INFO, payload: userObj});
   } catch (e) {
-    console.log('Signup Failed');
+    console.log('Get User Failed');
   }
 }
 

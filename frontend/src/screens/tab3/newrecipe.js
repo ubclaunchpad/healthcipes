@@ -43,6 +43,8 @@ export default function NewRecipe({navigation, route}) {
   const [recipeImage, setRecipeImage] = useState('');
   const [servings, setServings] = useState(0);
   const [prepTime, setPrepTime] = useState(0);
+  const [importModal, setImportModal] = useState(false);
+  const [parseURL, setParseURL] = useState('');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -364,9 +366,100 @@ export default function NewRecipe({navigation, route}) {
     }
   }
 
+  function processURL(url) {
+    console.log('processing URL: ' + url);
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {Loader(loading, 'fade')}
+      {importModal && (
+        <View
+          onTouchEnd={() => {
+            setImportModal(false);
+          }}
+          style={{
+            width: '100%',
+            height: '110%',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 5,
+            position: 'absolute',
+          }}>
+          <View
+            onTouchEnd={e => {
+              e.stopPropagation();
+            }}
+            style={{
+              width: '90%',
+              height: 100,
+              position: 'absolute',
+              top: '18%',
+              left: '5%',
+              zIndex: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: '90%',
+                height: 100,
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 10,
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  color: color.appPrimary,
+                  marginBottom: 20,
+                }}>
+                Enter URL to Import Recipe
+              </Text>
+              <TextInput
+                placeholder="www.example.com"
+                autoCorrect={false}
+                onChangeText={text => setParseURL(text)}
+                value={parseURL}
+                style={{
+                  borderBottomColor: color.gray,
+                  borderBottomWidth: 1,
+                  width: '80%',
+                  paddingBottom: 10,
+                }}
+                placeholderTextColor={color.gray}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                processURL(parseURL);
+              }}
+              style={{
+                width: 50,
+                height: 50,
+                backgroundColor: color.appPrimary,
+                borderRadius: 50,
+                padding: 10,
+                marginLeft: -25,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={require('../../assets/Back.png')}
+                style={{
+                  width: 24,
+                  height: 20,
+                  resizeMode: 'contain',
+                  tintColor: color.white,
+                  transform: [{rotate: '180deg'}],
+                  marginLeft: 5,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
       <View
         style={{
           paddingHorizontal: '5%',
@@ -377,14 +470,15 @@ export default function NewRecipe({navigation, route}) {
         <TouchableOpacity
           style={{flex: 1, marginBottom: 10, marginRight: 10}}
           onPress={() => {
-            navigation.pop();
+            setImportModal(true);
           }}>
           <Image
-            source={require('../../assets/Back.png')}
+            source={require('../../assets/Link.png')}
             style={{
               width: 24,
               height: 24,
               resizeMode: 'contain',
+              tintColor: color.appPrimary,
             }}
           />
         </TouchableOpacity>
@@ -402,7 +496,22 @@ export default function NewRecipe({navigation, route}) {
           }}
           placeholderTextColor={color.gray}
         />
-        <View style={{flex: 1}} />
+        <TouchableOpacity
+          style={{
+            flex: 1.5,
+            marginBottom: 10,
+            marginLeft: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => {
+            save();
+          }}>
+          <Text
+            style={{fontWeight: '500', color: color.appPrimary, fontSize: 18}}>
+            Save
+          </Text>
+        </TouchableOpacity>
       </View>
       <DraggableFlatList
         data={steps}
@@ -581,9 +690,6 @@ export default function NewRecipe({navigation, route}) {
                     </View>
                   </View>
                 </View>
-              </View>
-              <View style={{flex: 0.75, width: '50%'}}>
-                {GoButton('Save', save)}
               </View>
             </KeyboardAvoidingView>
           </View>

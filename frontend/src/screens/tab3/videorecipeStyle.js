@@ -31,7 +31,7 @@ export default StyleSheet.create({
         borderColor: color.gray,
         paddingTop: 0,
         paddingBottom: 0,
-      },
+    },
     description: {
         borderRadius: 25,
     },

@@ -14,6 +14,7 @@ import {
   postRecipe,
   postRecipeLike,
   postRecipeView,
+  postRecipeURL,
   postVideoURL,
   putRecipe,
 } from './recipeSaga';
@@ -41,6 +42,7 @@ export default function* rootSaga() {
     fork(searchIngredients),
     fork(getMyRecipes),
     fork(registerUserToken),
+    fork(postRecipeURL),
     fork(getMyNotifications),
   ]);
 }

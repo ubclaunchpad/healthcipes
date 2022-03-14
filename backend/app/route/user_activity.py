@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 import logging
 from app.indexer.tools import init_conn
-from app.indexer import user_activity
+from app.indexer import user_activity as user_activity
+from app.constants.user_activity import *
 
 default_user_activity = {
     "user_id": "testID",
-    "activity_type": user_activity.RECIPE_VIEW,
+    "activity_type": RECIPE_VIEW,
     "recipe_view_id": 1,
 }
 
@@ -29,6 +30,7 @@ async def read_user_activity(userID: str = ""):
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
+
 
 
 @router.get("/recipe_like")

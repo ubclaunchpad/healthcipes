@@ -1,4 +1,5 @@
 import logging
+from app.functions.notification import send_user_activity_notification
 
 # USER ACTIVITY TYPES CONSTANTS 
 # NOTE: NEED TO REGISTER EVERY TIME EXPAND USER ACTIVITY TYPE
@@ -83,6 +84,8 @@ def post_user_activity(conn, cursor, user_activity):
         RECIPE_LIKE: recipe_like_id,
         RECIPE_VIEW: recipe_view_id
     }
+
+    send_user_activity_notification(fk_obj)
 
     # NOTE: checks corresponding FK inserted matches the activity_type
     for key in fk_obj:

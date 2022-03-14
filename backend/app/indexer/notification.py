@@ -12,7 +12,6 @@ def upsert_user_notification_token(conn, cursor, userID, token):
         logging.error(e)
         return False
 
-
 def get_user_notification_token(cursor, userID):
     sql = 'getUserNotificationToken'
     try:

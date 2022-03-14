@@ -3,6 +3,7 @@ import requests
 from app.constants.user_activity import *
 from app.indexer.recipes import get_recipe_by_id
 from app.indexer.tools import init_conn
+from app.indexer.notification import get_user_notification_token
 import logging
 
 endpoint = "https://fcm.googleapis.com/fcm/send"
@@ -40,15 +41,16 @@ def _send_notif(user_activity, id):
         # send notification to creator of recipe
         try:
             conn, cursor = init_conn()
-            res = get_recipe_by_id(conn, cursor, id)
-            if res:
-                print(res)
-                # creator_id = res[0]['user_id']
+            recipe = get_recipe_by_id(conn, cursor, id)
+            if recipe:
+                creator_id = recipe['user_id']
+                # TODO: verify token 
+                token = get_user_notification_token(cursor, creator_id)
+            else:
+                return
         except Exception as e:
             logging.error(e)
             pass
-
-        pass
     if user_activity == USER_FOLLOW:
         # no notification currently
         pass

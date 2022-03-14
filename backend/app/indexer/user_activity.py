@@ -1,7 +1,6 @@
 import logging
 from app.functions.notification import send_user_activity_notification
 from app.constants.user_activity import *
-user_activity_type_constants = {RECIPE_LIKE, USER_FOLLOW, RECIPE_VIEW}
 
 def get_user_activity(cursor, user_id):
     sql_proc = 'getUsersUserActivity'

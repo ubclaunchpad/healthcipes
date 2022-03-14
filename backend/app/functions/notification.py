@@ -8,6 +8,7 @@ import logging
 
 endpoint = "https://fcm.googleapis.com/fcm/send"
 # TODO: move to env file
+# NOTE: this is example key
 auth_key = "AAAAg7rOhRA:APA91bFlbIfZgyMmXXTrYwzAS9AQW8pINiLVWrV45_uavGNjYyb0MEJ0cmK6KrQJPUYIEPF63-WLRczdBkUAp3gxsMUz1WYpTVQSjjm4p2gEt3ONrWVgzgLYTgG4Dse55ZQhGLCpKiX2"
 
 def send_notification(token, title, body, priority="high"):

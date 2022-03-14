@@ -1,8 +1,9 @@
 # NOTE: Apple works, unsure about Android
 import requests
-from app.indexer.user_activity import RECIPE_LIKE, USER_FOLLOW, RECIPE_VIEW
+from app.constants.user_activity import *
 from app.indexer.recipes import get_recipe_by_id
 from app.indexer.tools import init_conn
+import logging
 
 endpoint = "https://fcm.googleapis.com/fcm/send"
 # TODO: move to env file
@@ -41,9 +42,10 @@ def _send_notif(user_activity, id):
             conn, cursor = init_conn()
             res = get_recipe_by_id(conn, cursor, id)
             if res:
-                creator_id = res[0]['user_id']
-
+                print(res)
+                # creator_id = res[0]['user_id']
         except Exception as e:
+            logging.error(e)
             pass
 
         pass

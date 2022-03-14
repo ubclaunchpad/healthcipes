@@ -13,6 +13,7 @@ def upsert_user_notification_token(conn, cursor, userID, token):
         return False
 
 def get_user_notification_token(cursor, userID):
+    print("trying to get token", userID, cursor)
     sql = 'getUserNotificationToken'
     try:
         cursor.callproc(sql, (userID, ))
@@ -27,6 +28,7 @@ def get_user_notification(cursor, userID):
     # NOTE: retrieval of notifications and actualy sending of notifications are seperated
     # and are not cohesive, aka there is no code that actually ties the logic together
     # not sure how to do this with sprocs in a clean way.
+    print("calling user notif sproc")
     sql = 'getUserNotifications'
     try:
         cursor.callproc(sql, (userID, ))

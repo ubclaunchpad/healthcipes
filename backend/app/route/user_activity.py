@@ -90,7 +90,7 @@ async def user_like_delete(userID: str = "", recipeID: int = 0):
         return "Error with {}".format(e), 400
 
 @router.get("/rank")
-async def rank_recipes(activity_type: str = user_activity.RECIPE_VIEW):
+async def rank_recipes(activity_type: str = RECIPE_VIEW):
     try:
         _, cursor = init_conn()
         res = user_activity.get_ranked_recipes(cursor, activity_type)

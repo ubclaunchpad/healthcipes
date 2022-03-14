@@ -70,7 +70,6 @@ async def get_token(userID: str = ""):
     try:
         _ , cursor = init_conn()
         res = get_user_notification_token(cursor, userID)
-        print(res)
         return res, 200
 
     except Exception as e:

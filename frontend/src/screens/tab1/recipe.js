@@ -400,7 +400,7 @@ export default function Recipe({navigation, route}) {
               <TouchableOpacity
                 style={{padding: 10}}
                 onPress={() => {
-                  navigation.push('NewRecipe');
+                  navigation.push('NewRecipe', {recipe: recipe, recipeInfo: recipeInfo});
                 }}>
                 <Text style={{fontSize: 16, fontWeight: '500'}}>
                   Edit Recipe

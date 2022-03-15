@@ -13,7 +13,7 @@ def upsert_user_notification_token(conn, cursor, userID, token):
         return False
 
 
-def get_user_notification(cursor, userID):
+def get_user_notification_token(cursor, userID):
     sql = 'getUserNotificationToken'
     try:
         cursor.callproc(sql, (userID, ))
@@ -24,3 +24,29 @@ def get_user_notification(cursor, userID):
         return False
 
 
+def get_user_notification(cursor, userID):
+    # TODO: implement sql proc below
+    # procedure
+    # currently only on recipe likes 
+    # join userID to recipe tables
+    # for those recipes join with all recipe like user actions
+    # return in chronological order of actions where userId "owns" recipe 
+    sql = 'getUserNotifications'
+    try:
+        cursor.callproc(sql, (userID, ))
+        return cursor.fetchall()
+
+    except Exception as e:
+        logging.error(e)
+        return False
+
+
+
+    # sql = 'getUserNotification'
+    # try:
+    #     cursor.callproc(sql, (userID, ))
+    #     return cursor.fetchall()
+
+    # except Exception as e:
+    #     logging.error(e)
+    #     return False

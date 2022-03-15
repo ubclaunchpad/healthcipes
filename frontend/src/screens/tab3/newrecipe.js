@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   TextInput,
@@ -20,22 +20,34 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import {launchImageLibrary} from 'react-native-image-picker';
 import color from '../../styles/color';
 import GoButton from '../../components/goButton';
-import {POST_RECIPE, RECIPE_STEP} from '../../actions/recipeActions';
+import {
+  POST_RECIPE,
+  POST_RECIPE_URL,
+  PUT_RECIPE,
+  RECIPE_STEP,
+} from '../../actions/recipeActions';
 import NutritionChips from '../../components/nutritionChips';
 import newrecipeStyle from './newrecipeStyle';
 import {SET_LOADING} from '../../actions/globalActions';
 import Loader from '../../components/Loader';
 
-export default function NewRecipe({navigation}) {
+export default function NewRecipe({navigation, route}) {
   const dispatch = useDispatch();
+  const recipe = route.params ? route.params.recipe : null;
+  const recipeInfo = route.params ? route.params.recipeInfo : null;
+  const [editMode, setEditMode] = useState(false);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const loading = useSelector(state => state.globalReducer.loadingReducer);
+  const urlRecipe = useSelector(state => state.recipeReducer.recipeURLReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
   const [recipeImage, setRecipeImage] = useState('');
   const [servings, setServings] = useState(0);
   const [prepTime, setPrepTime] = useState(0);
+  const [importModal, setImportModal] = useState(false);
+  const [parseURL, setParseURL] = useState('');
+  const pattern = /^((http|https|ftp):\/\/)/;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -46,6 +58,53 @@ export default function NewRecipe({navigation}) {
       setPrepTime(prepTimeCalc);
     }, [steps]),
   );
+
+  useEffect(() => {
+    if (recipe) {
+      setEditMode(true);
+      setRecipeName(recipe.name);
+      setRecipeDescription(recipe.recipe_description);
+      setPrepTime(recipe.cooking_time);
+      setServings(recipe.servings);
+      console.log(recipe.header_image);
+      const editSteps = recipeInfo.steps;
+      const promises = [];
+      editSteps.map(step => {
+        const prom = storage()
+          .refFromURL(step.header_image)
+          .getDownloadURL()
+          .then(res => {
+            step['image_cache'] = {uri: res};
+            step['step_text'] = step.description;
+            step['step_time'] = step.time;
+            step['step_image'] = step.header_image;
+            step['step_ingredients'] = [];
+          });
+
+        promises.push(prom);
+      });
+
+      Promise.all(promises).then(() => {
+        dispatch({
+          type: RECIPE_STEP,
+          payload: editSteps,
+        });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (urlRecipe) {
+      setRecipeName(urlRecipe.name);
+      setRecipeDescription(urlRecipe.recipe_description);
+      console.log(urlRecipe.header_image);
+      if (urlRecipe.header_image !== '') {
+        setRecipeImage({uri: urlRecipe.header_image});
+      }
+      setServings(urlRecipe.servings);
+      setPrepTime(urlRecipe.cooking_time);
+    }
+  }, [urlRecipe]);
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -140,33 +199,129 @@ export default function NewRecipe({navigation}) {
     );
   };
 
+  function updateRecipe() {
+    dispatch({type: SET_LOADING, loading: true});
+    const uploadUri =
+      Platform.OS === 'ios'
+        ? recipeImage.uri.replace('file://', '')
+        : recipeImage.uri;
+
+    const storageRef = storage()
+      .ref()
+      .child('Recipes')
+      .child(`${recipeName}_${auth().currentUser.uid}.jpeg`);
+
+    if (pattern.test(uploadUri)) {
+      console.log('Skip Image Uploaded');
+      const recipeObj = {
+        recipe_id: recipe.recipe_id,
+        name: recipeName,
+        recipe_description: recipeDescription,
+        header_image: uploadUri,
+        user_id: auth().currentUser.uid,
+        creator_username: user.username,
+        protein: recipe.protein,
+        carbs: recipe.carbs,
+        fat: recipe.fat,
+        fiber: recipe.fiber,
+        calories: recipe.calories,
+        servings: servings,
+        vegetarian: recipe.vegetarian,
+        vegan: recipe.vegan,
+        cooking_time: prepTime,
+      };
+
+      dispatch({
+        type: PUT_RECIPE,
+        recipeObj: recipeObj,
+        steps: steps,
+      });
+
+      dispatch({type: SET_LOADING, loading: false});
+
+      dispatch({
+        type: RECIPE_STEP,
+        payload: [{step_index: 0, step_image: ''}],
+      });
+      navigation.replace('NewRecipe');
+      const jumpToAction = TabActions.jumpTo('FeedTab');
+      navigation.dispatch(jumpToAction);
+      navigation.popToTop();
+    } else {
+      storageRef
+        .putFile(uploadUri, {
+          customMetadata: {
+            Owner: auth().currentUser.uid,
+          },
+        })
+        .then(() => {
+          console.log('Uploaded');
+          const recipeObj = {
+            recipe_id: recipe.recipe_id,
+            name: recipeName,
+            recipe_description: recipeDescription,
+            header_image: storageRef.toString(),
+            user_id: auth().currentUser.uid,
+            creator_username: user.username,
+            protein: recipe.protein,
+            carbs: recipe.carbs,
+            fat: recipe.fat,
+            fiber: recipe.fiber,
+            calories: recipe.calories,
+            servings: servings,
+            vegetarian: recipe.vegetarian,
+            vegan: recipe.vegan,
+            cooking_time: prepTime,
+          };
+
+          dispatch({
+            type: PUT_RECIPE,
+            recipeObj: recipeObj,
+            steps: steps,
+          });
+
+          dispatch({type: SET_LOADING, loading: false});
+
+          dispatch({
+            type: RECIPE_STEP,
+            payload: [{step_index: 0, step_image: ''}],
+          });
+          navigation.replace('NewRecipe');
+          const jumpToAction = TabActions.jumpTo('FeedTab');
+          navigation.dispatch(jumpToAction);
+          navigation.popToTop();
+        })
+        .catch(() => {
+          dispatch({type: SET_LOADING, loading: false});
+        });
+    }
+  }
+
   function save() {
+    console.log(`[INFO] EDIT MODE: ${editMode}`);
     if (recipeName !== '') {
       if (recipeImage !== '') {
-        dispatch({type: SET_LOADING, loading: true});
-        const uploadUri =
-          Platform.OS === 'ios'
-            ? recipeImage.uri.replace('file://', '')
-            : recipeImage.uri;
+        if (editMode) {
+          updateRecipe();
+        } else {
+          dispatch({type: SET_LOADING, loading: true});
+          const uploadUri =
+            Platform.OS === 'ios'
+              ? recipeImage.uri.replace('file://', '')
+              : recipeImage.uri;
 
-        const storageRef = storage()
-          .ref()
-          .child('Recipes')
-          .child(`${recipeName}_${auth().currentUser.uid}.jpeg`);
+          const storageRef = storage()
+            .ref()
+            .child('Recipes')
+            .child(`${recipeName}_${auth().currentUser.uid}.jpeg`);
 
-        storageRef
-          .putFile(uploadUri, {
-            customMetadata: {
-              Owner: auth().currentUser.uid,
-            },
-          })
-          .then(() => {
-            console.log('Uploaded');
+          if (pattern.test(uploadUri)) {
+            console.log('Skip Image Upload');
             const recipeObj = {
               recipe_id: '',
               name: recipeName,
               recipe_description: recipeDescription,
-              header_image: storageRef.toString(),
+              header_image: uploadUri,
               user_id: auth().currentUser.uid,
               creator_username: user.username,
               protein: 0,
@@ -206,10 +361,65 @@ export default function NewRecipe({navigation}) {
             navigation.replace('NewRecipe');
             const jumpToAction = TabActions.jumpTo('FeedTab');
             navigation.dispatch(jumpToAction);
-          })
-          .catch(() => {
-            dispatch({type: SET_LOADING, loading: false});
-          });
+          } else {
+            storageRef
+              .putFile(uploadUri, {
+                customMetadata: {
+                  Owner: auth().currentUser.uid,
+                },
+              })
+              .then(() => {
+                console.log('Uploaded');
+                const recipeObj = {
+                  recipe_id: '',
+                  name: recipeName,
+                  recipe_description: recipeDescription,
+                  header_image: storageRef.toString(),
+                  user_id: auth().currentUser.uid,
+                  creator_username: user.username,
+                  protein: 0,
+                  carbs: 0,
+                  fat: 0,
+                  fiber: 0,
+                  calories: 0,
+                  servings: servings,
+                  vegetarian: false,
+                  vegan: false,
+                  cooking_time: prepTime,
+                };
+                const ingredients = [];
+
+                steps.forEach(step => {
+                  ingredientList = step.step_ingredients;
+                  ingredientList.forEach(ingredient => {
+                    if (!ingredients.includes(ingredient)) {
+                      ingredients.push(ingredient);
+                    }
+                  });
+                });
+
+                dispatch({
+                  type: POST_RECIPE,
+                  recipeObj: recipeObj,
+                  steps: steps,
+                  ingredients: ingredients,
+                });
+
+                dispatch({type: SET_LOADING, loading: false});
+
+                dispatch({
+                  type: RECIPE_STEP,
+                  payload: [{step_index: 0, step_image: ''}],
+                });
+                navigation.replace('NewRecipe');
+                const jumpToAction = TabActions.jumpTo('FeedTab');
+                navigation.dispatch(jumpToAction);
+              })
+              .catch(() => {
+                dispatch({type: SET_LOADING, loading: false});
+              });
+          }
+        }
       } else {
         console.log('Image Cannot Be Empty');
       }
@@ -218,21 +428,120 @@ export default function NewRecipe({navigation}) {
     }
   }
 
+  function processURL(url) {
+    dispatch({type: POST_RECIPE_URL, url: url});
+    setImportModal(false);
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {Loader(loading, 'fade')}
-      <View style={{paddingHorizontal: '5%', flex: 2, flexDirection: 'row', alignItems: 'flex-end'}}>
+      {importModal && (
+        <View
+          onTouchEnd={() => {
+            setImportModal(false);
+          }}
+          style={{
+            width: '100%',
+            height: '110%',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 5,
+            position: 'absolute',
+          }}>
+          <View
+            onTouchEnd={e => {
+              e.stopPropagation();
+            }}
+            style={{
+              width: '90%',
+              height: 100,
+              position: 'absolute',
+              top: '18%',
+              left: '5%',
+              zIndex: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: '90%',
+                height: 100,
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 10,
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  color: color.appPrimary,
+                  marginBottom: 20,
+                }}>
+                Enter URL to Import Recipe
+              </Text>
+              <TextInput
+                placeholder="www.example.com"
+                autoCorrect={false}
+                onChangeText={text => setParseURL(text)}
+                value={parseURL}
+                style={{
+                  borderBottomColor: color.gray,
+                  borderBottomWidth: 1,
+                  width: '80%',
+                  paddingBottom: 10,
+                }}
+                placeholderTextColor={color.gray}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                processURL(parseURL);
+              }}
+              style={{
+                width: 50,
+                height: 50,
+                backgroundColor: color.appPrimary,
+                borderRadius: 50,
+                padding: 10,
+                marginLeft: -25,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={require('../../assets/Back.png')}
+                style={{
+                  width: 24,
+                  height: 20,
+                  resizeMode: 'contain',
+                  tintColor: color.white,
+                  transform: [{rotate: '180deg'}],
+                  marginLeft: 5,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+      <View
+        style={{
+          paddingHorizontal: '5%',
+          flex: 2,
+          flexDirection: 'row',
+          alignItems: 'flex-end',
+        }}>
         <TouchableOpacity
           style={{flex: 1, marginBottom: 10, marginRight: 10}}
           onPress={() => {
-            navigation.pop();
+            setImportModal(true);
           }}>
           <Image
-            source={require('../../assets/Back.png')}
+            source={require('../../assets/Link.png')}
             style={{
               width: 24,
               height: 24,
-              resizeMode: 'contain'
+              resizeMode: 'contain',
+              tintColor: color.appPrimary,
             }}
           />
         </TouchableOpacity>
@@ -246,11 +555,26 @@ export default function NewRecipe({navigation}) {
             borderBottomWidth: 1,
             height: '100%',
             paddingTop: 20,
-            flex: 8
+            flex: 8,
           }}
           placeholderTextColor={color.gray}
         />
-        <View style={{flex: 1}}/>
+        <TouchableOpacity
+          style={{
+            flex: 1.5,
+            marginBottom: 10,
+            marginLeft: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => {
+            save();
+          }}>
+          <Text
+            style={{fontWeight: '500', color: color.appPrimary, fontSize: 18}}>
+            Save
+          </Text>
+        </TouchableOpacity>
       </View>
       <DraggableFlatList
         data={steps}
@@ -362,7 +686,7 @@ export default function NewRecipe({navigation}) {
               </TouchableOpacity>
               <View style={{flex: 1.2}}>{NutritionChips({})}</View>
               <View style={{flex: 1.5, width: '80%'}}>
-              <Text style={newrecipeStyle.InputPromptText}>Description</Text>
+                <Text style={newrecipeStyle.InputPromptText}>Description</Text>
                 <TextInput
                   style={{
                     height: '100%',
@@ -429,9 +753,6 @@ export default function NewRecipe({navigation}) {
                     </View>
                   </View>
                 </View>
-              </View>
-              <View style={{flex: 0.75, width: '50%'}}>
-                {GoButton('Save', save)}
               </View>
             </KeyboardAvoidingView>
           </View>

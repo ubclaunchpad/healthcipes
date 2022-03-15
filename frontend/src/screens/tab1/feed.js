@@ -19,6 +19,7 @@ import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 import Loader from '../../components/Loader';
 import {SET_LOADING} from '../../actions/globalActions';
+import { GET_NOTIFICATIONS } from '../../actions/profileActions';
 
 export default function Feed({navigation}) {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ export default function Feed({navigation}) {
     if (user.user_id !== '') {
       dispatch({type: SET_LOADING, loading: true});
       dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
+      dispatch({type: GET_NOTIFICATIONS, user});
     }
   }, [user]);
 
@@ -170,7 +172,11 @@ export default function Feed({navigation}) {
           }}
           numColumns={2}
           onEndReached={() => {
-            dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
+            dispatch({
+              type: GET_FEED,
+              user: user,
+              startIndex: forYouFeed.length,
+            });
           }}
           onEndReachedThreshold={0.2}
           contentContainerStyle={{paddingBottom: '15%'}}

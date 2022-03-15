@@ -16,11 +16,9 @@ import ShoppingStyle from './src/screens/onboarding/shopping-style';
 import AboutYou from './src/screens/onboarding/about-you';
 import Feed from './src/screens/tab1/feed';
 import Pantry from './src/screens/tab2/pantry';
-import Post from './src/screens/tab3/post';
 import NewRecipe from './src/screens/tab3/newrecipe'
 import VideoRecipe from './src/screens/tab3/videorecipe'
 import VideoRecipeGenerated from './src/screens/tab3/videorecipegenerated'
-import WebRecipe from './src/screens/tab3/webrecipe'
 import Notification from './src/screens/tab4/notification';
 import Profile from './src/screens/tab5/profile';
 import Diet from './src/screens/onboarding/diet';
@@ -61,6 +59,9 @@ function NotificationScreen() {
         headerShown: false,
       }}>
       <NotificationStack.Screen name="Notification" component={Notification} />
+      <NotificationStack.Screen name="Recipe" component={Recipe} />
+      <NotificationStack.Screen name="NewRecipe" component={NewRecipe} />
+      <NotificationStack.Screen name="NewStep" component={NewStep} />
     </NotificationStack.Navigator>
   );
 }
@@ -69,16 +70,14 @@ const CreateStack = createNativeStackNavigator();
 function CreateScreen() {
   return (
     <CreateStack.Navigator
-      initialRouteName="Create"
+      initialRouteName="NewRecipe"
       screenOptions={{
         headerShown: false,
       }}>
-      <CreateStack.Screen name="Create" component={Post} />
       <CreateStack.Screen name="NewRecipe" component={NewRecipe} />
       <CreateStack.Screen name="NewStep" component={NewStep} />
       <CreateStack.Screen name="VideoRecipe" component={VideoRecipe} />
       <CreateStack.Screen name="VideoRecipeGenerated" component={VideoRecipeGenerated} />
-      <CreateStack.Screen name="WebRecipe" component={WebRecipe} />
     </CreateStack.Navigator>
   );
 }
@@ -108,18 +107,15 @@ function ProfileScreen() {
       }}>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="EditProfile" component={EditProfile} />
+      <ProfileStack.Screen name="Recipe" component={Recipe} />
+      <ProfileStack.Screen name="NewRecipe" component={NewRecipe} />
+      <ProfileStack.Screen name="NewStep" component={NewStep} />
     </ProfileStack.Navigator>
   );
 }
 
 const SignUpLoginStack = createNativeStackNavigator();
 const MasterStack = createNativeStackNavigator();
-
-
-// useEffect so recipe id that is taking in will navigate?
-// parse recipe id into recipe object (look at other examples)
-//    - done in recipe.js wherre it checks if param is id or object, if id then find object
-//    - navigation.push('Recipe', {recipe: item});
 
 const linking = {
   prefixes: ["umami://"],

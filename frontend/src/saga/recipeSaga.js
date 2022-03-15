@@ -1,4 +1,4 @@
-import {takeLatest, call, put} from 'redux-saga/effects';
+import {takeLatest, call, put, take} from 'redux-saga/effects';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
@@ -12,9 +12,12 @@ import {
   REGISTER_VIEW_RECIPE,
   LIKE_RECIPE,
   POST_RECIPE,
+  POST_RECIPE_URL,
   POST_VIDEO_URL,
   PUT_RECIPE,
   DELETE_RECIPE,
+  WEB_RECIPE,
+  RECIPE_STEP,
 } from '../actions/recipeActions';
 import { GET_FEED } from '../actions/feedActions';
 
@@ -78,7 +81,6 @@ function* getRecipeCall(param) {
         'Content-Type': 'application/json',
       },
     };
-
     const response = yield call(axios, apiConfig);
     const results = response.data;
     console.log('[INFO]: GET RECIPE API:');
@@ -113,10 +115,14 @@ function* deleteRecipeCall(param) {
 function* putRecipeCall(param) {
   try {
     const apiConfig = {
-      method: 'get',
-      url: `${API_URL}/recipe/${param.recipe_id}`,
+      method: 'put',
+      url: `${API_URL}/recipe`,
       headers: {
         'Content-Type': 'application/json',
+      },
+      data: {
+        recipe: param.recipeObj,
+        steps: param.steps,
       },
     };
 
@@ -124,8 +130,7 @@ function* putRecipeCall(param) {
     const results = response.data;
     console.log('[INFO]: PUT RECIPE API:');
 
-    // console.log(results);
-    yield put({type: RECIPE, payload: results.data});
+    console.log(results);
   } catch (e) {
     console.log('Put Recipe Failed: ' + e);
   }
@@ -147,6 +152,50 @@ function* getRecipeLikeCall(param) {
     yield put({type: LIKE_RECIPE, payload: results.data});
   } catch (e) {
     console.log('Registering like failed: ' + e);
+  }
+}
+
+function* postRecipeURLCall(param) {
+  try {
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/recipe/scrape-url?url=${param.url}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: POST RECIPE URL API:');
+    console.log(results.data.recipe.name);
+    console.log(results);
+    const recipeObj = {
+      ...results.data,
+      name: results.data.recipe.name ?? "",
+      recipe_description: results.data.recipe.recipe_description ?? "",
+      servings: results.data.recipe.servings ?? 0,
+      cooking_time: results.data.recipe.cooking_time ?? 0,
+      header_image: results.data.recipe.header_image ?? "",
+    };
+    yield put({type: WEB_RECIPE, payload: recipeObj});
+
+    let stepsObj = []
+    let i = 0;
+    results.data.steps.forEach((step) => {
+      const stepObj = {
+        step_index: i,
+        step_image: {uri: results.data.recipe.header_image},
+        step_text: step,
+        step_time: 0,
+        step_ingredients: results.data.ingredients,
+        image_cache: {uri: results.data.recipe.header_image},
+      };
+      i += 1;
+      stepsObj.push(stepObj);
+    });
+    yield put({type: RECIPE_STEP, payload: stepsObj});
+  } catch (e) {
+    console.log('POST Recipe URL failed: ' + e);
   }
 }
 
@@ -230,6 +279,10 @@ export function* getRecipeLike() {
 
 export function* postRecipeView() {
   yield takeLatest(POST_RECIPE_VIEW, postRecipeViewCall);
+}
+
+export function* postRecipeURL() {
+  yield takeLatest(POST_RECIPE_URL, postRecipeURLCall);
 }
 
 export function* postVideoURL() {

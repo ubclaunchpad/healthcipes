@@ -1,6 +1,4 @@
 import {StyleSheet} from 'react-native'
-import { blue100 } from 'react-native-paper/lib/typescript/styles/colors';
-import { startDetecting } from 'react-native/Libraries/Utilities/PixelRatio';
 import color from '../../styles/color';
 
 export default StyleSheet.create({
@@ -10,10 +8,8 @@ export default StyleSheet.create({
         alignSelf: 'center',
         color: color.black,
         marginLeft: 15,
-    },
-    Next: {
-        fontSize: 18,
-        color: color.lightGey,
+        flex: 8,
+        textAlign: 'center',
     },
     textBox: {
         marginTop: 20,
@@ -35,7 +31,7 @@ export default StyleSheet.create({
         borderColor: color.gray,
         paddingTop: 0,
         paddingBottom: 0,
-      },
+    },
     description: {
         borderRadius: 25,
     },

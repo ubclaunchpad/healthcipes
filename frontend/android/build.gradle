@@ -3,10 +3,14 @@
 buildscript {
     ext {
         buildToolsVersion = "30.0.2"
-        minSdkVersion = 21
-        compileSdkVersion = 30
-        targetSdkVersion = 30
-        ndkVersion = "21.4.7075529"
+            minSdkVersion = 21
+            compileSdkVersion = 30
+            targetSdkVersion = 30
+            ndkVersion = "21.4.7075529"
+
+            // Other settings
+            firebaseMessagingVersion = "<Your Firebase version>" // default: "+"
+            supportLibVersion = "<Your support lib version>" // default: 23.1.1
     }
     repositories {
         google()

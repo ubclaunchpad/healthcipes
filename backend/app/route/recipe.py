@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
+from app.indexer.recipes import soft_delete_recipe_by_id, delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
 from app.functions.scraper import scraper
 from app.functions.ingredient import parse_ingredients_from_text
 from functools import reduce
@@ -162,12 +162,12 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         res = post_recipe(conn, cursor, recipe)
         if (len(steps) > 0):
             if (url != ""):
-                _ = post_scrape_steps(conn, cursor, steps[0].split("\n"), res[0])
+                _ = post_scrape_steps(conn, cursor, steps, res[0])
             else:
                 _ = post_steps(conn, cursor, steps, res[0])
         if (len(ingredients) > 0):
             if (url != ""):
-                _ = post_ingredients(conn, cursor, ingredients[0], res[0])
+                _ = post_ingredients(conn, cursor, ingredients, res[0])
         return res, 200
     except Exception as e:
         logging.error(e)
@@ -208,6 +208,28 @@ def parse_ingredients(text: str = ""):
             "data": "Error with {}".format(e),
             "status_code": 400
         }
+
+@router.post("/scrape-url")
+async def scrape_recipe_url(url: str = ""):
+    if url == "":
+        return "Error: no url given", 400
+
+    try:
+        recipe, steps, ingredients = scraper(url)
+
+        response = {
+            "recipe": recipe,
+            "steps": steps,
+            "ingredients": ingredients
+        }
+
+        return {
+            "data": response,
+            "status_code": 200
+        }
+
+    except Exception as e:
+        return "Error with {}".format(e), 400
 
 @router.get("/scrape")
 async def auto_scrape_recipe():
@@ -252,6 +274,19 @@ async def remove_recipe_by_id(recipe_id: int):
     try:
         conn, cursor = init_conn()
         res = delete_recipe_by_id(conn, cursor, recipe_id)
+        return res, 200
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
+@router.put("/")
+def put_recipe(recipe: dict = defaultRecipe, steps: list = []):
+    try:
+        conn, cursor = init_conn()
+        _ = soft_delete_recipe_by_id(conn, cursor, recipe['recipe_id'])
+        res = post_recipe(conn, cursor, recipe)
+        if (len(steps) > 0):
+            _ = post_steps(conn, cursor, steps, res[0])
         return res, 200
     except Exception as e:
         logging.error(e)

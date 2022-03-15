@@ -17,10 +17,11 @@ import {
   postRecipe,
   postRecipeLike,
   postRecipeView,
+  postRecipeURL,
   postVideoURL,
   putRecipe,
 } from './recipeSaga';
-import {getLikedRecipes, getMyRecipes} from './profileSaga';
+import {getLikedRecipes, getMyNotifications, getMyRecipes} from './profileSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -44,6 +45,8 @@ export default function* rootSaga() {
     fork(searchIngredients),
     fork(getMyRecipes),
     fork(registerUserToken),
-    fork(getGroceryList)
+    fork(getGroceryList),
+    fork(postRecipeURL),
+    fork(getMyNotifications),
   ]);
 }

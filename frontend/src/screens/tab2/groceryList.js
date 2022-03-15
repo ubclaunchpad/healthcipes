@@ -17,6 +17,7 @@ import { Chip } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import color from '../../styles/color';
 import { GET_PANTRY } from '../../actions/pantryActions';
+import {GET_GROCERY}  from '../../actions/groceryListActions';
 
 // This is the CRUD functionality of the groceryList 
 import {
@@ -32,7 +33,7 @@ export default function GroceryList({ navigation }) {
     const dispatch = useDispatch();
     const grocerylist = useSelector(state => state.pantryReducer.pantryReducer);
     const [ingredientIds, setingredientIds] = useState([]);
-    console.log(grocerylist);
+    // console.log(grocerylist);
     const [addState, setAddState] = useState(true);
     const [search, setSearch] = useState('');
     const ingredients = useSelector(
@@ -52,10 +53,14 @@ export default function GroceryList({ navigation }) {
         { "title": "Other", "data": [{ "category": "Seasoning", "id": "aaaacdscadvd", "name": "Cookie Crumbs" }] }
     ];
 
+    useEffect(() => {
+        dispatch({type: GET_GROCERY, userID: auth().currentUser.uid});
+        console.log("DISPATCHING")
+      }, [dispatch]);
 
     useEffect(() => {
         console.log("Got the grocery list stage ")
-        console.log(grocerylist);
+        // console.log(grocerylist);
         const pantryIds = grocerylist.map(pantryItem => {
             const data = pantryItem.data;
             return data.map(ingredient => {
@@ -63,7 +68,7 @@ export default function GroceryList({ navigation }) {
             });
         });
         setingredientIds(pantryIds.flat());
-        console.log("here is the ingredient IDS -> ", ingredientIds);
+        // console.log("here is the ingredient IDS -> ", ingredientIds);
     }, [grocerylist]);
 
     // Asking if the ingredient is in the pantry
@@ -71,7 +76,7 @@ export default function GroceryList({ navigation }) {
         return true;
     };
 
-    console.log(grocerylist)
+    // console.log(grocerylist)
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <TouchableOpacity

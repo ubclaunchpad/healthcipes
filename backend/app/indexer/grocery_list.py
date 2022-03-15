@@ -76,7 +76,9 @@ def fetch_grocery_list_by_user(cursor, user_id):
                 {
                     "grocery_list_item_id": result[0],
                     "ingredient_id": result[2],
-                    "obtained": result[3]
+                    "obtained": result[3], 
+                    "name": result[5], 
+                    "catergory": result[6],
                 }
             )
 

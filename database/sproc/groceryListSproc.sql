@@ -7,6 +7,10 @@ DROP procedure IF EXISTS `updateGroceryListObtainedStatus`;
 
 DELIMITER $$ 
 
+-- DOCKER COMPOSE DOWN 
+-- DELETE THE DATABASE/DATA FOLDER 
+-- DOCKER COMPOSE UP 
+
 CREATE PROCEDURE `postGroceryList` (
     IN `_user_id` VARCHAR(50),
     IN `_ingredient_id` VARCHAR(255)
@@ -38,9 +42,9 @@ CREATE PROCEDURE `getGroceryListByUser` (
     IN `_user_id` VARCHAR(50)
 ) BEGIN 
 
-SELECT * FROM `grocery_list_table` 
+SELECT gl.*, il.* FROM `grocery_list_table` gl
+LEFT JOIN `ingredients_info_table` il ON gl.ingredient_id = il.ingredient_id
 WHERE `user_id` = `_user_id`;
-
 END $$
 
 DELIMITER ;

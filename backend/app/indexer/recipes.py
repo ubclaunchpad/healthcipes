@@ -1,4 +1,5 @@
 import logging
+from app.functions.transcription import get_recipe_from_video_url
 
 from app.route.pantry import get_all_ingredients
 
@@ -76,8 +77,6 @@ def _filter_vegetarian(cursor):
     
 def _filter_vegan(cursor):
     return _abstract_recipe_filter(cursor, 'filterRecipeVegan')
-    
-
 
 def post_recipe(conn, cursor, recipe):
     sql_proc = 'createRecipeAutoID'
@@ -146,8 +145,8 @@ def post_recipe(conn, cursor, recipe):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
-def recipe_from_video_url(conn, cursor, url):
-    return url
+def recipe_from_video_url(url, recipe):
+    return get_recipe_from_video_url(video_url, recipe)
 
 def post_scrape_steps(conn, cursor, stepList, recipe):
     sql_proc = 'addSteps'

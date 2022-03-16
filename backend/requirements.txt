@@ -6,3 +6,4 @@ requests
 pandas
 recipe-scrapers
 spacy
+youtube_transcript_api

@@ -174,13 +174,11 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         return "Error with {}".format(e), 400
 
 @router.post("/video")
-def create_recipe_video(recipe: Dict):
+def create_recipe_video(body: Dict):
     try:
         conn, cursor = init_conn()
-        res = ''
-        if (recipe != recipe['url']):
-            res = recipe_from_video_url(conn, cursor, recipe)
-            print(res)
+        if (body['url'] != "" and _is_valid_recipe_body_video(body['recipe'])):
+            res = recipe_from_video_url(body['url'], body['recipe'])
         return {
             "recipe_description": res['recipe_description'],
             "name": res['name'],
@@ -291,3 +289,21 @@ def put_recipe(recipe: dict = defaultRecipe, steps: list = []):
     except Exception as e:
         logging.error(e)
         return "Error with {}".format(e), 400
+
+def _is_valid_recipe_body_video(recipe):
+    if type(recipe) != "dict":
+        return False
+
+    if 'name' not in recipe:
+        return False
+
+    if 'recipe_description' not in recipe:
+        return False
+
+    if 'user_id' not in recipe:
+        return False
+
+    if 'creator_username' not in recipe:
+        return False
+
+    return True

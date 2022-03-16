@@ -8,13 +8,13 @@ def parse_ingredients_from_text(text):
     ingredients = []
     nouns = [token.text for token in doc if token.pos_ == "NOUN"]
 
-    with open('app/food.csv', newline='') as csvfile:
+    with open('app/food.csv', newline='', encoding='utf-8') as csvfile:
         foodReader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in foodReader:
             foodList.append(row[2])
     
     for noun in nouns:
-        if any(noun.lower() in x for x in foodList):
-            ingredients.append(noun)
+        if any(noun.lower() in x for x in foodList) and len(noun) > 2:
+            ingredients.append(noun.title())
 
-    return ingredients
+    return list(set(ingredients))

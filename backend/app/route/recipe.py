@@ -175,14 +175,13 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
 
 @router.post("/video")
 def create_recipe_video(body: Dict):
+    # body: {url: ''}
     try:
         conn, cursor = init_conn()
-        if (body['url'] != "" and _is_valid_recipe_body_video(body['recipe'])):
-            res = recipe_from_video_url(body['url'], body['recipe'])
+        if (body['url'] != ""):
+            res = recipe_from_video_url(body['url'])
         return {
-            "recipe_description": res['recipe_description'],
-            "name": res['name'],
-            "url": res['url'],
+            "data": res,
             "status_code": 200
         }
     except Exception as e:

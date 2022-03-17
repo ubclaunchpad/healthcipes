@@ -145,8 +145,8 @@ def post_recipe(conn, cursor, recipe):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
-def recipe_from_video_url(url, recipe):
-    return get_recipe_from_video_url(video_url, recipe)
+def recipe_from_video_url(url):
+    return get_recipe_from_video_url(url)
 
 def post_scrape_steps(conn, cursor, stepList, recipe):
     sql_proc = 'addSteps'

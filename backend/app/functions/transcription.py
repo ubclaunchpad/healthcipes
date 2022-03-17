@@ -2,7 +2,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 import spacy
 from pprint import pprint
 import re
-from ingredient import parse_ingredients_from_text
+from app.functions.ingredient import parse_ingredients_from_text
 
 def fetch_transcript_from_video_url(video_url):
     transcript = None
@@ -129,7 +129,7 @@ def get_recipe_steps_from_transcript(transcript, transcript_text):
 def get_recipe_ingredients_from_transcript(transcript_text):
     return parse_ingredients_from_text(transcript_text)
 
-def get_recipe_from_video_url(video_url, recipe):
+def get_recipe_from_video_url(video_url):
     transcript = fetch_transcript_from_video_url(video_url)
     transcript_text = ' '.join([item['text'] for item in transcript])
     print(transcript_text)
@@ -138,17 +138,12 @@ def get_recipe_from_video_url(video_url, recipe):
     ingredients = get_recipe_ingredients_from_transcript(transcript_text)
     servings = get_servings_from_transcript(transcript_text)
 
-    name = recipe['name']
-    recipe_description = recipe['recipe_description']
-    user_id = recipe['user_id']
-    creator_username = recipe['creator_username']
-
     recipe = {
         "recipe_id": "",
-        "name": name,
-        "recipe_description": recipe_description,
-        "user_id": user_id,
-        "creator_username": creator_username,
+        "name": "",
+        "recipe_description": "",
+        "user_id": "",
+        "creator_username": "",
         "header_image": "",
         "protein": 0,
         "carbs": 0,
@@ -158,13 +153,15 @@ def get_recipe_from_video_url(video_url, recipe):
         "vegetarian": False,
         "vegan": False,
         "cooking_time": 0,
-        "servings": servings,
+        "servings": servings
+    }
+
+    print(recipe)
+    return {
+        "recipe": recipe,
         "steps": steps,
         "ingredients": ingredients
     }
-
-    pprint(recipe)
-    return recipe
 
 
 # fetch_transcript_from_video_url('https://www.youtube.com/watch?v=NiPZY3UwQn0')
@@ -178,6 +175,6 @@ recipe = {
     "creator_username": "chef"
 }
 
-get_recipe_from_video_url('https://www.youtube.com/watch?v=NiPZY3UwQn0', recipe)
+# get_recipe_from_video_url('https://www.youtube.com/watch?v=NiPZY3UwQn0', recipe)
 # get_recipe_from_video_url('https://www.youtube.com/watch?v=BPl7D20F2mE', recipe) # TASTY - no capitalizations or punctuation, well 2 "."s and 0 ","s
 # get_recipe_from_video_url('https://www.youtube.com/watch?v=GLdl71cZXmY') 

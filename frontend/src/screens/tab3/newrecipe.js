@@ -429,7 +429,13 @@ export default function NewRecipe({navigation, route}) {
   }
 
   function processURL(url) {
-    dispatch({type: POST_RECIPE_URL, url: url});
+    // Check if URL == Youtube
+    const youtubeURL = url.contains('https://www.youtube.com/watch?v=') || url.contains('https://youtu.be/');
+    if (youtubeURL) {
+      dispatch({type: POST_VIDEO_URL, url: url});
+    } else {
+      dispatch({type: POST_RECIPE_URL, url: url});
+    }
     setImportModal(false);
   }
 

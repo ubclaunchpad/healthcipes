@@ -55,9 +55,7 @@ function* postVideoURLCall(param) {
         'Content-Type': 'application/json',
       },
       data: {
-        name: param.payload.recipe_name,
-        url: param.payload.url,
-        recipe_description: param.payload.recipe_description
+        body: { url: param.payload.url }
       }
     };
 
@@ -67,6 +65,35 @@ function* postVideoURLCall(param) {
 
     console.log(results);
     yield put({type: VIDEO_RECIPE, payload: results});
+
+    console.log(results.data.recipe.name);
+    console.log(results);
+    const recipeObj = {
+      ...results.data,
+      name: results.data.recipe.name ?? "",
+      recipe_description: results.data.recipe.recipe_description ?? "",
+      servings: results.data.recipe.servings ?? 0,
+      cooking_time: results.data.recipe.cooking_time ?? 0,
+      header_image: results.data.recipe.header_image ?? "",
+    };
+    yield put({type: WEB_RECIPE, payload: recipeObj});
+
+    let stepsObj = []
+    let i = 0;
+    results.data.steps.forEach((step) => {
+      const stepObj = {
+        step_index: i,
+        step_image: {uri: results.data.recipe.header_image},
+        step_text: step,
+        step_time: 0,
+        step_ingredients: results.data.ingredients,
+        image_cache: {uri: results.data.recipe.header_image},
+      };
+      i += 1;
+      stepsObj.push(stepObj);
+    });
+    yield put({type: RECIPE_STEP, payload: stepsObj});
+
   } catch (e) {
     console.log('Post Video URL Failed: ' + e);
   }

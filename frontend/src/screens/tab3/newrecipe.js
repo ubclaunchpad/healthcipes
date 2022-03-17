@@ -23,6 +23,7 @@ import GoButton from '../../components/goButton';
 import {
   POST_RECIPE,
   POST_RECIPE_URL,
+  POST_VIDEO_URL,
   PUT_RECIPE,
   RECIPE_STEP,
 } from '../../actions/recipeActions';
@@ -430,7 +431,7 @@ export default function NewRecipe({navigation, route}) {
 
   function processURL(url) {
     // Check if URL == Youtube
-    const youtubeURL = url.contains('https://www.youtube.com/watch?v=') || url.contains('https://youtu.be/');
+    const youtubeURL = url.includes('https://www.youtube.com/watch?v=') || url.includes('https://youtu.be/');
     if (youtubeURL) {
       dispatch({type: POST_VIDEO_URL, url: url});
     } else {

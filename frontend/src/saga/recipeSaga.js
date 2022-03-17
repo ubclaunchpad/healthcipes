@@ -5,7 +5,6 @@ import {
   GET_RECIPE_LIKE,
   GET_RECIPE,
   RECIPE,
-  VIDEO_RECIPE,
   POST_RECIPE_LIKE,
   POST_RECIPE_VIEW,
   REGISTER_LIKE_RECIPE,
@@ -55,7 +54,7 @@ function* postVideoURLCall(param) {
         'Content-Type': 'application/json',
       },
       data: {
-        body: { url: param.payload.url }
+        url: param.url
       }
     };
 
@@ -64,8 +63,6 @@ function* postVideoURLCall(param) {
     console.log('[INFO]: POST VIDEO URL API:');
 
     console.log(results);
-    yield put({type: VIDEO_RECIPE, payload: results});
-
     console.log(results.data.recipe.name);
     console.log(results);
     const recipeObj = {
@@ -83,11 +80,11 @@ function* postVideoURLCall(param) {
     results.data.steps.forEach((step) => {
       const stepObj = {
         step_index: i,
-        step_image: {uri: results.data.recipe.header_image},
+        step_image: results.data.recipe.header_image ? {uri: results.data.recipe.header_image} : "",
         step_text: step,
         step_time: 0,
         step_ingredients: results.data.ingredients,
-        image_cache: {uri: results.data.recipe.header_image},
+        image_cache: results.data.recipe.header_image ? {uri: results.data.recipe.header_image} : "",
       };
       i += 1;
       stepsObj.push(stepObj);

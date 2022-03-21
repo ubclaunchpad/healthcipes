@@ -5,7 +5,8 @@ import rec_sys
 app = Flask(__name__)
 @app.route('/recipe', methods=["GET"])
 def recommend_recipe():
-    ingredients = request.args.get('ingredients')   
+    ingredients = request.args.get('ingredients')  
+    print(ingredients) 
     recipe = rec_sys.RecSys(ingredients)
     
     response = {}

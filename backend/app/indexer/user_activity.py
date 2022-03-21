@@ -1,13 +1,6 @@
 import logging
-
-# USER ACTIVITY TYPES CONSTANTS 
-# NOTE: NEED TO REGISTER EVERY TIME EXPAND USER ACTIVITY TYPE
-RECIPE_LIKE = 'RECIPE_LIKE'
-USER_FOLLOW = 'USER_FOLLOW'
-RECIPE_VIEW = 'RECIPE_VIEW'
-
-user_activity_type_constants = {RECIPE_LIKE, USER_FOLLOW, RECIPE_VIEW}
-
+from app.functions.notification import send_user_activity_notification
+from app.constants.user_activity import *
 
 def get_user_activity(cursor, user_id):
     sql_proc = 'getUsersUserActivity'
@@ -83,6 +76,8 @@ def post_user_activity(conn, cursor, user_activity):
         RECIPE_LIKE: recipe_like_id,
         RECIPE_VIEW: recipe_view_id
     }
+
+    send_user_activity_notification(fk_obj)
 
     # NOTE: checks corresponding FK inserted matches the activity_type
     for key in fk_obj:

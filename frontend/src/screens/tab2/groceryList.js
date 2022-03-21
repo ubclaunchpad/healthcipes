@@ -26,6 +26,7 @@ import {
     REMOVE_INGREDIENT,
     SEARCH_INGREDIENTS,
 } from '../../actions/pantryActions';
+import { autoType } from 'd3';
 
 
 
@@ -79,27 +80,59 @@ export default function GroceryList({ navigation }) {
     // console.log(grocerylist)
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <TouchableOpacity
+            <View
                 disabled={true}
                 style={{
-                    borderBottomWidth: 2,
+                    // borderBottomWidth: 2,
                     borderColor: color.black,
+                    flexDirection: "row", 
+                    justifyContent: "space-around", 
                     flex: 1,
-                    width: 100,
+                    width: 250,
                     alignSelf: 'center',
-                    marginBottom: 10,
+                    marginTop: 20, 
+                    marginBottom: 25,
+                   
                 }}>
+                
+
                 <Text
+                    onPress ={()=>{
+                        navigation.push("Pantry")
+                    }}
                     style={{
                         fontWeight: 'bold',
                         fontSize: 24,
                         paddingVertical: 10,
-                        textAlign: 'center',
+                        // textAlign: 'flex-end',
+                        marginRight: 75, 
                         color: color.black,
                     }}>
-                    Grocery
+                    Pantry
                 </Text>
-            </TouchableOpacity>
+
+                <View
+                    style={{
+                        borderBottomWidth: 2,
+                        borderColor: color.black,
+
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontWeight: 'bold',
+                            fontSize: 24,
+                            paddingVertical: 10,
+                            // textAlign: 'flex-start',
+                            marginLeft: 0,
+                            color: color.black,
+                            // textDecorationLine: "underline"
+
+                        }}>
+                        Grocery List
+                    </Text>
+                </View>
+            </View>
 
 
 

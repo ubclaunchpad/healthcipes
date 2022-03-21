@@ -32,9 +32,7 @@ function* getGroceryCall(param) {
     try {
       const apiConfig = {
         method: 'get',
-        // MAKE SURE THE URL IS RIGHT
-        // TODO: url: `${API_URL}/grocery_list?user_id=${param.userID}`,
-        url: 'http://localhost:8080/grocery_list/?user_id=Qnj6AjQOLoZlJw4TZBpRE3iNz0K3',
+        url: `${API_URL}/grocery_list?user_id=${param.userID}`,
         headers: {
           'Content-Type': 'application/json',
         },

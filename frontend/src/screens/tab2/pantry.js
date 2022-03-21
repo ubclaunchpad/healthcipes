@@ -61,7 +61,7 @@ export default function Pantry({navigation}) {
 
                 <Text
                     onPress ={()=>{
-                        navigation.push("Grocery")
+                        navigation.replace("Grocery")
                     }}
                     style={{
                         fontWeight: 'bold',

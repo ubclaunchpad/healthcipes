@@ -5,18 +5,12 @@ import {
     TouchableOpacity,
     View,
     Image,
-    ScrollView,
     TextInput,
-    FlatList,
     SectionList,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import Swipeable from 'react-native-swipeable';
-import SwitchSelector from 'react-native-switch-selector';
-import { Chip } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import color from '../../styles/color';
-import { GET_PANTRY } from '../../actions/pantryActions';
 import {GET_GROCERY}  from '../../actions/groceryListActions';
 
 // This is the CRUD functionality of the groceryList 
@@ -26,9 +20,6 @@ import {
     REMOVE_INGREDIENT,
     SEARCH_INGREDIENTS,
 } from '../../actions/pantryActions';
-import { autoType } from 'd3';
-
-
 
 export default function GroceryList({ navigation }) {
     const dispatch = useDispatch();
@@ -98,7 +89,7 @@ export default function GroceryList({ navigation }) {
 
                 <Text
                     onPress ={()=>{
-                        navigation.push("Pantry")
+                        navigation.replace("Pantry")
                     }}
                     style={{
                         fontWeight: 'bold',

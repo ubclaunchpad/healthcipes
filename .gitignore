@@ -1,7 +1,9 @@
 *.DS_STORE
+*.DS_Store
 certbot/
 database/data/
 deploy/*.csv
 *.env
 *.p8
 deploy/umami.sql
+*pycache*

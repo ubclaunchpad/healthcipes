@@ -2,9 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Image, Modal} from 'react-native';
 import colors from '../styles/color';
 
-const LOADER = require('../assets/Noodles.gif');
-
-export default function Loader(modalVisible, animationType) {
+export default function Alert(alertVisible, text) {
   const styles = StyleSheet.create({
     wrapper: {
       zIndex: 10,
@@ -16,7 +14,7 @@ export default function Loader(modalVisible, animationType) {
       left: 0,
       justifyContent: 'center',
     },
-    alertContainer: {
+    loaderContainer: {
       width: 100,
       height: 100,
       backgroundColor: colors.transparent,
@@ -25,7 +23,7 @@ export default function Loader(modalVisible, animationType) {
       alignSelf: 'center',
       justifyContent: 'center',
     },
-    alertImage: {
+    loaderImage: {
       width: 200,
       height: 200,
       alignSelf: 'center',
@@ -34,12 +32,10 @@ export default function Loader(modalVisible, animationType) {
   });
 
   return (
-    <Modal animationType={animationType} transparent visible={modalVisible}>
-      <View style={styles.wrapper}>
-        <View style={styles.loaderContainer}>
-          <Image style={styles.loaderImage} source={LOADER} />
-        </View>
-      </View>
-    </Modal>
+    <View>
+        <Text>
+            
+        </Text>
+    </View>
   );
 }

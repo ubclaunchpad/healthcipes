@@ -13,13 +13,14 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
 import {POST_USER} from '../../actions/accountActions';
-import {SET_ONBOARDING} from '../../actions/globalActions';
+import {SET_ONBOARDING, SET_ALERT} from '../../actions/globalActions';
+import Alerts from '../../components/Alerts';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ export default function SignUp({navigation}) {
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
   const confirmInput = useRef(null);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
 
   // Sign Up User
   async function signUp(
@@ -209,7 +211,8 @@ export default function SignUp({navigation}) {
           {'. '}
         </Text>
               {GoButton('Sign Up', () => {
-                submitForm(username, email, password, confirmPassword);
+                !alert ? submitForm(username, email, password, confirmPassword) : Alerts(true, "Signup Failed");
+                dispatch({type: SET_ALERT, alert: false});
               })}
             </View>
             <View style={{flex: 1}}>

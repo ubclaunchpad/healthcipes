@@ -1,6 +1,6 @@
-import {takeLatest, call, put} from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
-import {API_URL} from '@env';
+import { API_URL } from '@env';
 import {
   GET_USER,
   POST_USER,
@@ -8,6 +8,7 @@ import {
   USER_INFO,
   POST_USER_TOKEN,
 } from '../actions/accountActions';
+import { SET_ALERT } from '../actions/globalActions';
 
 function* signUpCall(param) {
   try {
@@ -49,6 +50,10 @@ function* signUpCall(param) {
     });
   } catch (e) {
     console.log('Signup Failed');
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -74,6 +79,10 @@ function* updateUserCall(param) {
     });
   } catch (e) {
     console.log('Update User Failed');
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -109,9 +118,13 @@ function* getUserCall(param) {
       style: results[0][15],
       experience: results[0][16],
     };
-    yield put({type: USER_INFO, payload: userObj});
+    yield put({ type: USER_INFO, payload: userObj });
   } catch (e) {
     console.log('Get User Failed');
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -130,6 +143,10 @@ function* registerUserTokenCall(param) {
   } catch (e) {
     console.log(e);
     console.log('User token registeration failed');
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 

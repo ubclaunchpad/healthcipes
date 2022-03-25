@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
   Dimensions,
-  ImageBackground,
+  ImageBackground  
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
@@ -18,8 +18,9 @@ import feedStyle from './feedStyle';
 import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 import Loader from '../../components/Loader';
-import {SET_LOADING} from '../../actions/globalActions';
+import {SET_ALERT, SET_LOADING} from '../../actions/globalActions';
 import { GET_NOTIFICATIONS } from '../../actions/profileActions';
+import Alerts from '../../components/Alerts';
 
 export default function Feed({navigation}) {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ export default function Feed({navigation}) {
     state => state.recipeReducer.forYouFeedReducer,
   );
   const loading = useSelector(state => state.globalReducer.loadingReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
   const snapPoints = useMemo(() => ['80%'], []);

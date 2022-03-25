@@ -16,7 +16,7 @@ export default function Loader(modalVisible, animationType) {
       left: 0,
       justifyContent: 'center',
     },
-    alertContainer: {
+    loaderContainer: {
       width: 100,
       height: 100,
       backgroundColor: colors.transparent,
@@ -25,7 +25,7 @@ export default function Loader(modalVisible, animationType) {
       alignSelf: 'center',
       justifyContent: 'center',
     },
-    alertImage: {
+    loaderImage: {
       width: 200,
       height: 200,
       alignSelf: 'center',

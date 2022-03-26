@@ -1,5 +1,7 @@
 
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, call, put, all } from 'redux-saga/effects';
+import {API_URL} from '@env';
+import axios from 'axios';
 import {
     GET_GROCERY,
     ADD_INGREDIENT,
@@ -48,7 +50,7 @@ function* getGroceryCall(param) {
           const category = item[2];
           const name = item[1];
           const id = item[0];
-          console.log("Catergory of the item --> ", category ); 
+          console.log("Category of the item --> ", category ); 
           console.log("name of the item --> ", name ); 
           console.log("ID of the item --> ", id ); 
           return call(addToGrocery, {category, name, id});

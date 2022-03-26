@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Text,
   TextInput,
@@ -13,16 +13,16 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import {useDispatch,useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
-import {POST_USER} from '../../actions/accountActions';
-import {SET_ONBOARDING, SET_ALERT} from '../../actions/globalActions';
+import { POST_USER } from '../../actions/accountActions';
+import { SET_ONBOARDING, SET_ALERT } from '../../actions/globalActions';
 import Alerts from '../../components/Alerts';
 
-export default function SignUp({navigation}) {
+export default function SignUp({ navigation }) {
   const dispatch = useDispatch();
   const [username, onUsernameChange] = useState('');
   const [email, onEmailChange] = useState('');
@@ -50,7 +50,7 @@ export default function SignUp({navigation}) {
               !usernameLower.includes('/') &&
               usernameLower.length >= 1
             ) {
-              dispatch({type: SET_ONBOARDING, onboarded: false});
+              dispatch({ type: SET_ONBOARDING, onboarded: false });
               await auth()
                 .createUserWithEmailAndPassword(newEmail, newPassword)
                 .then(result => {
@@ -58,8 +58,7 @@ export default function SignUp({navigation}) {
 
                   result.user.updateProfile({
                     displayName: usernameLower,
-                  });
-
+                  })
                   dispatch({
                     type: POST_USER,
                     payload: {
@@ -67,7 +66,10 @@ export default function SignUp({navigation}) {
                       username: usernameLower,
                       email: newEmail,
                     },
-                  });
+                  })
+                })
+                .catch(e => {
+                  dispatch({ type: SET_ALERT, alert: true });
                 });
             } else {
               console.log('Invalid Username');
@@ -107,7 +109,7 @@ export default function SignUp({navigation}) {
   function finePrint(text, link) {
     return (
       <Text
-        style={{color: color.textGray}}
+        style={{ color: color.textGray }}
         onPress={() => {
           Linking.openURL(link);
         }}
@@ -118,12 +120,13 @@ export default function SignUp({navigation}) {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
+      {Alerts(alert, "Signup Failed")}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? '' : ''}
-        style={{flex: 1}}
-        contentContainerStyle={{flex: 1}}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
           <View
             style={{
               paddingHorizontal: '15%',
@@ -139,7 +142,7 @@ export default function SignUp({navigation}) {
               }}
             />
 
-            <View style={{flex: 2.5}}>
+            <View style={{ flex: 2.5 }}>
               <Text
                 style={{
                   fontSize: 20,
@@ -199,29 +202,28 @@ export default function SignUp({navigation}) {
                 ref={confirmInput}
               />
             </View>
-            <View style={{flex: 1.5, justifyContent: 'center'}}>
-            <Text style={{fontSize: 10, marginBottom: 30}}>
-          {'By continuing, you agree to the '}
-          {finePrint(
-            'Terms of Service',
-            'https://hungrii.com/terms-conditions/',
-          )}
-          {' and acknowledge the '}
-          {finePrint('Privacy Policy', 'https://hungrii.com/privacy/')}
-          {'. '}
-        </Text>
+            <View style={{ flex: 1.5, justifyContent: 'center' }}>
+              <Text style={{ fontSize: 10, marginBottom: 30 }}>
+                {'By continuing, you agree to the '}
+                {finePrint(
+                  'Terms of Service',
+                  'https://hungrii.com/terms-conditions/',
+                )}
+                {' and acknowledge the '}
+                {finePrint('Privacy Policy', 'https://hungrii.com/privacy/')}
+                {'. '}
+              </Text>
               {GoButton('Sign Up', () => {
-                !alert ? submitForm(username, email, password, confirmPassword) : Alerts(true, "Signup Failed");
-                dispatch({type: SET_ALERT, alert: false});
+                submitForm(username, email, password, confirmPassword);
               })}
             </View>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <TouchableOpacity
-                style={{alignSelf: 'center'}}
+                style={{ alignSelf: 'center' }}
                 onPress={() => {
                   navigation.push('Login');
                 }}>
-                <Text style={{fontWeight: '300'}}>
+                <Text style={{ fontWeight: '300' }}>
                   Already have an account?{'   '}Login
                 </Text>
               </TouchableOpacity>

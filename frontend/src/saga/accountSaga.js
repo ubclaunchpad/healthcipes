@@ -118,7 +118,6 @@ function* getUserCall(param) {
       style: results[0][15],
       experience: results[0][16],
     };
-    yield put({ type: USER_INFO, payload: userObj });
   } catch (e) {
     console.log('Get User Failed');
     yield put({

@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Text,
   TextInput,
@@ -10,20 +10,22 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import GoButton from '../../components/goButton';
 import color from '../../styles/color';
 import loginStyles from './loginStyles';
-import {SET_ONBOARDING} from '../../actions/globalActions';
-import {GET_USER} from '../../actions/accountActions';
+import { SET_ONBOARDING, SET_ALERT } from '../../actions/globalActions';
+import { GET_USER } from '../../actions/accountActions';
+import Alerts from '../../components/Alerts';
 
-export default function Login({navigation}) {
+export default function Login({ navigation }) {
   const dispatch = useDispatch();
   const [email, onEmailChange] = useState('');
   const [password, onPasswordChange] = useState('');
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
 
   // Login User
   async function login(loginEmail, loginPassword) {
@@ -33,22 +35,26 @@ export default function Login({navigation}) {
           .signInWithEmailAndPassword(loginEmail, loginPassword)
           .then(res => {
             // console.log(res);
-            dispatch({type: GET_USER, userID: res.user.uid});
-            dispatch({type: SET_ONBOARDING, onboarded: true});
-          });
+            dispatch({ type: GET_USER, userID: res.user.uid });
+            dispatch({ type: SET_ONBOARDING, onboarded: true });
+          })
+          .catch(e => {
+            dispatch({ type: SET_ALERT, alert: true });
+          }
+          );
       } else {
         console.log('Password Cannot Be Empty');
         Alert.alert(
           "Error",
           "Password Cannot Be Empty"
-          ); 
+        );
       }
     } else {
       console.log('Email Cannot Be Empty');
       Alert.alert(
         "Error",
         "Email Cannot Be Empty"
-        ); 
+      );
     }
   }
 
@@ -58,11 +64,12 @@ export default function Login({navigation}) {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
-        <View style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
+      {Alerts(alert, "Login Failed")}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <TouchableOpacity
-            style={{flex: 1, margin: 20}}
+            style={{ flex: 1, margin: 20 }}
             onPress={() => {
               navigation.pop();
             }}>
@@ -81,7 +88,7 @@ export default function Login({navigation}) {
               paddingBottom: '30%',
               flex: 3,
             }}>
-            <View style={{flex: 3}}>
+            <View style={{ flex: 3 }}>
               <Text
                 style={{
                   fontSize: 20,
@@ -114,17 +121,17 @@ export default function Login({navigation}) {
                 placeholderTextColor={color.gray}
                 ref={passwordInput}
               />
-              <View style={{marginTop: 80}}>
+              <View style={{ marginTop: 80 }}>
                 {GoButton("Let's go!", () => {
                   submitForm(email, password);
                 })}
               </View>
               <TouchableOpacity
-                style={{alignSelf: 'center', marginTop: 30}}
+                style={{ alignSelf: 'center', marginTop: 30 }}
                 onPress={() => {
                   navigation.push('Forgot');
                 }}>
-                <Text style={{fontWeight: '300'}}>Forgot Password?</Text>
+                <Text style={{ fontWeight: '300' }}>Forgot Password?</Text>
               </TouchableOpacity>
             </View>
           </View>

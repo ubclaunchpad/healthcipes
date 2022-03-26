@@ -83,6 +83,8 @@ export default function EditProfile({navigation}) {
               .catch(error => {
                 console.log(error);
               });
+            Alert.alert("Profile Changed!") 
+            navigation.pop();
           } else {
             console.log('Invalid Email');
             Alert.alert(

@@ -27,6 +27,11 @@ CREATE TABLE `recipes_table` (
   `servings` INT,
   `vegetarian` BOOLEAN,
   `vegan` BOOLEAN,
+  `pescatarian` BOOLEAN,
+  `gluten_free` BOOLEAN,
+  `dairy_free` BOOLEAN,
+  `keto` BOOLEAN,
+  `paleo` BOOLEAN,
   `cooking_time` INT,
   PRIMARY KEY (`recipe_id`),
   CONSTRAINT fk_user_recipe FOREIGN KEY (`user_id`)

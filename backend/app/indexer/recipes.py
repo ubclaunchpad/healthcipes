@@ -1,4 +1,5 @@
 import logging
+import itertools
 from app.functions.transcription import get_recipe_from_video_url
 
 from app.route.pantry import get_all_ingredients
@@ -32,18 +33,41 @@ def get_featured_recipes(cursor):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
-def filter_recipes(cursor, vegetarian: bool = False, vegan: bool = False):
+def filter_recipes(cursor, filters):
     vegetarian_result = []
     vegan_result = []
+    pescatarian_result = []
+    gluten_free_result = []
+    dairy_free_result = []
+    keto_result = []
+    paleo_result = []
     try:
         # returns tuples
-        if vegetarian:
+        if filters["vegetarian"]:
             vegetarian_result = list(_filter_vegetarian(cursor))
-        if vegan:
+        if filters["vegan"]:
             vegan_result = list(_filter_vegan(cursor))
+        if filters["pescatarian"]:
+            pescatarian_result = list(_filter_pescatarian(cursor))
+        if filters["gluten_free"]:
+            gluten_free_result = list(_filter_gluten_free(cursor))
+        if filters["dairy_free"]:
+            dairy_free_result = list(_filter_dairy_free(cursor))
+        if filters["keto"]:
+            keto_result = list(_filter_keto(cursor))
+        if filters["paleo"]:
+            paleo_result = list(_filter_paleo(cursor))
 
         # assume id is first
-        return _filter_duplicates(vegetarian_result + vegan_result, 0)
+        return _filter_duplicates(list(itertools.chain(
+            vegetarian_result,
+            vegan_result,
+            pescatarian_result,
+            gluten_free_result,
+            dairy_free_result,
+            keto_result,
+            paleo_result
+        )), 0)
 
     except Exception as e:
         print("MYSQL ERROR:")
@@ -77,6 +101,21 @@ def _filter_vegetarian(cursor):
     
 def _filter_vegan(cursor):
     return _abstract_recipe_filter(cursor, 'filterRecipeVegan')
+
+def _filter_pescatarian(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipePescatarian')
+
+def _filter_dairy_free(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeDairyFree')
+
+def _filter_gluten_free(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeGlutenFree')
+
+def _filter_keto(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeKeto')
+
+def _filter_paleo(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipePaleo')
 
 def post_recipe(conn, cursor, recipe):
     sql_proc = 'createRecipeAutoID'

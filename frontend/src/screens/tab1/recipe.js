@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   Alert,
+  Button,
 } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import moment from 'moment';
@@ -24,6 +25,7 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
+import { ADD_INGREDIENT } from '../../actions/groceryListActions';
 
 export default function Recipe({navigation, route}) {
   const [recipe, setRecipe] = useState(route.params.recipe);
@@ -121,6 +123,10 @@ export default function Recipe({navigation, route}) {
       .catch(function (error) {
         console.log(error);
       });
+  }
+
+  function addIngredientsToGroceryList(ingredients) {
+
   }
 
   function deleteLike(ID) {
@@ -326,6 +332,18 @@ export default function Recipe({navigation, route}) {
                 marginBottom: 10,
                 alignItems: 'center',
               }}>
+              <Button 
+                title = "Add to Grocery List"
+                onPress = {() => {
+                  console.log("Add to grocery list button pressed")
+                  ingredients.forEach(ingredient => {
+                    dispatch({
+                      type: ADD_INGREDIENT,
+                      payload: {userID: auth().currentUser.uid, item: ingredient},
+                    });
+                  });
+                }}> 
+              </Button>
               <Image
                 source={require('../../assets/Plus.png')}
                 style={{

@@ -200,6 +200,7 @@ export default function EditProfile({navigation}) {
               <View>
                 <Text style={profileStyle.inputTitle}>First Name</Text>
                 <TextInput
+                  ref={firstnameInput}
                   textContentType="firstname"
                   placeholder=""
                   autoCorrect={false}
@@ -208,11 +209,12 @@ export default function EditProfile({navigation}) {
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
                   onSubmitEditing={() => {
-                    firstnameInput.current.focus();
+                    lastnameInput.current.focus();
                   }}
                 />
                 <Text style={profileStyle.inputTitle}>Last Name</Text>
                 <TextInput
+                  ref={lastnameInput}
                   textContentType="lastname"
                   placeholder=""
                   autoCorrect={false}
@@ -221,11 +223,12 @@ export default function EditProfile({navigation}) {
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
                   onSubmitEditing={() => {
-                    lastnameInput.current.focus();
+                    usernameInput.current.focus();
                   }}
                 />
                 <Text style={profileStyle.inputTitle}>Username</Text>
                 <TextInput
+                  ref={usernameInput}
                   textContentType="username"
                   placeholder=""
                   autoCorrect={false}
@@ -234,11 +237,12 @@ export default function EditProfile({navigation}) {
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
                   onSubmitEditing={() => {
-                    usernameInput.current.focus();
+                    emailInput.current.focus();
                   }}
                 />
                 <Text style={profileStyle.inputTitle}>Email</Text>
                 <TextInput
+                  ref={emailInput}
                   textContentType="email"
                   placeholder=""
                   autoCorrect={false}
@@ -246,9 +250,6 @@ export default function EditProfile({navigation}) {
                   value={email}
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
-                  onSubmitEditing={() => {
-                    emailInput.current.focus();
-                  }}
                 />
               </View>
               <View

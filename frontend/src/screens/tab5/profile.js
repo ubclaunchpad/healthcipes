@@ -76,6 +76,8 @@ export default function Profile({navigation}) {
             style={{
               padding: 10,
               resizeMode: 'contain',
+              width: 24,
+              height: 24
             }}
           />
         </TouchableOpacity>
@@ -98,6 +100,8 @@ export default function Profile({navigation}) {
             style={{
               margin: 0,
               resizeMode: 'contain',
+              width: 24,
+              height: 24
             }}
           />
         </TouchableOpacity>

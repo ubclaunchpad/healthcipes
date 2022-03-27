@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Text, View, SafeAreaView, SectionList, Image} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import { GET_NOTIFICATIONS } from '../../actions/profileActions';
 import color from '../../styles/color';
 
 export default function Notification({navigation}) {
+  const dispatch = useDispatch();
   const notifications = useSelector(
     state => state.profileReducer.myNotificationReducer,
   );
+  const user = useSelector(state => state.accountReducer.userInfoReducer);
 
   const numNotification = notifications.length;
+
+  useEffect(() => {
+    if (user && user.user_id !== '') {
+      dispatch({type: GET_NOTIFICATIONS, user});
+    }
+  }, [user]);
 
   return numNotification ? (
     <SafeAreaView style={{flex: 1}}>

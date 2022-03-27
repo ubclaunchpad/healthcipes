@@ -88,8 +88,8 @@ function* searchFeedCall(param) {
 }
 
 function* getFullFeed(param) {
-  yield getFeedCall(param);
   yield getFeaturedCall(param);
+  yield getFeedCall(param);
   yield put({type: SET_LOADING, loading: false});
 }
 

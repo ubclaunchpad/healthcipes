@@ -19,7 +19,6 @@ import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 import Loader from '../../components/Loader';
 import {SET_LOADING} from '../../actions/globalActions';
-import { GET_NOTIFICATIONS } from '../../actions/profileActions';
 
 export default function Feed({navigation}) {
   const dispatch = useDispatch();
@@ -37,10 +36,9 @@ export default function Feed({navigation}) {
   const snapPoints = useMemo(() => ['80%'], []);
 
   useEffect(() => {
-    if (user.user_id !== '') {
+    if (user && user.user_id !== '') {
       dispatch({type: SET_LOADING, loading: true});
       dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
-      dispatch({type: GET_NOTIFICATIONS, user});
     }
   }, [user]);
 
@@ -114,7 +112,7 @@ export default function Feed({navigation}) {
                 <Text style={feedStyle.feedTitle}>Featured</Text>
                 <FlatList
                   data={featuredFeed}
-                  style={{flex: 1, marginBottom: 30}}
+                  style={{marginBottom: 30}}
                   contentContainerStyle={{paddingLeft: '5%'}}
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}

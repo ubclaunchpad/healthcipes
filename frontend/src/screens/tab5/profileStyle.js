@@ -42,6 +42,8 @@ export default StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     left: 19,
+    width: 30,
+    height: 30
   },
   textInput: {
     height: 20,

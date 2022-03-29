@@ -2,13 +2,13 @@ import {takeLatest, call, put, all} from 'redux-saga/effects';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
-  ADD_INGREDIENT,
+  ADD_PANTRY_INGREDIENT,
   GET_ALL_INGREDIENTS,
   GET_PANTRY,
   INGREDIENTS,
   PANTRY_ADD,
   PANTRY_REMOVE,
-  REMOVE_INGREDIENT,
+  REMOVE_PANTRY_INGREDIENT,
   SEARCH_INGREDIENTS,
 } from '../actions/pantryActions';
 
@@ -164,9 +164,9 @@ export function* searchIngredients() {
 }
 
 export function* addIngredient() {
-  yield takeLatest(ADD_INGREDIENT, addIngredientCall);
+  yield takeLatest(ADD_PANTRY_INGREDIENT, addIngredientCall);
 }
 
 export function* removeIngredient() {
-  yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);
+  yield takeLatest(REMOVE_PANTRY_INGREDIENT, removeIngredientCall);
 }

@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   Alert,
+  Button
 } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import moment from 'moment';
@@ -206,6 +207,12 @@ export default function Recipe({navigation, route}) {
       : require('../../assets/Like.png');
     return (
       <View>
+         <Button
+              title ="press me"
+              onPress={
+                console.log("hello")
+                }>
+          </Button>
         <View
           style={{
             flexDirection: 'row',

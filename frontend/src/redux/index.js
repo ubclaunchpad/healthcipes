@@ -6,6 +6,7 @@ import pantryReducer from './pantryReducer';
 import accordionReducer from './accordionReducer';
 import accordionStepReducer from './accordionReducer';
 import profileReducer from './profileReducer';
+import groceryListReducer from './groceryListReducer';
 
 const rootReducer = combineReducers({
   accountReducer,
@@ -15,6 +16,8 @@ const rootReducer = combineReducers({
   accordionReducer,
   accordionStepReducer,
   profileReducer,
+  groceryListReducer,
+  
 });
 
 export default rootReducer;

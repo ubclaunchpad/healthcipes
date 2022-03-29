@@ -228,6 +228,8 @@ export default function Profile({navigation}) {
       </View>
     );
   }
+
+  
   if (!onboarded) {
     navigation.replace('ShoppingStyle');
   } else {

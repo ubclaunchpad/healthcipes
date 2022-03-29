@@ -27,7 +27,7 @@ import {
     SEARCH_INGREDIENTS,
 } from '../../actions/groceryListActions';
 
-export default function GroceryList({ navigation }) {
+export default function GroceryList({navigation}) {
     const dispatch = useDispatch();
     const grocerylist = useSelector(state => state.groceryListReducer.groceryListReducer);
     const pantrylist = useSelector(state => state.pantryReducer.pantryReducer);
@@ -36,6 +36,9 @@ export default function GroceryList({ navigation }) {
     const [pantryIds, setIds] = useState([]);
     var pnatryIds = [];
     const [refresh, setrefresh] = useState(true);
+    const [ingredientIds, setingredientIds] = useState([]);
+    // console.log(grocerylist);
+    const [addState, setAddState] = useState(true);
     const [search, setSearch] = useState('');
     const ingredients = useSelector(
         state => state.pantryReducer.ingredientReducer,

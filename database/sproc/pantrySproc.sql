@@ -22,10 +22,10 @@ DELIMITER $$
 
 CREATE PROCEDURE `deletePantry` (
     IN `_user_id` VARCHAR(50),
-    IN `_ingredient_id` INT
+    IN `_ingredient_id` VARCHAR(255)
 ) BEGIN 
 DELETE FROM `pantry_table`
-WHERE `_user_id`=`user_id` AND `_ingredient_id`=`ingredient_id`;
+WHERE `user_id`=`_user_id` AND `ingredient_id`=`_ingredient_id`;
 
 END $$
 

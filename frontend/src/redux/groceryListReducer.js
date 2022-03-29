@@ -34,10 +34,11 @@ const groceryListReducer = (state = defaultGroceryList, action) => {
   switch (action.type) {
     //   Return the current grocery 
     case GROCERY:
-      return state;
+      return action.payload;
     // Add items to the grocery list, if the ingredients isnt there yet. 
     // Then return the updated grocery list. 
     case GROCERY_ADD:
+      // console.log(action.payload)
       state.map(({title, data}) => {
         if (title === action.payload.category) {
           if (data.every(item => item.name !== action.payload.name)) {
@@ -72,6 +73,7 @@ const ingredientReducer = (state = [], action) => {
       return state;
   }
 };
+
 
 export default combineReducers({
   groceryListReducer,

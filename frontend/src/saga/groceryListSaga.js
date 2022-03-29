@@ -43,16 +43,18 @@ function* getGroceryCall(param) {
       const response = yield call(axios, apiConfig);
       const results = response.data;
       console.log('[INFO]: GETTING GROCERY API:');
-      console.log(results); 
-      console.log(results[1]); 
+      // console.log(results); 
+      // undefined here, not sure why I am getting an undefined here for some reason.; 
+      // console.log("grocery List here ----> ", results.data.grocery_list[1]); 
       yield all(
-        results.data.map(item => {
-          const category = item[2];
-          const name = item[1];
-          const id = item[0];
-          console.log("Category of the item --> ", category ); 
-          console.log("name of the item --> ", name ); 
-          console.log("ID of the item --> ", id ); 
+        // Failure here; 
+        results.data.grocery_list.map(item => {
+          const category = item.catergory;
+          const name = item.name;
+          const id = item.ingredient_id;
+          // console.log("Catergory of the item --> ", category ); 
+          // console.log("name of the item --> ", name ); 
+          // console.log("ID of the item --> ", id );
           return call(addToGrocery, {category, name, id});
          
         }),

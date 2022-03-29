@@ -7,23 +7,35 @@ import {
     Image,
     TextInput,
     SectionList,
+    Swipeable,
+    Button
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
+import SwitchSelector from 'react-native-switch-selector';
 import color from '../../styles/color';
-import {GET_GROCERY}  from '../../actions/groceryListActions';
+import { GET_GROCERY, GROCERY } from '../../actions/groceryListActions';
+import { ADD_PANTRY_INGREDIENT } from '../../actions/pantryActions';
+
+
 
 // This is the CRUD functionality of the groceryList 
 import {
-    ADD_INGREDIENT,
+    // ADD_INGREDIENT,
     GET_ALL_INGREDIENTS,
     REMOVE_INGREDIENT,
     SEARCH_INGREDIENTS,
-} from '../../actions/pantryActions';
+} from '../../actions/groceryListActions';
 
 export default function GroceryList({navigation}) {
     const dispatch = useDispatch();
     const grocerylist = useSelector(state => state.groceryListReducer.groceryListReducer);
+    const pantrylist = useSelector(state => state.pantryReducer.pantryReducer);
+    // console.log("THIS IS THE PANTRY ----> ", pantrylist);
+    const [pantryIngredientIds, setpantryIngredientIds] = useState([]);
+    const [pantryIds, setIds] = useState([]);
+    var pnatryIds = [];
+    const [refresh, setrefresh] = useState(true);
     const [ingredientIds, setingredientIds] = useState([]);
     // console.log(grocerylist);
     const [addState, setAddState] = useState(true);
@@ -37,38 +49,44 @@ export default function GroceryList({navigation}) {
             { "category": "Seasoning", "id": "aadsvavcadwaad", "name": "Cinnamon Sticks" }]
         },
 
-        { "title": "Fruits And Vegetables", "data": [{ "category": "Seasoning", "id": "acadaad", "name": "Cauliflower" },
-        { "category": "Seasoning", "id": "aacasdcaad", "name": "Cabbage" },
-        { "category": "Seasoning", "id": "aaacdcaad", "name": "Tomato" }]},
+        {
+            "title": "Fruits And Vegetables", "data": [{ "category": "Seasoning", "id": "acadaad", "name": "Cauliflower" },
+            { "category": "Seasoning", "id": "aacasdcaad", "name": "Cabbage" },
+            { "category": "Seasoning", "id": "aaacdcaad", "name": "Tomato" }]
+        },
         { "title": "Meats and Fish", "data": [{ "category": "Seasoning", "id": "aaacadcadsd", "name": "Goldfish" }] },
         { "title": "Seasoning", "data": [] },
         { "title": "Other", "data": [{ "category": "Seasoning", "id": "aaaacdscadvd", "name": "Cookie Crumbs" }] }
     ];
 
     useEffect(() => {
-        dispatch({type: GET_GROCERY, userID: auth().currentUser.uid});
-        console.log("DISPATCHING")
-      }, [dispatch]);
+        dispatch({ type: GET_GROCERY, userID: auth().currentUser.uid });
+        console.log("DISPATCHING");
+    }, [dispatch]);
+
 
     useEffect(() => {
-        console.log("Got the grocery list stage ")
-        // console.log(grocerylist);
-        const pantryIds = grocerylist.map(pantryItem => {
+        console.log("Doing the ingredient ids stage");
+        const pantryIds = pantrylist.map(pantryItem => {
             const data = pantryItem.data;
             return data.map(ingredient => {
                 return ingredient.id;
             });
         });
-        setingredientIds(pantryIds.flat());
-        // console.log("here is the ingredient IDS -> ", ingredientIds);
-    }, [grocerylist]);
+        setpantryIngredientIds(pantryIds.flat());
 
-    // Asking if the ingredient is in the pantry
-    const itemInPantry = item => {
-        return true;
-    };
+    }, [pantrylist]);
+    // console.log("these are the ingredient ids ----> ", pantryIngredientIds);
 
-    // console.log(grocerylist)
+
+    const groceryItemInPantry = item => {
+        // console.log(item);
+        const id = item.id;
+        //   console.log("THIS IS THE ITEM ID ----->", id); 
+        // console.log(pantryIngredientIds.includes(id)); 
+        return pantryIngredientIds.includes(id);
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View
@@ -76,19 +94,19 @@ export default function GroceryList({navigation}) {
                 style={{
                     // borderBottomWidth: 2,
                     borderColor: color.black,
-                    flexDirection: "row", 
-                    justifyContent: "space-around", 
+                    flexDirection: "row",
+                    justifyContent: "space-around",
                     flex: 1,
                     width: 250,
                     alignSelf: 'center',
-                    marginTop: 20, 
+                    marginTop: 20,
                     marginBottom: 25,
-                   
+
                 }}>
-                
+
 
                 <Text
-                    onPress ={()=>{
+                    onPress={() => {
                         navigation.replace("Pantry")
                     }}
                     style={{
@@ -96,7 +114,7 @@ export default function GroceryList({navigation}) {
                         fontSize: 24,
                         paddingVertical: 10,
                         // textAlign: 'flex-end',
-                        marginRight: 75, 
+                        marginRight: 75,
                         color: color.black,
                     }}>
                     Pantry
@@ -172,21 +190,22 @@ export default function GroceryList({navigation}) {
                         }}
                     />
                 </View>
+                {/* <Button title= "Add To Grocery">  </Button> */}
 
                 <SectionList
                     stickySectionHeadersEnabled={false}
-                    sections={sampleGroceryList}
+                    sections={grocerylist}
                     style={{ paddingLeft: '5%', marginRight: '5%' }}
 
-                    renderSectionFooter = {() => {
+                    renderSectionFooter={() => {
                         return (
                             <View
                                 style={{
                                     height: 1,
                                     backgroundColor: color.black75,
-                                    marginBottom: 20, 
-                                    marginTop: 2, 
-                
+                                    marginBottom: 20,
+                                    marginTop: 2,
+
                                 }}
                             />
                         );
@@ -207,7 +226,7 @@ export default function GroceryList({navigation}) {
 
                     renderItem={({ item }) => {
                         return (
-                            
+
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -218,13 +237,17 @@ export default function GroceryList({navigation}) {
                                 <Text style={{ fontSize: 18, marginVertical: 20, }}>{item.name}</Text>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        dispatch({
-                                            type: ADD_INGREDIENT,
-                                            payload: { userID: auth().currentUser.uid, item: item },
-                                        });
+                                        // add the ingredient to the pantry if it is no
+                                        console.log("DISPATCHING MANY MANY TIMES")
+                                        if (!groceryItemInPantry(item)){
+                                            dispatch({
+                                                type: ADD_PANTRY_INGREDIENT,
+                                                payload: { userID: auth().currentUser.uid, item: [item.id, item.name, item.category] },
+                                            });
+                                        }
                                     }}
                                 >
-                                    {!itemInPantry(item) && (
+                                    {!groceryItemInPantry(item) && (
                                         <Image
                                             source={require('../../assets/Plus.png')}
                                             style={{
@@ -237,7 +260,7 @@ export default function GroceryList({navigation}) {
                                         />
                                     )}
 
-                                    {itemInPantry(item) && (
+                                    {groceryItemInPantry(item) && (
                                         <Image
                                             source={require('../../assets/check.png')}
                                             style={{
@@ -253,7 +276,7 @@ export default function GroceryList({navigation}) {
                             </View>
                         );
                     }}
-                    contentContainerStyle={{ paddingBottom: '30%' }}
+                    contentContainerStyle={{ paddingBottom: '10%' }}
                     showsVerticalScrollIndicator={false}
                     SectionSeparatorComponent={() => {
                         return (
@@ -273,7 +296,11 @@ export default function GroceryList({navigation}) {
                             </View>
                         );
                     }}
+                    
                 />
+                
+
+                
 
 
             </View>

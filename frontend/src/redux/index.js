@@ -4,7 +4,6 @@ import globalReducer from './globalReducer';
 import recipeReducer from './recipeReducer';
 import pantryReducer from './pantryReducer';
 import accordionReducer from './accordionReducer';
-import accordionStepReducer from './accordionReducer';
 import profileReducer from './profileReducer';
 import groceryListReducer from './groceryListReducer';
 
@@ -14,10 +13,8 @@ const rootReducer = combineReducers({
   recipeReducer,
   pantryReducer,
   accordionReducer,
-  accordionStepReducer,
   profileReducer,
   groceryListReducer,
-  
 });
 
 export default rootReducer;

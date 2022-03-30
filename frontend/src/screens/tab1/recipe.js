@@ -43,11 +43,7 @@ export default function Recipe({navigation, route}) {
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
-
-  const open = useSelector(state => state.accordionReducer.accordionReducer);
-  const stepIndex = useSelector(
-    state => state.accordionStepReducer.accordionStepReducer,
-  );
+  const stepIndex = useSelector(state => state.accordionReducer.accordionStepReducer);
 
   useEffect(() => {
     if (route.params.recipe_id) {
@@ -368,7 +364,6 @@ export default function Recipe({navigation, route}) {
   }
 
   function stepTab() {
-    data = {steps};
     return (
       <BottomSheetFlatList
         contentContainerStyle={{paddingTop: 20, paddingBottom: '30%'}}
@@ -384,7 +379,7 @@ export default function Recipe({navigation, route}) {
                 borderRadius: 20,
                 marginBottom: 20,
                 backgroundColor:
-                  open && stepIndex == item.step_id
+                  stepIndex[index]
                     ? 'white'
                     : color.appPrimary,
               }}>
@@ -397,9 +392,11 @@ export default function Recipe({navigation, route}) {
       />
     );
   }
+
   if (!recipe) {
     return null;
   }
+
   return (
     <View
       style={{flex: 1, backgroundColor: 'white'}}

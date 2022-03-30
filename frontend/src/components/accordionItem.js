@@ -1,4 +1,3 @@
-import { dispatch } from 'd3-dispatch';
 import React, {useState, useRef} from 'react';
 import {
   View,
@@ -10,15 +9,12 @@ import {
   Image,
 } from 'react-native';
 import { useDispatch, useSelector} from 'react-redux';
-import { set_open, set_step} from '../actions/accordionActions';
-import accordionReducer from '../redux/accordionReducer';
+import { SET_STEP} from '../actions/accordionActions';
 
 const AccordionItem = ({title, children, index}) => {
-  
   const animatedController = useRef(new Animated.Value(0)).current;
   const [bodySectionHeight, setBodySectionHeight] = useState(0);
-  const open = useSelector(state => state.accordionReducer.accordionReducer); 
-  const stepIndex = useSelector(state => state.accordionStepReducer.accordionStepReducer);
+  const stepIndex = useSelector(state => state.accordionReducer.accordionStepReducer);
 
   const dispatch = useDispatch();
 
@@ -33,8 +29,7 @@ const AccordionItem = ({title, children, index}) => {
   });
   
   const toggleListItem = () => {
-    console.log(title);
-    if (open) {
+    if (stepIndex[index - 1]) {
       Animated.timing(animatedController, {
         duration: 300,
         toValue: 0,
@@ -50,16 +45,16 @@ const AccordionItem = ({title, children, index}) => {
       }).start();
     }
     
-    dispatch(set_step(index)); 
-    dispatch(set_open(index));
- 
+    dispatch({type: SET_STEP, payload: index - 1});
   };
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={() => toggleListItem()}>
+      <TouchableWithoutFeedback onPress={() => {
+        toggleListItem()
+        }}>
         <View style={styles.titleContainer}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: open && index == stepIndex ? 'black' : 'white'}}>{title}</Text>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: stepIndex[index - 1] ? 'black' : 'white'}}>{title}</Text>
           <Animated.View style={{transform: [{rotateZ: arrowAngle}]}}>
             <Image
               source={require('../assets/Down.png')}
@@ -68,7 +63,7 @@ const AccordionItem = ({title, children, index}) => {
                 height: 24,
                 resizeMode: 'contain',
                 marginRight: 5,
-                tintColor: open && index == stepIndex ? 'black' : 'white',
+                tintColor: stepIndex[index - 1] ? 'black' : 'white',
               }}
             />
           </Animated.View>

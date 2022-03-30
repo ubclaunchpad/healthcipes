@@ -1,31 +1,18 @@
 import {combineReducers} from 'redux';
+import { SET_STEP } from '../actions/accordionActions';
 
-const defaultStepState = true;
-const defaultStep = 0;
-const stateMap = new Map();
-
-
-const accordionReducer = (state = defaultStepState, action) => {
-    switch (action.type) {
-        case 'SET_OPEN':
-            stateMap.set(action.payload, !state)
-            return stateMap.get(action.payload); 
-        default: 
-            return state; 
-    }
-};
+const defaultState = {}
  
-const accordionStepReducer = (state = defaultStep, action) => {
+const accordionStepReducer = (state = defaultState, action) => {
     switch (action.type) {
-        case 'SET_STEP':
-            stateMap.set(action.payload, defaultStepState);
-            return action.payload; 
+        case SET_STEP:
+            state[action.payload] = state[action.payload] ? false : true;
+            return {...state}; 
         default: 
             return state;
     }
 };
 
 export default combineReducers({
-    accordionReducer,
     accordionStepReducer
 });

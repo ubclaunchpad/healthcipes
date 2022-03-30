@@ -22,6 +22,8 @@ import {FlatList} from 'react-native-gesture-handler';
 import storage from '@react-native-firebase/storage';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {PUT_USER} from '../../actions/accountActions';
+import { SET_ALERT } from '../../actions/globalActions';
+import Alerts from '../../components/Alerts';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
@@ -51,6 +53,7 @@ export default function EditProfile({navigation}) {
       })
       .catch(e => {
         console.log('No User Image: ' + e);
+        dispatch({ type: SET_ALERT, alert: true});
       });
   }, [user]);
 
@@ -135,6 +138,7 @@ export default function EditProfile({navigation}) {
   } else {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: color.white}}>
+        {Alerts(alert, "No User Image")}
         <FlatList
           ListHeaderComponent={
             <View>
@@ -150,6 +154,7 @@ export default function EditProfile({navigation}) {
                   }}
                   onPress={() => {
                     navigation.pop();
+                    dispatch( {type: SET_ALERT, alert: false} );
                   }}>
                   <Image
                     source={require('../../assets/Back.png')}

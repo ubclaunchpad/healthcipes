@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useMemo, useState} from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import moment from 'moment';
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import {useDispatch, useSelector} from 'react-redux';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { useDispatch, useSelector } from 'react-redux';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import AccordionItem from '../../components/accordionItem';
 import axios from 'axios';
-import {API_URL} from '@env';
+import { API_URL } from '@env';
 import {
   DELETE_RECIPE,
   GET_RECIPE,
@@ -24,8 +24,10 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
+import { SET_ALERT } from '../../actions/globalActions';
+import Alerts from '../../components/Alerts';
 
-export default function Recipe({navigation, route}) {
+export default function Recipe({ navigation, route }) {
   const [recipe, setRecipe] = useState(route.params.recipe);
   const dispatch = useDispatch();
   const [page, setPage] = useState('Info');
@@ -78,15 +80,15 @@ export default function Recipe({navigation, route}) {
       })
       .catch(function (error) {
         console.log(error);
+        dispatch({ type: SET_ALERT, alert: true });
       });
   }
 
   function checkLike(ID) {
     const apiConfig = {
       method: 'get',
-      url: `${API_URL}/user_activity/like_status?userID=${
-        auth().currentUser.uid
-      }&recipeID=${ID}`,
+      url: `${API_URL}/user_activity/like_status?userID=${auth().currentUser.uid
+        }&recipeID=${ID}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -126,9 +128,8 @@ export default function Recipe({navigation, route}) {
   function deleteLike(ID) {
     const apiConfig = {
       method: 'delete',
-      url: `${API_URL}/user_activity/like?userID=${
-        auth().currentUser.uid
-      }&recipeID=${ID}`,
+      url: `${API_URL}/user_activity/like?userID=${auth().currentUser.uid
+        }&recipeID=${ID}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -149,7 +150,7 @@ export default function Recipe({navigation, route}) {
         .refFromURL(`gs://umami-2021.appspot.com/Users/${recipe.user_id}.jpg`)
         .getDownloadURL()
         .then(res => {
-          setImage({uri: res});
+          setImage({ uri: res });
         })
         .catch(e => {
           console.log('[INFO]: No User Image: ' + e);
@@ -159,7 +160,7 @@ export default function Recipe({navigation, route}) {
 
   useEffect(() => {
     if (recipe) {
-      dispatch({type: GET_RECIPE, recipe_id: recipe.recipe_id});
+      dispatch({ type: GET_RECIPE, recipe_id: recipe.recipe_id });
       dispatch({
         type: POST_RECIPE_VIEW,
         user_id: auth().currentUser.uid,
@@ -256,7 +257,7 @@ export default function Recipe({navigation, route}) {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               source={image}
               style={{
@@ -267,16 +268,16 @@ export default function Recipe({navigation, route}) {
                 borderRadius: 36,
               }}
             />
-            <View style={{flexDirection: 'column'}}>
-              <Text numberOfLines={1} style={{width: 80}}>
+            <View style={{ flexDirection: 'column' }}>
+              <Text numberOfLines={1} style={{ width: 80 }}>
                 {recipe.creator_username}
               </Text>
-              <Text style={{fontSize: 10}}>
+              <Text style={{ fontSize: 10 }}>
                 {moment(new Date(recipe.created_time)).format('D MMM YYYY')}
               </Text>
             </View>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               source={require('../../assets/Time.png')}
               style={{
@@ -288,7 +289,7 @@ export default function Recipe({navigation, route}) {
             />
             <Text>{recipe.cooking_time} mins</Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               source={require('../../assets/Serving.png')}
               style={{
@@ -303,7 +304,7 @@ export default function Recipe({navigation, route}) {
         </View>
         {NutritionChips(recipe)}
         <View>
-          <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
             About this Recipe
           </Text>
           <Text>{recipe.recipe_description}</Text>
@@ -315,10 +316,10 @@ export default function Recipe({navigation, route}) {
   function ingredientTab() {
     return (
       <BottomSheetFlatList
-        contentContainerStyle={{paddingTop: 20}}
+        contentContainerStyle={{ paddingTop: 20 }}
         data={ingredients}
         keyExtractor={item => item.ingredient_id}
-        renderItem={({item}) => {
+        renderItem={({ item }) => {
           return (
             <View
               style={{
@@ -335,7 +336,7 @@ export default function Recipe({navigation, route}) {
                   marginRight: 10,
                 }}
               />
-              <Text style={{fontSize: 18}}>{item.ingredient_name}</Text>
+              <Text style={{ fontSize: 18 }}>{item.ingredient_name}</Text>
             </View>
           );
         }}
@@ -344,13 +345,13 @@ export default function Recipe({navigation, route}) {
   }
 
   function stepTab() {
-    data = {steps};
+    data = { steps };
     return (
       <BottomSheetFlatList
-        contentContainerStyle={{paddingTop: 20, paddingBottom: '30%'}}
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: '30%' }}
         data={steps}
         keyExtractor={item => item.step_id}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return (
             <View
               style={{
@@ -378,12 +379,13 @@ export default function Recipe({navigation, route}) {
   }
   return (
     <View
-      style={{flex: 1, backgroundColor: 'white'}}
+      style={{ flex: 1, backgroundColor: 'white' }}
       onTouchEndCapture={() => {
         if (editPrompt) {
           setEditPrompt(false);
         }
       }}>
+      {Alerts(alert, "Recipe Failed to Load")}
       {editPrompt && (
         <View
           style={{
@@ -398,16 +400,16 @@ export default function Recipe({navigation, route}) {
           {recipe.user_id === auth().currentUser.uid && (
             <View>
               <TouchableOpacity
-                style={{padding: 10}}
+                style={{ padding: 10 }}
                 onPress={() => {
-                  navigation.push('NewRecipe', {recipe: recipe, recipeInfo: recipeInfo});
+                  navigation.push('NewRecipe', { recipe: recipe, recipeInfo: recipeInfo });
                 }}>
-                <Text style={{fontSize: 16, fontWeight: '500'}}>
+                <Text style={{ fontSize: 16, fontWeight: '500' }}>
                   Edit Recipe
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{padding: 10}}
+                style={{ padding: 10 }}
                 onPress={() => {
                   Alert.alert(
                     'Are you sure you want to delete this recipe?',
@@ -434,15 +436,15 @@ export default function Recipe({navigation, route}) {
                     ],
                   );
                 }}>
-                <Text style={{fontSize: 16, fontWeight: '500', color: 'red'}}>
+                <Text style={{ fontSize: 16, fontWeight: '500', color: 'red' }}>
                   Delete Recipe
                 </Text>
               </TouchableOpacity>
             </View>
           )}
           {recipe.user_id !== auth().currentUser.uid && (
-            <TouchableOpacity style={{padding: 10}}>
-              <Text style={{fontSize: 16, fontWeight: '500'}}>
+            <TouchableOpacity style={{ padding: 10 }}>
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>
                 Report Recipe
               </Text>
             </TouchableOpacity>
@@ -450,7 +452,7 @@ export default function Recipe({navigation, route}) {
         </View>
       )}
       <ImageBackground
-        source={{uri: recipe.header_image}}
+        source={{ uri: recipe.header_image }}
         resizeMode="cover"
         style={{
           width: '100%',
@@ -459,7 +461,7 @@ export default function Recipe({navigation, route}) {
           flexDirection: 'row',
         }}>
         <TouchableOpacity
-          style={{flex: 1, width: 24, height: 24, margin: 20, marginTop: '15%'}}
+          style={{ flex: 1, width: 24, height: 24, margin: 20, marginTop: '15%' }}
           onPress={() => {
             navigation.pop();
           }}>
@@ -473,7 +475,7 @@ export default function Recipe({navigation, route}) {
             }}
           />
         </TouchableOpacity>
-        <View style={{flex: 3}} />
+        <View style={{ flex: 3 }} />
         <TouchableOpacity
           style={{
             flex: 1,
@@ -498,8 +500,8 @@ export default function Recipe({navigation, route}) {
         </TouchableOpacity>
       </ImageBackground>
       <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
-        <View style={{flex: 1, paddingHorizontal: '7%'}}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={{ flex: 1, paddingHorizontal: '7%' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             {recipeTab('Info')}
             {recipeTab('Ingredients')}
             {recipeTab('Steps')}

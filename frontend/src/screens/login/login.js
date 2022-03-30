@@ -72,6 +72,7 @@ export default function Login({ navigation }) {
             style={{ flex: 1, margin: 20 }}
             onPress={() => {
               navigation.pop();
+              dispatch({ type: SET_ALERT, alert: false });
             }}>
             <Image
               source={require('../../assets/Back.png')}

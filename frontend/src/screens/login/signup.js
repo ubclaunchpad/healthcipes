@@ -222,6 +222,7 @@ export default function SignUp({ navigation }) {
                 style={{ alignSelf: 'center' }}
                 onPress={() => {
                   navigation.push('Login');
+                  dispatch({ type: SET_ALERT, alert: false });
                 }}>
                 <Text style={{ fontWeight: '300' }}>
                   Already have an account?{'   '}Login

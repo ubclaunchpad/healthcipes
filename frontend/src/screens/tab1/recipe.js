@@ -25,7 +25,9 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
-import { ADD_INGREDIENT } from '../../actions/groceryListActions';
+import {ADD_INGREDIENT} from '../../actions/groceryListActions';
+import GoButton from '../../components/goButton';
+import {REMOVE_PANTRY_INGREDIENT, REMOVE_RECIPE_INGREDIENT} from '../../actions/pantryActions';
 
 export default function Recipe({navigation, route}) {
   const [recipe, setRecipe] = useState(route.params.recipe);
@@ -43,7 +45,9 @@ export default function Recipe({navigation, route}) {
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
-  const stepIndex = useSelector(state => state.accordionReducer.accordionStepReducer);
+  const stepIndex = useSelector(
+    state => state.accordionReducer.accordionStepReducer,
+  );
 
   useEffect(() => {
     if (route.params.recipe_id) {
@@ -121,9 +125,7 @@ export default function Recipe({navigation, route}) {
       });
   }
 
-  function addIngredientsToGroceryList(ingredients) {
-
-  }
+  function addIngredientsToGroceryList(ingredients) {}
 
   function deleteLike(ID) {
     const apiConfig = {
@@ -208,12 +210,6 @@ export default function Recipe({navigation, route}) {
       : require('../../assets/Like.png');
     return (
       <View>
-         <Button
-              title ="press me"
-              onPress={
-                console.log("hello")
-                }>
-          </Button>
         <View
           style={{
             flexDirection: 'row',
@@ -334,18 +330,20 @@ export default function Recipe({navigation, route}) {
                 marginBottom: 10,
                 alignItems: 'center',
               }}>
-              <Button 
-                title = "Add to Grocery List"
-                onPress = {() => {
-                  console.log("Add to grocery list button pressed")
+              <Button
+                title="Add to Grocery List"
+                onPress={() => {
+                  console.log('Add to grocery list button pressed');
                   ingredients.forEach(ingredient => {
                     dispatch({
                       type: ADD_INGREDIENT,
-                      payload: {userID: auth().currentUser.uid, item: ingredient},
+                      payload: {
+                        userID: auth().currentUser.uid,
+                        item: ingredient,
+                      },
                     });
                   });
-                }}> 
-              </Button>
+                }}></Button>
               <Image
                 source={require('../../assets/Plus.png')}
                 style={{
@@ -378,10 +376,7 @@ export default function Recipe({navigation, route}) {
                 borderWidth: 1,
                 borderRadius: 20,
                 marginBottom: 20,
-                backgroundColor:
-                  stepIndex[index]
-                    ? 'white'
-                    : color.appPrimary,
+                backgroundColor: stepIndex[index] ? 'white' : color.appPrimary,
               }}>
               <AccordionItem title={`Step ${index + 1}`} index={index + 1}>
                 <Text>{item.description}</Text>
@@ -389,6 +384,19 @@ export default function Recipe({navigation, route}) {
             </View>
           );
         }}
+        ListFooterComponent={
+          <View>
+            {GoButton('Finish Cooking', () => {
+              dispatch({
+                type: REMOVE_RECIPE_INGREDIENT,
+                payload: {
+                  userID: auth().currentUser.uid,
+                  ingredients
+                },
+              });
+            })}
+          </View>
+        }
       />
     );
   }
@@ -421,7 +429,10 @@ export default function Recipe({navigation, route}) {
               <TouchableOpacity
                 style={{padding: 10}}
                 onPress={() => {
-                  navigation.push('NewRecipe', {recipe: recipe, recipeInfo: recipeInfo});
+                  navigation.push('NewRecipe', {
+                    recipe: recipe,
+                    recipeInfo: recipeInfo,
+                  });
                 }}>
                 <Text style={{fontSize: 16, fontWeight: '500'}}>
                   Edit Recipe

@@ -58,7 +58,7 @@ export default function Profile({navigation}) {
       })
       .catch(e => {
         console.log('No User Image: ' + e);
-        dispatch({ type: SET_ALERT, alert: true });
+        // dispatch({ type: SET_ALERT, alert: true });
       });
   }, [user]);
 
@@ -238,7 +238,7 @@ export default function Profile({navigation}) {
   } else {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#447551'}}>
-        {Alerts(alert, "Profile Error")}
+        {/* {Alerts(alert, "Profile Error")} */}
         <View //Header Component
           style={{
             paddingVertical: 45,

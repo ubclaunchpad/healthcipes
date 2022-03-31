@@ -314,6 +314,7 @@ export default function EditProfile({navigation}) {
                 <TouchableOpacity
                   onPress={() => {
                     auth().signOut();
+                    dispatch({type: SET_ALERT, alert: false});
                   }}>
                   <Text
                     style={{

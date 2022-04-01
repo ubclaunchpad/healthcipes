@@ -95,13 +95,23 @@ function* getFullFeed(param) {
 
 function* getFeedCall(param) {
   try {
-    const apiConfig = {
+    let apiConfig = {
       method: 'get',
       url: `${API_URL}/recipe?start=${param.startIndex}&limit=30`,
       headers: {
         'Content-Type': 'application/json',
       },
     };
+
+    if (!param.user.recipe_driven) {
+      apiConfig = {
+        method: 'get',
+        url: `${API_URL}/recipe/driven?start=${param.startIndex}&limit=30&user=${param.user.user_id}`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+    }
 
     const response = yield call(axios, apiConfig);
     const resultsArray = response.data[0];

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import soft_delete_recipe_by_id, delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
+from app.indexer.recipes import get_all_recipes_driven, soft_delete_recipe_by_id, delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
 from app.functions.scraper import scraper
 from app.functions.ingredient import parse_ingredients_from_text
 from functools import reduce
@@ -92,6 +92,15 @@ async def read_all_recipes(startIndex, limit):
         logging.error(e)
         return "Error with {}".format(e), 400
 
+async def read_all_recipes_driven(startIndex, limit, user):
+    try:
+        _, cursor = init_conn()
+        res = get_all_recipes_driven(cursor, startIndex, limit, user)
+        return res, 200
+    except Exception as e:
+        logging.error(e)
+        return "Error with {}".format(e), 400
+
 #TODO
 async def read_featured_recipes():
     try:
@@ -110,6 +119,10 @@ async def read_recipe(keyword: str = "", start: int = 0, limit: int = 5):
         return await recipe_by_keyword(keyword)
     else:
         return await read_all_recipes(start, limit)
+
+@router.get("/driven")
+async def read_recipe_driven(start: int = 0, limit: int = 5, user: str = ""):
+    return await read_all_recipes_driven(start, limit, user)
 
 @router.get("/featured")
 async def read_featured_recipe():

@@ -23,6 +23,15 @@ def get_all_recipes(cursor, startIndex, numOnPage):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
+def get_all_recipes_driven(cursor, startIndex, numOnPage, user):
+    sql_proc = 'getRecipePageDriven'
+    try:
+        cursor.callproc(sql_proc, (startIndex, numOnPage, user,))
+        return cursor.fetchall()
+    except Exception as e:
+        print("MYSQL ERROR:", sql_proc)
+        logging.error(e)
+
 def get_featured_recipes(cursor):
     sql_proc = 'getFeaturedRecipes'
     try:

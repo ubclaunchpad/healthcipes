@@ -173,7 +173,7 @@ INSERT INTO `recipes_table` (
     `gluten_free`,
     `dairy_free`,
     `keto`,
-    `paleo,
+    `paleo`,
     `cooking_time`
 ) VALUES(
     'Scrambled Eggs',
@@ -224,7 +224,7 @@ INSERT INTO `recipes_table` (
     `gluten_free`,
     `dairy_free`,
     `keto`,
-    `paleo,
+    `paleo`,
     `cooking_time`
 ) VALUES(
     'Scrambled Eggs',
@@ -357,7 +357,7 @@ REPLACE INTO `recipes_table` (
     `gluten_free`,
     `dairy_free`,
     `keto`,
-    `paleo,
+    `paleo`,
     `cooking_time`
 )
 VALUES (
@@ -432,7 +432,7 @@ INSERT INTO `recipes_table` (
     `gluten_free`,
     `dairy_free`,
     `keto`,
-    `paleo,
+    `paleo`,
     `cooking_time`
 )
 VALUES (

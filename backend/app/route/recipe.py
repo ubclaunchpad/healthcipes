@@ -26,6 +26,11 @@ defaultRecipe = {
     "servings": 4,
     "vegetarian": True,
     "vegan": False,
+    "pescatarian": False,
+    "gluten_free": False,
+    "dairy_free": False,
+    "keto": False,
+    "paleo": False,
     "cooking_time": 10
 }
 
@@ -57,6 +62,11 @@ class RecipeDetails(BaseModel):
     servings: int
     vegetarian: bool
     vegan: bool
+    pescatarian: bool
+    gluten_free: bool
+    dairy_free: bool
+    keto: bool
+    paleo: bool
     cooking_time: Optional[int] = None
     steps: List[RecipeStep]
     ingredients: List[RecipeIngredient]

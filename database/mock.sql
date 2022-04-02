@@ -13,16 +13,16 @@ CALL umami_db.addMockSteps();
 CALL umami_db.addMockIngredientsInfo();
 CALL umami_db.addMockIngredients();
 
-CALL umami_db.createRecipe(2, 'Butter Chicken', 'Tasty and savoury butter chicken', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(3, 'Teriyaki Chicken', 'The BEST teriyaki chicken recipe you will ever try', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Teriyaki Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(4, 'Fried Chicken', 'Classic Louisiana-style fried chicken', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Fried Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(5, 'Roasted Chicken', 'Who needs Costco anyways?', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Roasted Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(6, 'Spicy Chicken', 'Because everything is better spicy', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Spicy Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(7, 'Sweet & Sour Chicken', 'Impress your friends, family, and partner with this sweet & sour chicken recipe', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Sweet & Sour Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(8, 'Beef Curry', 'Savoury beef curry for the soul', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Beef Curry.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(9, 'Pineapple Gelato', 'Best enjoyed in the summer, but also surprisingly outdoors on a winter day', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Pineapple Gelato.jpeg', 20, 10, 5, 2, 600, 3, 1, 1, 20);
-CALL umami_db.createRecipe(10, 'Kebabs', 'These are no ordinary kebabs', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Kebabs.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 20);
-CALL umami_db.createRecipe(11, 'Fried Rice', 'You can never go wrong with fried rice', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Fried Rice.jpeg', 20, 10, 5, 2, 600, 3, 1, 1, 20);
+CALL umami_db.createRecipe(2, 'Butter Chicken', 'Tasty and savoury butter chicken', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(3, 'Teriyaki Chicken', 'The BEST teriyaki chicken recipe you will ever try', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Teriyaki Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(4, 'Fried Chicken', 'Classic Louisiana-style fried chicken', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Fried Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(5, 'Roasted Chicken', 'Who needs Costco anyways?', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Roasted Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(6, 'Spicy Chicken', 'Because everything is better spicy', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Spicy Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(7, 'Sweet & Sour Chicken', 'Impress your friends, family, and partner with this sweet & sour chicken recipe', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Sweet & Sour Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(8, 'Beef Curry', 'Savoury beef curry for the soul', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Beef Curry.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(9, 'Pineapple Gelato', 'Best enjoyed in the summer, but also surprisingly outdoors on a winter day', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Pineapple Gelato.jpeg', 20, 10, 5, 2, 600, 3, 1, 1, 1, 1, 0, 0, 0, 20);
+CALL umami_db.createRecipe(10, 'Kebabs', 'These are no ordinary kebabs', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Kebabs.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.createRecipe(11, 'Fried Rice', 'You can never go wrong with fried rice', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Fried Rice.jpeg', 20, 10, 5, 2, 600, 3, 1, 1, 1, 1, 1, 0, 0, 20);
 
 CALL umami_db.postUserActivity('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'RECIPE_VIEW', NULL, NULL, 3);
 CALL umami_db.postUserActivity('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'RECIPE_VIEW', NULL, NULL, 3);

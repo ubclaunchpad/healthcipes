@@ -136,6 +136,11 @@ def post_recipe(conn, cursor, recipe):
     servings = recipe['servings']
     vegetarian = recipe['vegetarian']
     vegan = recipe['vegan']
+    pescatarian = recipe['pescatarian']
+    gluten_free = recipe['gluten_free']
+    dairy_free = recipe['dairy_free']
+    keto = recipe['keto']
+    paleo = recipe['paleo']
     cooking_time = recipe['cooking_time']
 
     try:
@@ -155,6 +160,11 @@ def post_recipe(conn, cursor, recipe):
                 servings,
                 vegetarian,
                 vegan,
+                pescatarian,
+                gluten_free,
+                dairy_free,
+                keto,
+                paleo,
                 cooking_time,
             ))
             conn.commit()
@@ -174,6 +184,11 @@ def post_recipe(conn, cursor, recipe):
                 servings,
                 vegetarian,
                 vegan,
+                pescatarian,
+                gluten_free,
+                dairy_free,
+                keto,
+                paleo,
                 cooking_time,
             ))
             conn.commit()
@@ -329,6 +344,11 @@ def get_recipe_by_id(conn, cursor, recipe_id):
             "servings": 0,
             "vegetarian": False,
             "vegan": False,
+            "pescatarian": False,
+            "gluten_free": False,
+            "dairy_free": False,
+            "keto": False,
+            "paleo": False,
             "cooking_time": 0,
             "steps": [],
             "ingredients": []
@@ -349,33 +369,38 @@ def get_recipe_by_id(conn, cursor, recipe_id):
             res["servings"] = raw_result[0][12]
             res["vegetarian"] = bool(raw_result[0][13])
             res["vegan"] = bool(raw_result[0][14])
-            res["cooking_time"] = raw_result[0][15]
+            res["pescatarian"] = bool(raw_result[0][15])
+            res["gluten_free"] = bool(raw_result[0][16])
+            res["dairy_free"] = bool(raw_result[0][17])
+            res["keto"] = bool(raw_result[0][18])
+            res["paleo"] = bool(raw_result[0][19])
+            res["cooking_time"] = raw_result[0][20]
 
             step_ids = set()
             ingredient_ids = set()
 
             for result in raw_result:
-                if (result[16]) and (result[16] not in step_ids):
+                if (result[21]) and (result[21] not in step_ids):
                     res["steps"].append(
                         {
-                            "step_id": result[16],
-                            "description": result[18],
-                            "time": result[19],
-                            "header_image": result[20],
+                            "step_id": result[21],
+                            "description": result[23],
+                            "time": result[24],
+                            "header_image": result[25],
                         }
                     )
-                    step_ids.add(result[16])
+                    step_ids.add(result[21])
 
-                if (result[21]) and (result[21] not in ingredient_ids):
+                if (result[26]) and (result[26] not in ingredient_ids):
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[21],
-                            "ingredient_name": result[22],
-                            "category": result[23],
-                            "step_id": result[24]
+                            "ingredient_id": result[26],
+                            "ingredient_name": result[27],
+                            "category": result[28],
+                            "step_id": result[29]
                         }
                     )
-                    ingredient_ids.add(result[21])
+                    ingredient_ids.add(result[26])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])

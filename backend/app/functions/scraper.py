@@ -13,6 +13,11 @@ def scraper (url):
     meats = ['Chicken', 'Beef', 'Turkey', 'Sausage', 'Bacon', 'Lamb', "Pork"]
     vegetarian = True
     vegan = False
+    pescatarian = False
+    gluten_free = False
+    dairy_free = False
+    keto = False
+    paleo = False
 
     nutrients.update(scraper.nutrients())
     ingredients = scraper.ingredients()
@@ -69,6 +74,11 @@ def scraper (url):
         "servings": servings,
         "vegetarian": vegetarian,
         "vegan": vegan,
+        "pescatarian": pescatarian,
+        "gluten_free": gluten_free,
+        "dairy_free": dairy_free,
+        "keto": keto,
+        "paleo": paleo,
         "cooking_time": scraper.total_time()
     }
 

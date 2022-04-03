@@ -3,27 +3,28 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import {API_URL} from '@env';
 import axios from 'axios';
 import {
-    GET_GROCERY,
-    ADD_GROCERY_INGREDIENT,
-    REMOVE_INGREDIENT,
-    GET_ALL_INGREDIENTS,
-    SEARCH_INGREDIENTS,
-    GROCERY_ADD,
-    GROCERY_REMOVE,
-    INGREDIENTS,
-   } from '../actions/groceryListActions';
-   
+  GET_GROCERY,
+  ADD_INGREDIENT,
+  REMOVE_INGREDIENT,
+  GET_ALL_INGREDIENTS,
+  SEARCH_INGREDIENTS,
+  GROCERY_ADD,
+  GROCERY_REMOVE,
+  INGREDIENTS,
+  ADD_RECIPE_INGREDIENT,
+} from '../actions/groceryListActions';
+import { SET_ALERT } from '../actions/globalActions';
 function* addToGrocery(param) {
   yield put({
     type: GROCERY_ADD,
-    payload: {category: param.category, name: param.name, id: param.id},
+    payload: { category: param.category, name: param.name, id: param.id },
   });
 }
 
 function* deleteFromGroceryList(param) {
   yield put({
     type: GROCERY_REMOVE,
-    payload: {category: param.category, name: param.name, id: param.id},
+    payload: { category: param.category, name: param.name, id: param.id },
   });
 }
 
@@ -62,6 +63,10 @@ function* getGroceryCall(param) {
       
     } catch (e) {
       console.log('Get Grocery Failed: ' + e);
+      yield put({
+      type: SET_ALERT,
+      alert: true
+    });
     }
   }
 
@@ -79,115 +84,194 @@ function* getGroceryCall(param) {
       const response = yield call(axios, apiConfig);
       const results = response.data;
       console.log('[INFO]: GET ALL INGREDIENTS API');
+}
 
-      yield put({type: INGREDIENTS, payload: results.data});
-    } catch (e) {
-      console.log('Get All Ingredients Failed: ' + e);
-    }
+function* getAllGroceriesCall() {
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/grocery_list/ingredients`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: GET ALL INGREDIENTS API');
+
+    yield put({ type: INGREDIENTS, payload: results.data });
+  } catch (e) {
+    console.log('Get All Ingredients Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
+}
 
-  
-  function* searchIngredientsCall(param){
-    try {
-      const apiConfig = {
-        method: 'get',
-        url: `${API_URL}/grocery_list/ingredients?keyword=${param.keyword}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
 
-      const response = yield call(axios, apiConfig);
-      const results = response.data;
-      console.log('[INFO]: SEARCH INGREDIENTS API:');
+function* searchIngredientsCall(param) {
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/grocery_list/ingredients?keyword=${param.keyword}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-      yield put({type: INGREDIENTS, payload: results.data});
-    } catch (e) {
-      console.log('Search Ingredients Failed: ' + e);
-    }
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: SEARCH INGREDIENTS API:');
+
+    yield put({ type: INGREDIENTS, payload: results.data });
+  } catch (e) {
+    console.log('Search Ingredients Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
+}
 
-  function* addIngredientCall(param) {
-    console.log("THIS IS THE PARAM ---->", param); 
-    console.log("THIS IS THE PARAM.payload.item[0] ---->", param.payload.item[0]); 
-    array = []; 
-    array.push(param.payload.item[0]); 
-    array2=[]
-    array2.push(array);
-    console.log("THIS IS THE ARRAY --->", array2); 
-    try {
-      const data = JSON.stringify({
-        user_id: param.payload.userID,
-        grocery_list_input: array2,
-      });
-      const apiConfig = {
-        method: 'post',
-        url: `${API_URL}/grocery_list`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data,
-      }
+//   function* addIngredientCall(param) {
+//     console.log("THIS IS THE PARAM ---->", param); 
+//     console.log("THIS IS THE PARAM.payload.item[0] ---->", param.payload.item[0]); 
+//     array = []; 
+//     array.push(param.payload.item[0]); 
+//     array2=[]
+//     array2.push(array);
+//     console.log("THIS IS THE ARRAY --->", array2); 
+//     try {
+//       const data = JSON.stringify({
+//         user_id: param.payload.userID,
+//         grocery_list_input: array2,
+//       });
+//       const apiConfig = {
+//         method: 'post',
+//         url: `${API_URL}/grocery_list`,
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         data,
+//       }
 
-      const response = yield call(axios, apiConfig);
-      const results = response.data;
-      console.log('[INFO]: ADD TO GROCERY LIST API: ' + results.status_code);
+//       const response = yield call(axios, apiConfig);
+//       const results = response.data;
+//       console.log('[INFO]: ADD TO GROCERY LIST API: ' + results.status_code);
 
-      yield call(addToGrocery, {
-        category: param.payload.item[2],
-        name: param.payload.item[1],
-        id: param.payload.item[0],
-      });
-    } catch (e) {
-      console.log('POST Grocery List Failed ' + e);
-    }
+function* addIngredientCall(param) {
+  try {
+    const data = JSON.stringify({
+      user_id: param.payload.userID,
+      ingredient_id: param.payload.item[0],
+    });
+    const apiConfig = {
+      method: 'post',
+      url: `${API_URL}/grocery_list`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: ADD TO GROCERY LIST API: ' + results.status_code);
+
+    yield call(addToGrocery, {
+      category: param.payload.item[2],
+      name: param.payload.item[1],
+      id: param.payload.item[0],
+    });
+  } catch (e) {
+    console.log('POST Grocery List Failed ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
+}
 
-  function* removeIngredientCall(param) {
-    try {
-      const data = JSON.stringify({
-        user_id: param.payload.userID,
-        ingredient_id: param.payload.item.id,
-      });
-      const apiConfig = {
-        method: 'delete',
-        url: `${API_URL}/grocery_list`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data,
-      };
+function* removeIngredientCall(param) {
+  try {
+    const data = JSON.stringify({
+      user_id: param.payload.userID,
+      ingredient_id: param.payload.item.id,
+    });
+    const apiConfig = {
+      method: 'delete',
+      url: `${API_URL}/grocery_list`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
 
-      const response = yield call(axios, apiConfig);
-      const results = response.data;
-      console.log('[INFO: DELETE FROM GROCERY LIST API: ' + results.status_code);
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO: DELETE FROM GROCERY LIST API: ' + results.status_code);
 
-      yield call(deleteFromGroceryList, {
-        category: param.payload.item.category,
-        name: param.payload.item.name,
-        id: param.payload.item.id,
-      });
-    } catch (e) {
-      console.log('DELETE Grocery List Failed: ' + e);
-    }
+    yield call(deleteFromGroceryList, {
+      category: param.payload.item.category,
+      name: param.payload.item.name,
+      id: param.payload.item.id,
+    });
+  } catch (e) {
+    console.log('DELETE Grocery List Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
-  
-  export function* getGroceryList() {
-    yield takeLatest(GET_GROCERY, getGroceryCall);
-  }
+}
 
-  export function* getAllIngredients() {
-    yield takeLatest(GET_ALL_INGREDIENTS, getAllGroceriesCall);
+function* addRecipeIngredientCall(param) {
+  try {
+    yield all(
+      param.payload.ingredients.map(item => {
+        return addIngredientCall({
+          payload: {
+            userID: param.payload.userID,
+            item: {
+              category: item.category,
+              name: item.ingredient_name,
+              id: item.ingredient_id,
+            },
+          },
+        });
+      }),
+    );
+  } catch (e) {
+    console.log('ADD All Recipe Ingredient Failed: ' + e);
   }
+}
 
-  export function* searchIngredients() {
-    yield takeLatest(SEARCH_INGREDIENTS, searchIngredientsCall);
-  }
+export function* getGroceryList() {
+  yield takeLatest(GET_GROCERY, getGroceryCall);
+}
+
+export function* getAllIngredients() {
+  yield takeLatest(GET_ALL_INGREDIENTS, getAllGroceriesCall);
+}
+
+export function* searchIngredients() {
+  yield takeLatest(SEARCH_INGREDIENTS, searchIngredientsCall);
+}
+
+export function* addIngredient() {
+  yield takeLatest(ADD_INGREDIENT, addIngredientCall);
+}
 
   export function* addGroceryIngredient() {
     yield takeLatest(ADD_GROCERY_INGREDIENT, addIngredientCall);
   }
 
-  export function* removeIngredient() {
-    yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);
-  }
+export function* removeIngredient() {
+  yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);
+}
+
+export function* addRecipeIngredient() {
+  yield takeLatest(ADD_RECIPE_INGREDIENT, addRecipeIngredientCall);
+}

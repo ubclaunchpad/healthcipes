@@ -12,10 +12,13 @@ import {Chip} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import {GET_PANTRY} from '../../actions/pantryActions';
+import Alerts from '../../components/Alerts';
+import { SET_ALERT } from '../../actions/globalActions';
 
 export default function Pantry({navigation}) {
   const dispatch = useDispatch();
   const pantry = useSelector(state => state.pantryReducer.pantryReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
 
   useEffect(() => {
     dispatch({type: GET_PANTRY, userID: auth().currentUser.uid});
@@ -23,6 +26,7 @@ export default function Pantry({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Alerts(alert, "Pantry Error")}
       <View
         disabled={true}
         style={{

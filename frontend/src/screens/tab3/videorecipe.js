@@ -15,9 +15,11 @@ import {POST_VIDEO_URL} from '../../actions/recipeActions';
 import videorecipeStyle from './videorecipeStyle';
 import color from '../../styles/color';
 import {FlatList} from 'react-native-gesture-handler';
+import Alerts from '../../components/Alerts';
 
 export default function VideoRecipe({navigation}) {
   const dispatch = useDispatch();
+  const alert = useSelector(state => state.globalReducer.alertReducer);
 
   useEffect(() => {
     dispatch({type: GET_USER, userID: auth().currentUser.uid});
@@ -27,6 +29,7 @@ export default function VideoRecipe({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1, marginHorizontal: '5%'}}>
+      {Alerts(alert, "Video Recipe Error")}
       <FlatList
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={

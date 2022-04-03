@@ -10,7 +10,7 @@ import {
   SEARCH_FEED,
   SEARCH_RESULT,
 } from '../actions/feedActions';
-import {SET_LOADING} from '../actions/globalActions';
+import {SET_LOADING, SET_ALERT} from '../actions/globalActions';
 
 function* searchFeedCall(param) {
   try {
@@ -84,6 +84,10 @@ function* searchFeedCall(param) {
     yield put({type: SEARCH_RESULT, payload: recipeArray});
   } catch (e) {
     console.log('Get Feed Failed');
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -175,6 +179,10 @@ function* getFeedCall(param) {
     yield put({type: (param.startIndex === 0) ? REPLACE_FEED : FORYOU_FEED, payload: recipeArray});
   } catch (e) {
     console.log('Get Feed Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -250,6 +258,10 @@ function* getFeaturedCall(param) {
     yield put({type: FEATURED_FEED, payload: recipeArray});
   } catch (e) {
     console.log('Get Featured Feed Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 

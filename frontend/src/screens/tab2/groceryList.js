@@ -26,9 +26,12 @@ import {
     REMOVE_INGREDIENT,
     SEARCH_INGREDIENTS,
 } from '../../actions/groceryListActions';
+import Alerts from '../../components/Alerts';
+import { SET_ALERT } from '../../actions/globalActions';
 
 export default function GroceryList({ navigation }) {
     const dispatch = useDispatch();
+    const alert = useSelector(state => state.globalReducer.alertReducer);
     const grocerylist = useSelector(state => state.groceryListReducer.groceryListReducer);
     const pantrylist = useSelector(state => state.pantryReducer.pantryReducer);
     // console.log("THIS IS THE PANTRY ----> ", pantrylist);
@@ -89,6 +92,7 @@ export default function GroceryList({ navigation }) {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            {Alerts(alert, "Grocery List Error")}
             <View
                 disabled={true}
                 style={{
@@ -106,7 +110,8 @@ export default function GroceryList({ navigation }) {
 
 
                 <Text
-                    onPress={() => {
+                    onPress ={()=>{
+                        dispatch({type: SET_ALERT, alert: false});
                         navigation.replace("Pantry")
                     }}
                     style={{

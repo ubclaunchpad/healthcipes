@@ -18,12 +18,14 @@ import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
+import Alerts from '../../components/Alerts';
 
 export default function Search({navigation}) {
   const [search, setSearch] = useState('');
   const [finalSearch, setFinalSearch] = useState('');
   const dispatch = useDispatch();
   const user = useSelector(state => state.accountReducer.userInfoReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const searchResult = useSelector(
     state => state.recipeReducer.searchResultReducer,
   );
@@ -37,6 +39,7 @@ export default function Search({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Alerts(alert, "Search Error")}
       <FlatList
         ref={flatListRef}
         data={searchResult}

@@ -1,8 +1,9 @@
 import {combineReducers} from 'redux';
-import {SET_LOADING, SET_ONBOARDING} from '../actions/globalActions';
+import {SET_LOADING, SET_ONBOARDING, SET_ALERT} from '../actions/globalActions';
 
 const defaultOnboardState = true;
 const defaultLoadingState = false;
+const defaultAlertState = false;
 
 const onboardReducer = (state = defaultOnboardState, action) => {
   switch (action.type) {
@@ -22,7 +23,17 @@ const loadingReducer = (state = defaultLoadingState, action) => {
   }
 };
 
+const alertReducer = (state = defaultAlertState, action) => {
+  switch(action.type) {
+    case SET_ALERT:
+      return action.alert;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   onboardReducer,
   loadingReducer,
+  alertReducer,
 });

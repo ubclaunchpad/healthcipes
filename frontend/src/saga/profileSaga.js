@@ -10,6 +10,7 @@ import {
   GET_NOTIFICATIONS,
   MY_NOTIFICATIONS,
 } from '../actions/profileActions';
+import { SET_ALERT } from '../actions/globalActions';
 
 function* getLikedRecipesCall(param) {
   try {
@@ -83,6 +84,10 @@ function* getLikedRecipesCall(param) {
     yield put({type: LIKED_RECIPES, payload: recipeArray});
   } catch (e) {
     console.log('Get LikedRecipesFeed Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -158,6 +163,10 @@ function* getMyRecipesCall(param) {
     yield put({type: MY_RECIPES, payload: recipeArray});
   } catch (e) {
     console.log('Get MyRecipesFeed Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -248,6 +257,10 @@ function* getMyNotificationsCall(param) {
     yield put({type: MY_NOTIFICATIONS, payload: dataObj});
   } catch (e) {
     console.log('Get My Notifications Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 

@@ -63,7 +63,7 @@ function* searchFeedCall(param) {
           servings: results[12],
           vegetarian: results[13],
           vegan: results[14],
-          cooking_time: results[15],
+          cooking_time: results[20],
         };
 
         if (results[6].startsWith('gs://')) {
@@ -158,7 +158,7 @@ function* getFeedCall(param) {
           servings: results[12],
           vegetarian: results[13],
           vegan: results[14],
-          cooking_time: results[15],
+          cooking_time: results[20],
         };
 
         if (results[6].startsWith('gs://')) {
@@ -237,7 +237,7 @@ function* getFeaturedCall(param) {
           servings: results[12],
           vegetarian: results[13],
           vegan: results[14],
-          cooking_time: results[15],
+          cooking_time: results[20],
         };
 
         if (results[6].startsWith('gs://')) {

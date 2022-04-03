@@ -26,6 +26,7 @@ import TabsUI from './TabsUI';
 import Search from './src/screens/tab1/search';
 import Recipe from './src/screens/tab1/recipe';
 import EditPantry from './src/screens/tab2/editPantry';
+import EditGrocery from './src/screens/tab2/editGrocery';
 import EditProfile from './src/screens/tab5/editprofile';
 import NewStep from './src/screens/tab3/newStep';
 import groceryList from './src/screens/tab2/groceryList'
@@ -93,6 +94,8 @@ function PantryScreen() {
       <PantryStack.Screen name="Pantry" component={Pantry} />
       <PantryStack.Screen name="EditPantry" component={EditPantry} />
       <PantryStack.Screen name="Grocery" component={groceryList} />
+      <PantryStack.Screen name="EditGrocery" component={EditGrocery} />
+
     </PantryStack.Navigator>
   );
 }

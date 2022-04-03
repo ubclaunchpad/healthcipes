@@ -10,6 +10,8 @@ import {
   searchIngredients,
 } from './pantrySaga';
 import {
+  getGroceryList,
+  addGroceryIngredient,
   addRecipeIngredient,
   getGroceryList
 } from './groceryListSaga'; 
@@ -51,6 +53,7 @@ export default function* rootSaga() {
     fork(postRecipeURL),
     fork(getMyNotifications),
     fork(removeRecipeIngredient),
+    fork(addGroceryIngredient), 
     fork(addRecipeIngredient)
   ]);
 }

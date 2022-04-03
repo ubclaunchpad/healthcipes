@@ -29,7 +29,7 @@ import {
 import Alerts from '../../components/Alerts';
 import { SET_ALERT } from '../../actions/globalActions';
 
-export default function GroceryList({navigation}) {
+export default function GroceryList({ navigation }) {
     const dispatch = useDispatch();
     const alert = useSelector(state => state.globalReducer.alertReducer);
     const grocerylist = useSelector(state => state.groceryListReducer.groceryListReducer);
@@ -197,6 +197,40 @@ export default function GroceryList({navigation}) {
                 </View>
                 {/* <Button title= "Add To Grocery">  </Button> */}
 
+                <View style={{ flex: 1.5, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: color.black75,
+                            padding: 10,
+                            paddingHorizontal: 20,
+                            borderRadius: 29,
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        onPress={() => {
+                            navigation.push('EditGrocery');
+                        }}>
+                        <Text
+                            style={{
+                                color: color.white,
+                                fontSize: 18,
+                                fontWeight: '400',
+                                marginRight: 5,
+                            }}>
+                            Edit
+                        </Text>
+                        <Image
+                            source={require('../../assets/Edit.png')}
+                            style={{
+                                width: 16,
+                                height: 16,
+                                resizeMode: 'contain',
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+
                 <SectionList
                     stickySectionHeadersEnabled={false}
                     sections={grocerylist}
@@ -244,7 +278,7 @@ export default function GroceryList({navigation}) {
                                     onPress={() => {
                                         // add the ingredient to the pantry if it is no
                                         console.log("DISPATCHING MANY MANY TIMES")
-                                        if (!groceryItemInPantry(item)){
+                                        if (!groceryItemInPantry(item)) {
                                             dispatch({
                                                 type: ADD_PANTRY_INGREDIENT,
                                                 payload: { userID: auth().currentUser.uid, item: [item.id, item.name, item.category] },
@@ -301,11 +335,11 @@ export default function GroceryList({navigation}) {
                             </View>
                         );
                     }}
-                    
-                />
-                
 
-                
+                />
+
+
+
 
 
             </View>

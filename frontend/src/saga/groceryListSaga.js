@@ -14,7 +14,6 @@ import {
   ADD_RECIPE_INGREDIENT,
 } from '../actions/groceryListActions';
 import { SET_ALERT } from '../actions/globalActions';
-
 function* addToGrocery(param) {
   yield put({
     type: GROCERY_ADD,
@@ -69,6 +68,22 @@ function* getGroceryCall(param) {
       alert: true
     });
     }
+  }
+
+  function* getAllGroceriesCall() {
+    console.log("HIT THE GET ALL GROCERIES CALL INSTEAD"); 
+    try {
+      const apiConfig = {
+        method: 'get',
+        url: `${API_URL}/grocery_list/ingredients`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const response = yield call(axios, apiConfig);
+      const results = response.data;
+      console.log('[INFO]: GET ALL INGREDIENTS API');
 }
 
 function* getAllGroceriesCall() {
@@ -119,6 +134,32 @@ function* searchIngredientsCall(param) {
     });
   }
 }
+
+//   function* addIngredientCall(param) {
+//     console.log("THIS IS THE PARAM ---->", param); 
+//     console.log("THIS IS THE PARAM.payload.item[0] ---->", param.payload.item[0]); 
+//     array = []; 
+//     array.push(param.payload.item[0]); 
+//     array2=[]
+//     array2.push(array);
+//     console.log("THIS IS THE ARRAY --->", array2); 
+//     try {
+//       const data = JSON.stringify({
+//         user_id: param.payload.userID,
+//         grocery_list_input: array2,
+//       });
+//       const apiConfig = {
+//         method: 'post',
+//         url: `${API_URL}/grocery_list`,
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         data,
+//       }
+
+//       const response = yield call(axios, apiConfig);
+//       const results = response.data;
+//       console.log('[INFO]: ADD TO GROCERY LIST API: ' + results.status_code);
 
 function* addIngredientCall(param) {
   try {
@@ -222,6 +263,10 @@ export function* searchIngredients() {
 export function* addIngredient() {
   yield takeLatest(ADD_INGREDIENT, addIngredientCall);
 }
+
+  export function* addGroceryIngredient() {
+    yield takeLatest(ADD_GROCERY_INGREDIENT, addIngredientCall);
+  }
 
 export function* removeIngredient() {
   yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);

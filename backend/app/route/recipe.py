@@ -26,6 +26,11 @@ defaultRecipe = {
     "servings": 4,
     "vegetarian": True,
     "vegan": False,
+    "pescatarian": False,
+    "gluten_free": False,
+    "dairy_free": False,
+    "keto": False,
+    "paleo": False,
     "cooking_time": 10
 }
 
@@ -57,6 +62,11 @@ class RecipeDetails(BaseModel):
     servings: int
     vegetarian: bool
     vegan: bool
+    pescatarian: bool
+    gluten_free: bool
+    dairy_free: bool
+    keto: bool
+    paleo: bool
     cooking_time: Optional[int] = None
     steps: List[RecipeStep]
     ingredients: List[RecipeIngredient]
@@ -151,15 +161,23 @@ async def read_createdrecipe_by_userid(user_id: str=""):
 # TODO: merge filter route with the one above if possible sql statements with default values?
 @router.get("/filter")
 async def filter_recipe(vegetarian: bool = False, vegan: bool = False, pescatarian: bool = False, gluten_free: bool = False, dairy_free: bool = False, keto: bool = False, paleo: bool = False):
-    filters = {"vegetarian": vegetarian, "vegan": vegan}
+    filters = {
+        "vegetarian": vegetarian,
+        "vegan": vegan,
+        "pescatarian": pescatarian,
+        "gluten_free": gluten_free,
+        "dairy_free": dairy_free,
+        "keto": keto,
+        "paleo": paleo
+    }
     # NOTE: currently only doing vegetarian and vegan 
-    # unused_filters = [pescatarian,gluten_free, dairy_free, dairy_free, paleo]
+    # unused_filters = [pescatarian,gluten_free, dairy_free, keto, paleo]
     if not reduce(lambda x, y: x or y, filters.values()):
         return await read_all_recipes()
     else: 
         try:
             _, cursor = init_conn()
-            res = filter_recipes(cursor, **filters) 
+            res = filter_recipes(cursor, filters) 
             return res, 200
         except Exception as e:
             logging.error(e)

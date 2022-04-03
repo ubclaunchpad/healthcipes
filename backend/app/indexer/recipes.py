@@ -1,4 +1,5 @@
 import logging
+import itertools
 from app.functions.transcription import get_recipe_from_video_url
 
 from app.route.pantry import get_all_ingredients
@@ -41,18 +42,41 @@ def get_featured_recipes(cursor):
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)
 
-def filter_recipes(cursor, vegetarian: bool = False, vegan: bool = False):
+def filter_recipes(cursor, filters):
     vegetarian_result = []
     vegan_result = []
+    pescatarian_result = []
+    gluten_free_result = []
+    dairy_free_result = []
+    keto_result = []
+    paleo_result = []
     try:
         # returns tuples
-        if vegetarian:
+        if filters["vegetarian"]:
             vegetarian_result = list(_filter_vegetarian(cursor))
-        if vegan:
+        if filters["vegan"]:
             vegan_result = list(_filter_vegan(cursor))
+        if filters["pescatarian"]:
+            pescatarian_result = list(_filter_pescatarian(cursor))
+        if filters["gluten_free"]:
+            gluten_free_result = list(_filter_gluten_free(cursor))
+        if filters["dairy_free"]:
+            dairy_free_result = list(_filter_dairy_free(cursor))
+        if filters["keto"]:
+            keto_result = list(_filter_keto(cursor))
+        if filters["paleo"]:
+            paleo_result = list(_filter_paleo(cursor))
 
         # assume id is first
-        return _filter_duplicates(vegetarian_result + vegan_result, 0)
+        return _filter_duplicates(list(itertools.chain(
+            vegetarian_result,
+            vegan_result,
+            pescatarian_result,
+            gluten_free_result,
+            dairy_free_result,
+            keto_result,
+            paleo_result
+        )), 0)
 
     except Exception as e:
         print("MYSQL ERROR:")
@@ -87,6 +111,21 @@ def _filter_vegetarian(cursor):
 def _filter_vegan(cursor):
     return _abstract_recipe_filter(cursor, 'filterRecipeVegan')
 
+def _filter_pescatarian(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipePescatarian')
+
+def _filter_dairy_free(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeDairyFree')
+
+def _filter_gluten_free(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeGlutenFree')
+
+def _filter_keto(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipeKeto')
+
+def _filter_paleo(cursor):
+    return _abstract_recipe_filter(cursor, 'filterRecipePaleo')
+
 def post_recipe(conn, cursor, recipe):
     sql_proc = 'createRecipeAutoID'
 
@@ -106,6 +145,11 @@ def post_recipe(conn, cursor, recipe):
     servings = recipe['servings']
     vegetarian = recipe['vegetarian']
     vegan = recipe['vegan']
+    pescatarian = recipe['pescatarian']
+    gluten_free = recipe['gluten_free']
+    dairy_free = recipe['dairy_free']
+    keto = recipe['keto']
+    paleo = recipe['paleo']
     cooking_time = recipe['cooking_time']
 
     try:
@@ -125,6 +169,11 @@ def post_recipe(conn, cursor, recipe):
                 servings,
                 vegetarian,
                 vegan,
+                pescatarian,
+                gluten_free,
+                dairy_free,
+                keto,
+                paleo,
                 cooking_time,
             ))
             conn.commit()
@@ -144,6 +193,11 @@ def post_recipe(conn, cursor, recipe):
                 servings,
                 vegetarian,
                 vegan,
+                pescatarian,
+                gluten_free,
+                dairy_free,
+                keto,
+                paleo,
                 cooking_time,
             ))
             conn.commit()
@@ -299,6 +353,11 @@ def get_recipe_by_id(conn, cursor, recipe_id):
             "servings": 0,
             "vegetarian": False,
             "vegan": False,
+            "pescatarian": False,
+            "gluten_free": False,
+            "dairy_free": False,
+            "keto": False,
+            "paleo": False,
             "cooking_time": 0,
             "steps": [],
             "ingredients": []
@@ -319,33 +378,38 @@ def get_recipe_by_id(conn, cursor, recipe_id):
             res["servings"] = raw_result[0][12]
             res["vegetarian"] = bool(raw_result[0][13])
             res["vegan"] = bool(raw_result[0][14])
-            res["cooking_time"] = raw_result[0][15]
+            res["pescatarian"] = bool(raw_result[0][15])
+            res["gluten_free"] = bool(raw_result[0][16])
+            res["dairy_free"] = bool(raw_result[0][17])
+            res["keto"] = bool(raw_result[0][18])
+            res["paleo"] = bool(raw_result[0][19])
+            res["cooking_time"] = raw_result[0][20]
 
             step_ids = set()
             ingredient_ids = set()
 
             for result in raw_result:
-                if (result[16]) and (result[16] not in step_ids):
+                if (result[21]) and (result[21] not in step_ids):
                     res["steps"].append(
                         {
-                            "step_id": result[16],
-                            "description": result[18],
-                            "time": result[19],
-                            "header_image": result[20],
+                            "step_id": result[21],
+                            "description": result[23],
+                            "time": result[24],
+                            "header_image": result[25],
                         }
                     )
-                    step_ids.add(result[16])
+                    step_ids.add(result[21])
 
-                if (result[21]) and (result[21] not in ingredient_ids):
+                if (result[26]) and (result[26] not in ingredient_ids):
                     res["ingredients"].append(
                         {
-                            "ingredient_id": result[21],
-                            "ingredient_name": result[22],
-                            "category": result[23],
-                            "step_id": result[24]
+                            "ingredient_id": result[26],
+                            "ingredient_name": result[27],
+                            "category": result[28],
+                            "step_id": result[29]
                         }
                     )
-                    ingredient_ids.add(result[21])
+                    ingredient_ids.add(result[26])
             
             res["steps"] = sorted(res["steps"], key=lambda step: step["step_id"])
             res["ingredients"] = sorted(res["ingredients"], key=lambda ingredient: ingredient["ingredient_id"])

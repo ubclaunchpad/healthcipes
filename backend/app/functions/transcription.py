@@ -152,6 +152,11 @@ def get_recipe_from_video_url(video_url):
         "calories": 0,
         "vegetarian": False,
         "vegan": False,
+        "pescatarian": False,
+        "gluten_free": False,
+        "dairy_free": False,
+        "keto": False,
+        "paleo": False,
         "cooking_time": 0,
         "servings": servings
     }

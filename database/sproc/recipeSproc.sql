@@ -169,6 +169,11 @@ INSERT INTO `recipes_table` (
     `servings`,
     `vegetarian`,
     `vegan`,
+    `pescatarian`,
+    `gluten_free`,
+    `dairy_free`,
+    `keto`,
+    `paleo`,
     `cooking_time`
 ) VALUES(
     'Scrambled Eggs',
@@ -184,6 +189,11 @@ INSERT INTO `recipes_table` (
     300,
     1,
     1,
+    0,
+    0,
+    0,
+    0,
+    0,
     0,
     5
 );
@@ -210,6 +220,11 @@ INSERT INTO `recipes_table` (
     `servings`,
     `vegetarian`,
     `vegan`,
+    `pescatarian`,
+    `gluten_free`,
+    `dairy_free`,
+    `keto`,
+    `paleo`,
     `cooking_time`
 ) VALUES(
     'Scrambled Eggs',
@@ -223,6 +238,11 @@ INSERT INTO `recipes_table` (
     NULL,
     1,
     1,
+    0,
+    0,
+    0,
+    0,
+    0,
     0,
     5
 );
@@ -308,6 +328,11 @@ CREATE PROCEDURE `createRecipe` (
     IN `_servings` INT,
     IN `_vegetarian` BOOLEAN,
     IN `_vegan` BOOLEAN,
+    IN `_pescatarian` BOOLEAN,
+    IN `_gluten_free` BOOLEAN,
+    IN `_dairy_free` BOOLEAN,
+    IN `_keto` BOOLEAN,
+    IN `_paleo` BOOLEAN,
     IN `_cooking_time` INT
 )
 BEGIN
@@ -328,6 +353,11 @@ REPLACE INTO `recipes_table` (
     `servings`,
     `vegetarian`,
     `vegan`,
+    `pescatarian`,
+    `gluten_free`,
+    `dairy_free`,
+    `keto`,
+    `paleo`,
     `cooking_time`
 )
 VALUES (
@@ -346,6 +376,11 @@ VALUES (
     `_servings`,
     `_vegetarian`,
     `_vegan`,
+    `_pescatarian`,
+    `_gluten_free`,
+    `_dairy_free`,
+    `_keto`,
+    `_paleo`,
     `_cooking_time`
 );
 
@@ -369,6 +404,11 @@ CREATE PROCEDURE `createRecipeAutoID` (
     IN `_servings` INT,
     IN `_vegetarian` BOOLEAN,
     IN `_vegan` BOOLEAN,
+    IN `_pescatarian` BOOLEAN,
+    IN `_gluten_free` BOOLEAN,
+    IN `_dairy_free` BOOLEAN,
+    IN `_keto` BOOLEAN,
+    IN `_paleo` BOOLEAN,
     IN `_cooking_time` INT
 )
 BEGIN
@@ -388,6 +428,11 @@ INSERT INTO `recipes_table` (
     `servings`,
     `vegetarian`,
     `vegan`,
+    `pescatarian`,
+    `gluten_free`,
+    `dairy_free`,
+    `keto`,
+    `paleo`,
     `cooking_time`
 )
 VALUES (
@@ -405,6 +450,11 @@ VALUES (
     `_servings`,
     `_vegetarian`,
     `_vegan`,
+    `_pescatarian`,
+    `_gluten_free`,
+    `_dairy_free`,
+    `_keto`,
+    `_paleo`,
     `_cooking_time`
 );
 

@@ -19,6 +19,7 @@ import {
   RECIPE_STEP,
 } from '../actions/recipeActions';
 import { GET_FEED } from '../actions/feedActions';
+import { SET_ALERT } from '../actions/globalActions';
 
 function* postRecipeCall(param) {
   try {
@@ -42,6 +43,10 @@ function* postRecipeCall(param) {
     console.log(results);
   } catch (e) {
     console.log('Post Recipe Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -93,6 +98,10 @@ function* postVideoURLCall(param) {
 
   } catch (e) {
     console.log('Post Video URL Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -113,6 +122,10 @@ function* getRecipeCall(param) {
     yield put({type: RECIPE, payload: results.data});
   } catch (e) {
     console.log('Get Recipe Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -133,6 +146,10 @@ function* deleteRecipeCall(param) {
     yield put({type: GET_FEED, user: param.user, startIndex: param.startIndex});
   } catch (e) {
     console.log('Delete Recipe Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -157,6 +174,10 @@ function* putRecipeCall(param) {
     console.log(results);
   } catch (e) {
     console.log('Put Recipe Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -176,6 +197,10 @@ function* getRecipeLikeCall(param) {
     yield put({type: LIKE_RECIPE, payload: results.data});
   } catch (e) {
     console.log('Registering like failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -220,6 +245,10 @@ function* postRecipeURLCall(param) {
     yield put({type: RECIPE_STEP, payload: stepsObj});
   } catch (e) {
     console.log('POST Recipe URL failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -246,6 +275,10 @@ function* postRecipeLikeCall(data) {
     yield put({type: LIKE_RECIPE, payload: results.data});
   } catch (e) {
     console.log('Registering like failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -272,6 +305,10 @@ function* postRecipeViewCall(data) {
     // TODO: This RECIPE action overwrites the actual recipe information data!! Need a new action for this
   } catch (e) {
     console.log('Registering like failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 

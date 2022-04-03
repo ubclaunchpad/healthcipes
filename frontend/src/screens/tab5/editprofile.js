@@ -22,12 +22,14 @@ import {FlatList} from 'react-native-gesture-handler';
 import storage from '@react-native-firebase/storage';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {PUT_USER} from '../../actions/accountActions';
+import { SET_ALERT } from '../../actions/globalActions';
+import Alerts from '../../components/Alerts';
 
 export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
-
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const [firstname, onFirstNameChange] = useState('');
   const [lastname, onLastNameChange] = useState('');
   const [username, onUsernameChange] = useState('');
@@ -51,6 +53,7 @@ export default function EditProfile({navigation}) {
       })
       .catch(e => {
         console.log('No User Image: ' + e);
+        // dispatch({ type: SET_ALERT, alert: true});
       });
   }, [user]);
 
@@ -137,6 +140,7 @@ export default function EditProfile({navigation}) {
   } else {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: color.white}}>
+        {Alerts(alert, "Edit Profile Error")}
         <FlatList
           ListHeaderComponent={
             <View>
@@ -152,6 +156,7 @@ export default function EditProfile({navigation}) {
                   }}
                   onPress={() => {
                     navigation.pop();
+                    dispatch({type: SET_ALERT, alert: false});
                   }}>
                   <Image
                     source={require('../../assets/Back.png')}
@@ -347,6 +352,7 @@ export default function EditProfile({navigation}) {
                 <TouchableOpacity
                   onPress={() => {
                     auth().signOut();
+                    dispatch({type: SET_ALERT, alert: false});
                   }}>
                   <Text
                     style={{

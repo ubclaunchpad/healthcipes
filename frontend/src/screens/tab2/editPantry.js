@@ -20,6 +20,7 @@ import {
   REMOVE_PANTRY_INGREDIENT,
   SEARCH_INGREDIENTS,
 } from '../../actions/pantryActions';
+import Alerts from '../../components/Alerts';
 
 export default function EditPantry({navigation}) {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ export default function EditPantry({navigation}) {
   const [search, setSearch] = useState('');
   const [ingredientIds, setingredientIds] = useState([]);
   const pantry = useSelector(state => state.pantryReducer.pantryReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
   );
@@ -53,6 +55,7 @@ export default function EditPantry({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Alerts(alert, "Pantry Edit Error")}
       <View
         style={{
           flex: 1,

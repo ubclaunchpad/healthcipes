@@ -25,13 +25,15 @@ import {
 import GoButton from '../../components/goButton';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import {SET_LOADING} from '../../actions/globalActions';
+import {SET_ALERT, SET_LOADING} from '../../actions/globalActions';
+import Alerts from '../../components/Alerts';
 
 export default function NewStep({navigation, route}) {
   const {index} = route.params;
   const dispatch = useDispatch();
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const loading = useSelector(state => state.globalReducer.loadingReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const [stepImage, setStepImage] = useState('');
   const [imageURI, setImageURI] = useState('');
   const [step, setStep] = useState('');
@@ -122,6 +124,7 @@ export default function NewStep({navigation, route}) {
             .catch(() => {
               console.log('No Image Update Uploaded');
               dispatch({type: SET_LOADING, loading: false});
+              // dispatch({type: SET_ALERT, alert: true});
             });
         }
       } else {
@@ -149,6 +152,7 @@ export default function NewStep({navigation, route}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Alerts(alert, "Step Error")}
       {Loader(loading, 'fade')}
       {addIngredient && (
         <View
@@ -205,6 +209,7 @@ export default function NewStep({navigation, route}) {
             style={{flex: 1}}
             onPress={() => {
               navigation.pop();
+              dispatch({type: SET_ALERT, alert: false});
             }}>
             <Image
               source={require('../../assets/Back.png')}

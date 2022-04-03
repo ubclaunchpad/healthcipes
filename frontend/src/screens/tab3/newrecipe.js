@@ -31,6 +31,7 @@ import NutritionChips from '../../components/nutritionChips';
 import newrecipeStyle from './newrecipeStyle';
 import {SET_LOADING} from '../../actions/globalActions';
 import Loader from '../../components/Loader';
+import Alerts from '../../components/Alerts';
 
 export default function NewRecipe({navigation, route}) {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ export default function NewRecipe({navigation, route}) {
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const loading = useSelector(state => state.globalReducer.loadingReducer);
   const urlRecipe = useSelector(state => state.recipeReducer.recipeURLReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const [recipeName, setRecipeName] = useState('');
   const [recipeDescription, setRecipeDescription] = useState('');
   const [recipeImage, setRecipeImage] = useState('');
@@ -442,6 +444,7 @@ export default function NewRecipe({navigation, route}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      {Alerts(alert, "New Recipe Error")}
       {Loader(loading, 'fade')}
       {importModal && (
         <View

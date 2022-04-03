@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useMemo} from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
   Text,
   SafeAreaView,
@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
   Dimensions,
-  ImageBackground,
+  ImageBackground
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {useDispatch, useSelector} from 'react-redux';
@@ -18,10 +18,12 @@ import feedStyle from './feedStyle';
 import FilterChips from '../../components/filterChips';
 import GoButton from '../../components/goButton';
 import Loader from '../../components/Loader';
-import {SET_LOADING} from '../../actions/globalActions';
+import { SET_ALERT, SET_LOADING } from '../../actions/globalActions';
+import { GET_NOTIFICATIONS } from '../../actions/profileActions';
+import Alerts from '../../components/Alerts';
 import { Chip } from 'react-native-paper';
 
-export default function Feed({navigation}) {
+export default function Feed({ navigation }) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
@@ -32,6 +34,7 @@ export default function Feed({navigation}) {
     state => state.recipeReducer.forYouFeedReducer,
   );
   const loading = useSelector(state => state.globalReducer.loadingReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const bottomSheetRef = useRef(null);
   const flatListRef = useRef(null);
   const snapPoints = useMemo(() => ['80%'], []);
@@ -47,7 +50,8 @@ export default function Feed({navigation}) {
     navigation.replace('ShoppingStyle');
   } else {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        {Alerts(alert, "Feed Error")}
         {Loader(loading, 'fade')}
         <FlatList
           ref={flatListRef}
@@ -84,6 +88,7 @@ export default function Feed({navigation}) {
                     flexDirection: 'row',
                   }}
                   onPress={() => {
+                    dispatch({type: SET_ALERT, alert: false});
                     navigation.push('Search');
                   }}>
                   <Image
@@ -117,11 +122,11 @@ export default function Feed({navigation}) {
                   contentContainerStyle={{paddingLeft: '5%'}}
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
-                  renderItem={({item}) => {
+                  renderItem={({ item }) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
-                          navigation.push('Recipe', {recipe: item});
+                          navigation.push('Recipe', { recipe: item });
                         }}
                         style={{
                           width: Dimensions.get('screen').width * 0.8,
@@ -130,7 +135,7 @@ export default function Feed({navigation}) {
                           marginRight: 10,
                         }}>
                         <ImageBackground
-                          source={{uri: item.header_image}}
+                          source={{ uri: item.header_image }}
                           resizeMode="cover"
                           borderRadius={20}
                           style={{
@@ -178,13 +183,13 @@ export default function Feed({navigation}) {
             });
           }}
           onEndReachedThreshold={0.2}
-          contentContainerStyle={{paddingBottom: '15%'}}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          renderItem={({item, index}) => {
+          contentContainerStyle={{ paddingBottom: '15%' }}
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          renderItem={({ item, index }) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.push('Recipe', {recipe: item});
+                  navigation.push('Recipe', { recipe: item });
                 }}
                 style={{
                   width: '44%',
@@ -195,7 +200,7 @@ export default function Feed({navigation}) {
                   marginRight: index % 2 === 0 ? 0 : '5%',
                 }}>
                 <ImageBackground
-                  source={{uri: item.header_image}}
+                  source={{ uri: item.header_image }}
                   resizeMode="cover"
                   borderRadius={20}
                   style={{
@@ -232,7 +237,7 @@ export default function Feed({navigation}) {
           enablePanDownToClose={true}
           index={-1}
           snapPoints={snapPoints}>
-          <View style={{flex: 1, paddingHorizontal: '7%'}}>
+          <View style={{ flex: 1, paddingHorizontal: '7%' }}>
             <Text style={feedStyle.filterTitle}>Refine Results</Text>
             <Chip
             key={"Preference"}
@@ -267,7 +272,7 @@ export default function Feed({navigation}) {
             Only Recipes I Have Ingredients For
           </Chip>
             {FilterChips()}
-            <View style={{flex: 2}}>
+            <View style={{ flex: 2 }}>
               {GoButton('Save', () => {
                 dispatch({
                   type: PUT_USER,

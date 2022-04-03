@@ -12,6 +12,7 @@ import {
   REMOVE_RECIPE_INGREDIENT,
   SEARCH_INGREDIENTS,
 } from '../actions/pantryActions';
+import { SET_ALERT } from '../actions/globalActions';
 
 function* addToPantry(param) {
   yield put({
@@ -51,6 +52,10 @@ function* getPantryCall(param) {
     );
   } catch (e) {
     console.log('Get Pantry Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -71,6 +76,10 @@ function* getAllIngredientsCall() {
     yield put({type: INGREDIENTS, payload: results.data});
   } catch (e) {
     console.log('Get All Ingredients Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -91,6 +100,10 @@ function* searchIngredientsCall(param) {
     yield put({type: INGREDIENTS, payload: results.data});
   } catch (e) {
     console.log('Search Ingredients Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -120,6 +133,10 @@ function* addIngredientCall(param) {
     });
   } catch (e) {
     console.log('POST Pantry Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 
@@ -149,6 +166,10 @@ function* removeIngredientCall(param) {
     });
   } catch (e) {
     console.log('DELETE Pantry Failed: ' + e);
+    yield put({
+      type: SET_ALERT,
+      alert: true
+    });
   }
 }
 

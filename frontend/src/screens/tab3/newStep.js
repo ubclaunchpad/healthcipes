@@ -33,6 +33,7 @@ export default function NewStep({navigation, route}) {
   const dispatch = useDispatch();
   const steps = useSelector(state => state.recipeReducer.recipeStepsReducer);
   const loading = useSelector(state => state.globalReducer.loadingReducer);
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const [stepImage, setStepImage] = useState('');
   const [imageURI, setImageURI] = useState('');
   const [step, setStep] = useState('');
@@ -123,7 +124,7 @@ export default function NewStep({navigation, route}) {
             .catch(() => {
               console.log('No Image Update Uploaded');
               dispatch({type: SET_LOADING, loading: false});
-              dispatch({type: SET_ALERT, alert: true});
+              // dispatch({type: SET_ALERT, alert: true});
             });
         }
       } else {
@@ -151,8 +152,8 @@ export default function NewStep({navigation, route}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      {Loader(loading, 'fade')}
       {Alerts(alert, "Step Error")}
+      {Loader(loading, 'fade')}
       {addIngredient && (
         <View
           style={{

@@ -29,7 +29,7 @@ export default function EditProfile({navigation}) {
   const dispatch = useDispatch();
   const onboarded = useSelector(state => state.globalReducer.onboardReducer);
   const user = useSelector(state => state.accountReducer.userInfoReducer);
-
+  const alert = useSelector(state => state.globalReducer.alertReducer);
   const [firstname, onFirstNameChange] = useState('');
   const [lastname, onLastNameChange] = useState('');
   const [username, onUsernameChange] = useState('');
@@ -53,7 +53,7 @@ export default function EditProfile({navigation}) {
       })
       .catch(e => {
         console.log('No User Image: ' + e);
-        dispatch({ type: SET_ALERT, alert: true});
+        // dispatch({ type: SET_ALERT, alert: true});
       });
   }, [user]);
 
@@ -138,7 +138,7 @@ export default function EditProfile({navigation}) {
   } else {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: color.white}}>
-        {Alerts(alert, "No User Image")}
+        {Alerts(alert, "Edit Profile Error")}
         <FlatList
           ListHeaderComponent={
             <View>
@@ -154,7 +154,7 @@ export default function EditProfile({navigation}) {
                   }}
                   onPress={() => {
                     navigation.pop();
-                    dispatch( {type: SET_ALERT, alert: false} );
+                    dispatch({type: SET_ALERT, alert: false});
                   }}>
                   <Image
                     source={require('../../assets/Back.png')}

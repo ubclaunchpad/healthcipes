@@ -17,8 +17,6 @@ import color from '../../styles/color';
 import {GET_USER} from '../../actions/accountActions';
 import {FlatList} from 'react-native-gesture-handler';
 import {GET_LIKEDRECIPES, GET_MYRECIPES} from '../../actions/profileActions';
-import {GET_ALERT, SET_ALERT} from '../../actions/globalActions';
-import Alerts from '../../components/Alerts';
 
 export default function Profile({navigation}) {
   const dispatch = useDispatch();
@@ -30,7 +28,6 @@ export default function Profile({navigation}) {
   const myRecipeFeed = useSelector(
     state => state.profileReducer.myRecipeReducer,
   );
-  const alert = useSelector(state => state.globalReducer.alertReducer);
   const [page, setPage] = useState('Myrecipes');
   const [profPic, setProfPic] = useState('');
   const bottomSheetRef = useRef(null);

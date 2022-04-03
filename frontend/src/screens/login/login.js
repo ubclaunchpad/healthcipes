@@ -65,7 +65,7 @@ export default function Login({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {Alerts(alert, "Login Failed")}
+      {Alerts(alert, "Login Error")}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <TouchableOpacity

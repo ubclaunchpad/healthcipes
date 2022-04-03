@@ -24,8 +24,6 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
-import { SET_ALERT } from '../../actions/globalActions';
-import Alerts from '../../components/Alerts';
 
 export default function Recipe({ navigation, route }) {
   const [recipe, setRecipe] = useState(route.params.recipe);
@@ -80,7 +78,6 @@ export default function Recipe({ navigation, route }) {
       })
       .catch(function (error) {
         console.log(error);
-        dispatch({ type: SET_ALERT, alert: true });
       });
   }
 
@@ -385,7 +382,6 @@ export default function Recipe({ navigation, route }) {
           setEditPrompt(false);
         }
       }}>
-      {Alerts(alert, "Recipe Failed to Load")}
       {editPrompt && (
         <View
           style={{

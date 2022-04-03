@@ -121,7 +121,7 @@ export default function SignUp({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {Alerts(alert, "Signup Failed")}
+      {Alerts(alert, "Signup Error")}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? '' : ''}
         style={{ flex: 1 }}

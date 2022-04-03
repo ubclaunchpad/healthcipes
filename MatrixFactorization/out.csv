@@ -1,0 +1,13 @@
+user_activity_id,user_id,activity_type,date_created,user_follow_id,recipe_like_id,recipe_view_id
+1, abc, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 5, 1
+2, abc, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 4, 1
+3, abc, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 3, 1
+4, def, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 5, 1
+5, def, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 2, 1
+6, def, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 1, 1
+7, ghi, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 1, 1
+8, ghi, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 1, 1
+9, ghi, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 5, 1
+10, jkl, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 6, 1
+11, jkl, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 6, 1
+12, jkl, RECIPE_VIEW, 2022-04-02 09:54:39, NULL, 1, 1

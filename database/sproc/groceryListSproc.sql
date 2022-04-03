@@ -25,11 +25,11 @@ DELIMITER ;
 DELIMITER $$ 
 
 CREATE PROCEDURE `deleteGroceryListItem` (
-    IN `_grocery_list_item_id` INT,
+    IN `_grocery_list_item_id` VARCHAR(255),
     IN `_user_id` VARCHAR(50)
 ) BEGIN 
 DELETE FROM `grocery_list_table`
-WHERE `grocery_list_item_id` = `_grocery_list_item_id` AND `user_id` = `_user_id`;
+WHERE `ingredient_id` = `_grocery_list_item_id` AND `user_id` = `_user_id`;
 
 END $$
 
@@ -53,14 +53,14 @@ DELIMITER ;
 DELIMITER $$ 
 
 CREATE PROCEDURE `updateGroceryListObtainedStatus` (
-    IN `_grocery_list_item_id` INT,
+    IN `_grocery_list_item_id` VARCHAR(255),
     IN `_user_id` VARCHAR(50),
     IN `_obtained` BOOLEAN
 ) BEGIN 
 
 UPDATE `grocery_list_table`
 SET `obtained` = `_obtained`
-WHERE `grocery_list_item_id` = `_grocery_list_item_id` AND `user_id` = `_user_id`;
+WHERE `ingredient_id` = `_grocery_list_item_id` AND `user_id` = `_user_id`;
 
 END $$
 

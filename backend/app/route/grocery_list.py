@@ -53,7 +53,7 @@ async def read_grocery_list(user_id: str):
         }
 
 @router.put("/")
-async def update_grocery_list(grocery_list_item_id: int, user_id: str, obtained_status: bool):
+async def update_grocery_list(grocery_list_item_id: str, user_id: str, obtained_status: bool):
     try:
         conn, cursor = init_conn()
         if user_id:
@@ -77,7 +77,7 @@ async def update_grocery_list(grocery_list_item_id: int, user_id: str, obtained_
         }
 
 @router.delete("/")
-async def delete_grocery_list_item(grocery_list_item_id: int, user_id: str):
+async def delete_grocery_list_item(grocery_list_item_id: str, user_id: str):
     try:
         conn, cursor = init_conn()
         if user_id:

@@ -146,17 +146,12 @@ function* addIngredientCall(param) {
 
 function* removeIngredientCall(param) {
   try {
-    const data = JSON.stringify({
-      user_id: param.payload.userID,
-      ingredient_id: param.payload.item.id,
-    });
     const apiConfig = {
       method: 'delete',
-      url: `${API_URL}/grocery_list`,
+      url: `${API_URL}/grocery_list?user_id=${param.payload.userID}&grocery_list_item_id=${param.payload.item.id}`,
       headers: {
         'Content-Type': 'application/json',
       },
-      data,
     };
 
     const response = yield call(axios, apiConfig);
@@ -215,7 +210,7 @@ export function* addGroceryIngredient() {
   yield takeLatest(ADD_GROCERY_INGREDIENT, addIngredientCall);
 }
 
-export function* removeIngredient() {
+export function* removeGroceryIngredient() {
   yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);
 }
 

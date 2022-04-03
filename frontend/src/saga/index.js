@@ -12,7 +12,8 @@ import {
 import {
   getGroceryList,
   addGroceryIngredient,
-  addRecipeIngredient
+  addRecipeIngredient,
+  removeGroceryIngredient,
 } from './groceryListSaga'; 
 import {
   deleteRecipe,
@@ -53,6 +54,7 @@ export default function* rootSaga() {
     fork(getMyNotifications),
     fork(removeRecipeIngredient),
     fork(addGroceryIngredient), 
-    fork(addRecipeIngredient)
+    fork(addRecipeIngredient),
+    fork(removeGroceryIngredient)
   ]);
 }

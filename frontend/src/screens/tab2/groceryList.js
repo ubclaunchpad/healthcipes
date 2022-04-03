@@ -21,7 +21,6 @@ import {ADD_PANTRY_INGREDIENT} from '../../actions/pantryActions';
 import {
   // ADD_INGREDIENT,
   GET_ALL_INGREDIENTS,
-  REMOVE_INGREDIENT,
   SEARCH_INGREDIENTS,
 } from '../../actions/groceryListActions';
 import Alerts from '../../components/Alerts';

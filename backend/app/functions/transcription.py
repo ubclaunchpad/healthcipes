@@ -1,6 +1,9 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 import spacy
 from pprint import pprint
+import urllib.request
+import json
+import urllib
 import re
 from app.functions.ingredient import parse_ingredients_from_text
 
@@ -138,9 +141,20 @@ def get_recipe_from_video_url(video_url):
     ingredients = get_recipe_ingredients_from_transcript(transcript_text)
     servings = get_servings_from_transcript(transcript_text)
 
+    params = {"format": "json", "url": video_url}
+    url = "https://www.youtube.com/oembed"
+    query_string = urllib.parse.urlencode(params)
+    url = url + "?" + query_string
+
+    with urllib.request.urlopen(url) as response:
+        response_text = response.read()
+        data = json.loads(response_text.decode())
+        # pprint(data)
+        title = data['title']
+
     recipe = {
         "recipe_id": "",
-        "name": "",
+        "name": title,
         "recipe_description": "",
         "user_id": "",
         "creator_username": "",

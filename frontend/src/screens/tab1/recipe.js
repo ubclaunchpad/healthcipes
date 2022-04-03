@@ -320,6 +320,41 @@ export default function Recipe({navigation, route}) {
     return (
       <BottomSheetFlatList
         contentContainerStyle={{paddingTop: 20}}
+        ListHeaderComponent={() => {
+          return(
+            <TouchableOpacity
+              style={{
+                backgroundColor: color.appPrimary,
+                width: '80%',
+                alignSelf: 'center',
+                height: 50,
+                borderRadius: 29,
+                marginBottom: 20,
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                ingredients.forEach(ingredient => {
+                  dispatch({
+                    type: ADD_INGREDIENT,
+                    payload: {
+                      userID: auth().currentUser.uid,
+                      item: ingredient,
+                    },
+                  });
+                });
+              }}>
+              <Text
+                style={{
+                  color: color.white,
+                  alignSelf: 'center',
+                  fontSize: 16,
+                  fontWeight: '700',
+                }}>
+                {"Add to Grocery List"}
+              </Text>
+            </TouchableOpacity>
+          );
+        }}
         data={ingredients}
         keyExtractor={item => item.ingredient_id}
         renderItem={({item}) => {
@@ -327,7 +362,7 @@ export default function Recipe({navigation, route}) {
             <View
               style={{
                 flexDirection: 'row',
-                marginBottom: 10,
+                marginBotton: 10,
                 alignItems: 'center',
               }}>
               <Button
@@ -358,7 +393,7 @@ export default function Recipe({navigation, route}) {
           );
         }}
       />
-    );
+      );
   }
 
   function stepTab() {

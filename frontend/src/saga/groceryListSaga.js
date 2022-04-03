@@ -11,6 +11,7 @@ import {
   GROCERY_ADD,
   GROCERY_REMOVE,
   INGREDIENTS,
+  ADD_RECIPE_INGREDIENT,
 } from '../actions/groceryListActions';
 import { SET_ALERT } from '../actions/globalActions';
 
@@ -185,6 +186,27 @@ function* removeIngredientCall(param) {
   }
 }
 
+function* addRecipeIngredientCall(param) {
+  try {
+    yield all(
+      param.payload.ingredients.map(item => {
+        return addIngredientCall({
+          payload: {
+            userID: param.payload.userID,
+            item: {
+              category: item.category,
+              name: item.ingredient_name,
+              id: item.ingredient_id,
+            },
+          },
+        });
+      }),
+    );
+  } catch (e) {
+    console.log('ADD All Recipe Ingredient Failed: ' + e);
+  }
+}
+
 export function* getGroceryList() {
   yield takeLatest(GET_GROCERY, getGroceryCall);
 }
@@ -203,4 +225,8 @@ export function* addIngredient() {
 
 export function* removeIngredient() {
   yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);
+}
+
+export function* addRecipeIngredient() {
+  yield takeLatest(ADD_RECIPE_INGREDIENT, addRecipeIngredientCall);
 }

@@ -25,7 +25,7 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
-import {ADD_INGREDIENT} from '../../actions/groceryListActions';
+import {ADD_INGREDIENT, ADD_RECIPE_INGREDIENT} from '../../actions/groceryListActions';
 import GoButton from '../../components/goButton';
 import {REMOVE_PANTRY_INGREDIENT, REMOVE_RECIPE_INGREDIENT} from '../../actions/pantryActions';
 
@@ -331,14 +331,12 @@ export default function Recipe({ navigation, route }) {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                ingredients.forEach(ingredient => {
-                  dispatch({
-                    type: ADD_INGREDIENT,
-                    payload: {
-                      userID: auth().currentUser.uid,
-                      item: ingredient,
-                    },
-                  });
+                dispatch({
+                  type: ADD_RECIPE_INGREDIENT,
+                  payload: {
+                    userID: auth().currentUser.uid,
+                    ingredients,
+                  },
                 });
               }}>
               <Text
@@ -360,7 +358,7 @@ export default function Recipe({ navigation, route }) {
             <View
               style={{
                 flexDirection: 'row',
-                marginBotton: 10,
+                paddingBottom: 10,
                 alignItems: 'center',
               }}>
               <Image

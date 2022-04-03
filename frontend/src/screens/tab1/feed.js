@@ -237,7 +237,7 @@ export default function Feed({ navigation }) {
           enablePanDownToClose={true}
           index={-1}
           snapPoints={snapPoints}>
-          <View style={{ flex: 1, paddingHorizontal: '7%' }}>
+          <View style={{flex: 1, paddingHorizontal: '7%', alignItems: 'flex-start'}}>
             <Text style={feedStyle.filterTitle}>Refine Results</Text>
             <Chip
             key={"Preference"}
@@ -254,6 +254,7 @@ export default function Feed({ navigation }) {
                 marginRight: 10,
                 marginBottom: 15,
                 borderRadius: 50,
+                height: 40,
               },
               {
                 backgroundColor: !user.recipe_driven ? color.appPrimary : null,
@@ -272,7 +273,7 @@ export default function Feed({ navigation }) {
             Only Recipes I Have Ingredients For
           </Chip>
             {FilterChips()}
-            <View style={{ flex: 2 }}>
+            <View style={{flex: 3, width: '100%'}}>
               {GoButton('Save', () => {
                 dispatch({
                   type: PUT_USER,

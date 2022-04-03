@@ -68,7 +68,6 @@ function* getGroceryCall(param) {
       alert: true
     });
     }
-  }
 }
 
 function* getAllGroceriesCall() {

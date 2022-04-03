@@ -12,8 +12,7 @@ import {
 import {
   getGroceryList,
   addGroceryIngredient,
-  addRecipeIngredient,
-  getGroceryList
+  addRecipeIngredient
 } from './groceryListSaga'; 
 import {
   deleteRecipe,

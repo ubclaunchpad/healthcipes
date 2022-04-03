@@ -361,20 +361,6 @@ export default function Recipe({ navigation, route }) {
                 paddingBottom: 10,
                 alignItems: 'center',
               }}>
-              <Button
-                title="Add to Grocery List"
-                onPress={() => {
-                  console.log('Add to grocery list button pressed');
-                  ingredients.forEach(ingredient => {
-                    dispatch({
-                      type: ADD_GROCERY_INGREDIENT,
-                      payload: {
-                        userID: auth().currentUser.uid,
-                        item: ingredient,
-                      },
-                    });
-                  });
-                }}></Button>
               <Image
                 source={require('../../assets/Plus.png')}
                 style={{

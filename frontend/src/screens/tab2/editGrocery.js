@@ -27,17 +27,19 @@ export default function EditGrocery({navigation}) {
   const [addState, setAddState] = useState(true);
   const [search, setSearch] = useState('');
   const [ingredientIds, setingredientIds] = useState([]);
-  const groceryList = useSelector(state => state.groceryListReducer.groceryListReducer);
+  const groceryList = useSelector(
+    state => state.groceryListReducer.groceryListReducer,
+  );
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
   );
-  
+
   useEffect(() => {
     dispatch({type: GET_ALL_INGREDIENTS});
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("THIS IS THE GROCERY LIST ---->", groceryList[0].data[1].id); 
+    console.log('THIS IS THE GROCERY LIST ---->', groceryList[0].data[1].id);
     const groceryIds = groceryList.map(groceryItem => {
       const data = groceryItem.data;
       return data.map(ingredient => {
@@ -60,14 +62,12 @@ export default function EditGrocery({navigation}) {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-        }}
-      >
+        }}>
         <TouchableOpacity
           style={{flex: 1, marginLeft: 20}}
           onPress={() => {
             navigation.pop();
-          }}
-        >
+          }}>
           <Image
             source={require('../../assets/Back.png')}
             style={{
@@ -100,7 +100,7 @@ export default function EditGrocery({navigation}) {
           <FlatList
             style={{paddingHorizontal: '5%'}}
             data={ingredients}
-            ListHeaderComponent={ 
+            ListHeaderComponent={
               <View
                 style={{
                   backgroundColor: color.lightGray,
@@ -112,8 +112,7 @@ export default function EditGrocery({navigation}) {
                   alignItems: 'center',
                   alignSelf: 'center',
                   flexDirection: 'row',
-                }}
-              >
+                }}>
                 <Image
                   source={require('../../assets/Search.png')}
                   style={{
@@ -143,7 +142,6 @@ export default function EditGrocery({navigation}) {
                 />
               </View>
             }
-            
             contentContainerStyle={{paddingBottom: '30%'}}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => {
@@ -158,31 +156,28 @@ export default function EditGrocery({navigation}) {
               );
             }}
             renderItem={({item}) => {
-                // console.log("THIS IS AN ITEM ----> ", item); 
+              // console.log("THIS IS AN ITEM ----> ", item);
               return (
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     flex: 1,
-                  }}
-                >
+                  }}>
                   <Text style={{fontSize: 18}}>{item[1]}</Text>
                   <TouchableOpacity
                     onPress={() => {
-                        console.log("Dispatching", item)
+                      console.log('Dispatching', item);
                       dispatch({
-                        type:ADD_GROCERY_INGREDIENT ,
+                        type: ADD_GROCERY_INGREDIENT,
                         payload: {userID: auth().currentUser.uid, item: item},
                       });
-                      console.log(""); 
 
-                    //   dispatch({
-                    //     type: REMOVE_PANTRY_INGREDIENT,
-                    //     payload: {userID: auth().currentUser.uid, item},
-                    //   });
-                    }}
-                  >
+                      //   dispatch({
+                      //     type: REMOVE_PANTRY_INGREDIENT,
+                      //     payload: {userID: auth().currentUser.uid, item},
+                      //   });
+                    }}>
                     {!itemInPantry(item) && (
                       <Image
                         source={require('../../assets/Plus.png')}
@@ -240,8 +235,7 @@ export default function EditGrocery({navigation}) {
                 }}
                 onPress={() => {
                   navigation.push('Search');
-                }}
-              >
+                }}>
                 <Image
                   source={require('../../assets/Search.png')}
                   style={{
@@ -267,8 +261,7 @@ export default function EditGrocery({navigation}) {
                           type: REMOVE_INGREDIENT,
                           payload: {userID: auth().currentUser.uid, item},
                         });
-                      }}
-                    >
+                      }}>
                       <Image
                         source={require('../../assets/X.png')}
                         style={{
@@ -279,15 +272,13 @@ export default function EditGrocery({navigation}) {
                         }}
                       />
                     </TouchableOpacity>,
-                  ]}
-                >
+                  ]}>
                   <Text
                     style={{
                       fontSize: 18,
                       marginVertical: 20,
                       marginLeft: 10,
-                    }}
-                  >
+                    }}>
                     {item.name}
                   </Text>
                 </Swipeable>

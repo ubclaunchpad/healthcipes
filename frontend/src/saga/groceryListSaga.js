@@ -1,5 +1,4 @@
-
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import {takeLatest, call, put, all} from 'redux-saga/effects';
 import {API_URL} from '@env';
 import axios from 'axios';
 import {
@@ -12,78 +11,61 @@ import {
   GROCERY_REMOVE,
   INGREDIENTS,
   ADD_RECIPE_INGREDIENT,
+  ADD_GROCERY_INGREDIENT,
 } from '../actions/groceryListActions';
-import { SET_ALERT } from '../actions/globalActions';
+import {SET_ALERT} from '../actions/globalActions';
 function* addToGrocery(param) {
   yield put({
     type: GROCERY_ADD,
-    payload: { category: param.category, name: param.name, id: param.id },
+    payload: {category: param.category, name: param.name, id: param.id},
   });
 }
 
 function* deleteFromGroceryList(param) {
   yield put({
     type: GROCERY_REMOVE,
-    payload: { category: param.category, name: param.name, id: param.id },
+    payload: {category: param.category, name: param.name, id: param.id},
   });
 }
 
-// Getting the Grocery List: 
-// Input: User ID 
-// Output: Grocery List 
+// Getting the Grocery List:
+// Input: User ID
+// Output: Grocery List
 function* getGroceryCall(param) {
-    try {
-      const apiConfig = {
-        method: 'get',
-        url: `${API_URL}/grocery_list?user_id=${param.userID}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-  
-      const response = yield call(axios, apiConfig);
-      const results = response.data;
-      console.log('[INFO]: GETTING GROCERY API:');
-      // console.log(results); 
-      // undefined here, not sure why I am getting an undefined here for some reason.; 
-      // console.log("grocery List here ----> ", results.data.grocery_list[1]); 
-      yield all(
-        // Failure here; 
-        results.data.grocery_list.map(item => {
-          const category = item.catergory;
-          const name = item.name;
-          const id = item.ingredient_id;
-          // console.log("Catergory of the item --> ", category ); 
-          // console.log("name of the item --> ", name ); 
-          // console.log("ID of the item --> ", id );
-          return call(addToGrocery, {category, name, id});
-         
-        }),
-      );
-      
-    } catch (e) {
-      console.log('Get Grocery Failed: ' + e);
-      yield put({
+  try {
+    const apiConfig = {
+      method: 'get',
+      url: `${API_URL}/grocery_list?user_id=${param.userID}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = yield call(axios, apiConfig);
+    const results = response.data;
+    console.log('[INFO]: GETTING GROCERY API:');
+    // console.log(results);
+    // undefined here, not sure why I am getting an undefined here for some reason.;
+    // console.log("grocery List here ----> ", results.data.grocery_list[1]);
+    yield all(
+      // Failure here;
+      results.data.grocery_list.map(item => {
+        const category = item.catergory;
+        const name = item.name;
+        const id = item.ingredient_id;
+        // console.log("Catergory of the item --> ", category );
+        // console.log("name of the item --> ", name );
+        // console.log("ID of the item --> ", id );
+        return call(addToGrocery, {category, name, id});
+      }),
+    );
+  } catch (e) {
+    console.log('Get Grocery Failed: ' + e);
+    yield put({
       type: SET_ALERT,
-      alert: true
+      alert: true,
     });
-    }
   }
-
-  function* getAllGroceriesCall() {
-    console.log("HIT THE GET ALL GROCERIES CALL INSTEAD"); 
-    try {
-      const apiConfig = {
-        method: 'get',
-        url: `${API_URL}/grocery_list/ingredients`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-
-      const response = yield call(axios, apiConfig);
-      const results = response.data;
-      console.log('[INFO]: GET ALL INGREDIENTS API');
 }
 
 function* getAllGroceriesCall() {
@@ -100,16 +82,15 @@ function* getAllGroceriesCall() {
     const results = response.data;
     console.log('[INFO]: GET ALL INGREDIENTS API');
 
-    yield put({ type: INGREDIENTS, payload: results.data });
+    yield put({type: INGREDIENTS, payload: results.data});
   } catch (e) {
     console.log('Get All Ingredients Failed: ' + e);
     yield put({
       type: SET_ALERT,
-      alert: true
+      alert: true,
     });
   }
 }
-
 
 function* searchIngredientsCall(param) {
   try {
@@ -125,55 +106,24 @@ function* searchIngredientsCall(param) {
     const results = response.data;
     console.log('[INFO]: SEARCH INGREDIENTS API:');
 
-    yield put({ type: INGREDIENTS, payload: results.data });
+    yield put({type: INGREDIENTS, payload: results.data});
   } catch (e) {
     console.log('Search Ingredients Failed: ' + e);
     yield put({
       type: SET_ALERT,
-      alert: true
+      alert: true,
     });
   }
 }
 
-//   function* addIngredientCall(param) {
-//     console.log("THIS IS THE PARAM ---->", param); 
-//     console.log("THIS IS THE PARAM.payload.item[0] ---->", param.payload.item[0]); 
-//     array = []; 
-//     array.push(param.payload.item[0]); 
-//     array2=[]
-//     array2.push(array);
-//     console.log("THIS IS THE ARRAY --->", array2); 
-//     try {
-//       const data = JSON.stringify({
-//         user_id: param.payload.userID,
-//         grocery_list_input: array2,
-//       });
-//       const apiConfig = {
-//         method: 'post',
-//         url: `${API_URL}/grocery_list`,
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         data,
-//       }
-
-//       const response = yield call(axios, apiConfig);
-//       const results = response.data;
-//       console.log('[INFO]: ADD TO GROCERY LIST API: ' + results.status_code);
-
 function* addIngredientCall(param) {
   try {
-    const data = JSON.stringify({
-      user_id: param.payload.userID,
-      ingredient_id: param.payload.item[0],
-    });
     const apiConfig = {
       method: 'post',
-      url: `${API_URL}/grocery_list`,
+      url: `${API_URL}/grocery_list?user_id=${param.payload.userID}&grocery_list_input=${param.payload.item[0]}`,
       headers: {
         'Content-Type': 'application/json',
       },
-      data,
     };
 
     const response = yield call(axios, apiConfig);
@@ -189,7 +139,7 @@ function* addIngredientCall(param) {
     console.log('POST Grocery List Failed ' + e);
     yield put({
       type: SET_ALERT,
-      alert: true
+      alert: true,
     });
   }
 }
@@ -222,7 +172,7 @@ function* removeIngredientCall(param) {
     console.log('DELETE Grocery List Failed: ' + e);
     yield put({
       type: SET_ALERT,
-      alert: true
+      alert: true,
     });
   }
 }
@@ -231,14 +181,11 @@ function* addRecipeIngredientCall(param) {
   try {
     yield all(
       param.payload.ingredients.map(item => {
+        console.log(item);
         return addIngredientCall({
           payload: {
             userID: param.payload.userID,
-            item: {
-              category: item.category,
-              name: item.ingredient_name,
-              id: item.ingredient_id,
-            },
+            item: [item.ingredient_id, item.ingredient_name, item.category],
           },
         });
       }),
@@ -264,9 +211,9 @@ export function* addIngredient() {
   yield takeLatest(ADD_INGREDIENT, addIngredientCall);
 }
 
-  export function* addGroceryIngredient() {
-    yield takeLatest(ADD_GROCERY_INGREDIENT, addIngredientCall);
-  }
+export function* addGroceryIngredient() {
+  yield takeLatest(ADD_GROCERY_INGREDIENT, addIngredientCall);
+}
 
 export function* removeIngredient() {
   yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);

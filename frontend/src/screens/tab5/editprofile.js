@@ -86,6 +86,8 @@ export default function EditProfile({navigation}) {
               .catch(error => {
                 console.log(error);
               });
+            Alert.alert('Profile Changed!');
+            navigation.pop();
           } else {
             console.log('Invalid Email');
             Alert.alert(
@@ -203,6 +205,7 @@ export default function EditProfile({navigation}) {
               <View>
                 <Text style={profileStyle.inputTitle}>First Name</Text>
                 <TextInput
+                  ref={firstnameInput}
                   textContentType="firstname"
                   placeholder=""
                   autoCorrect={false}
@@ -211,11 +214,12 @@ export default function EditProfile({navigation}) {
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
                   onSubmitEditing={() => {
-                    firstnameInput.current.focus();
+                    lastnameInput.current.focus();
                   }}
                 />
                 <Text style={profileStyle.inputTitle}>Last Name</Text>
                 <TextInput
+                  ref={lastnameInput}
                   textContentType="lastname"
                   placeholder=""
                   autoCorrect={false}
@@ -224,11 +228,12 @@ export default function EditProfile({navigation}) {
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
                   onSubmitEditing={() => {
-                    lastnameInput.current.focus();
+                    usernameInput.current.focus();
                   }}
                 />
                 <Text style={profileStyle.inputTitle}>Username</Text>
                 <TextInput
+                  ref={usernameInput}
                   textContentType="username"
                   placeholder=""
                   autoCorrect={false}
@@ -237,11 +242,12 @@ export default function EditProfile({navigation}) {
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
                   onSubmitEditing={() => {
-                    usernameInput.current.focus();
+                    emailInput.current.focus();
                   }}
                 />
                 <Text style={profileStyle.inputTitle}>Email</Text>
                 <TextInput
+                  ref={emailInput}
                   textContentType="email"
                   placeholder=""
                   autoCorrect={false}
@@ -249,9 +255,6 @@ export default function EditProfile({navigation}) {
                   value={email}
                   style={profileStyle.textInput}
                   placeholderTextColor={color.gray}
-                  onSubmitEditing={() => {
-                    emailInput.current.focus();
-                  }}
                 />
               </View>
               <View
@@ -299,6 +302,41 @@ export default function EditProfile({navigation}) {
                       </Chip>
                     );
                   })}
+                  <Chip
+                    key={'Preference'}
+                    onPress={() => {
+                      dispatch({
+                        type: PUT_USER,
+                        payload: {...user, recipe_driven: !user.recipe_driven},
+                      });
+                    }}
+                    selectedColor={color.appPrimary}
+                    style={[
+                      {
+                        marginRight: 10,
+                        marginBottom: 15,
+                        borderRadius: 50,
+                      },
+                      {
+                        backgroundColor: !user.recipe_driven
+                          ? color.appPrimary
+                          : null,
+                      },
+                    ]}
+                    textStyle={[
+                      {
+                        fontSize: 18,
+                        paddingHorizontal: 8,
+                        paddingVertical: 5,
+                      },
+                      {
+                        color: !user.recipe_driven
+                          ? color.white
+                          : color.textGray,
+                      },
+                    ]}>
+                    Ingredient Driven
+                  </Chip>
                 </View>
               </View>
               <View
@@ -333,7 +371,7 @@ export default function EditProfile({navigation}) {
                     marginVertical: 10,
                     fontWeight: 'bold',
                     fontSize: 15,
-                    textAlign: 'center'
+                    textAlign: 'center',
                   }}
                   onPress={() => {
                     Linking.openURL('https://hungrii.com/privacy/');

@@ -32,39 +32,42 @@ function* deleteFromGroceryList(param) {
 // Input: User ID 
 // Output: Grocery List 
 function* getGroceryCall(param) {
-  try {
-    const apiConfig = {
-      method: 'get',
-      url: `${API_URL}/grocery_list?user_id=${param.userID}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = yield call(axios, apiConfig);
-    const results = response.data;
-    console.log('[INFO]: GETTING GROCERY API:');
-    console.log(results);
-    console.log(results[1]);
-    yield all(
-      results.data.map(item => {
-        const category = item[2];
-        const name = item[1];
-        const id = item[0];
-        console.log("Catergory of the item --> ", category);
-        console.log("name of the item --> ", name);
-        console.log("ID of the item --> ", id);
-        return call(addToGrocery, { category, name, id });
-
-      }),
-    );
-
-  } catch (e) {
-    console.log('Get Grocery Failed: ' + e);
-    yield put({
+    try {
+      const apiConfig = {
+        method: 'get',
+        url: `${API_URL}/grocery_list?user_id=${param.userID}`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+  
+      const response = yield call(axios, apiConfig);
+      const results = response.data;
+      console.log('[INFO]: GETTING GROCERY API:');
+      // console.log(results); 
+      // undefined here, not sure why I am getting an undefined here for some reason.; 
+      // console.log("grocery List here ----> ", results.data.grocery_list[1]); 
+      yield all(
+        // Failure here; 
+        results.data.grocery_list.map(item => {
+          const category = item.catergory;
+          const name = item.name;
+          const id = item.ingredient_id;
+          // console.log("Catergory of the item --> ", category ); 
+          // console.log("name of the item --> ", name ); 
+          // console.log("ID of the item --> ", id );
+          return call(addToGrocery, {category, name, id});
+         
+        }),
+      );
+      
+    } catch (e) {
+      console.log('Get Grocery Failed: ' + e);
+      yield put({
       type: SET_ALERT,
       alert: true
     });
+    }
   }
 }
 

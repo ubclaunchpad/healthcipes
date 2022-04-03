@@ -5,6 +5,7 @@ from app.indexer.recipes import get_recipe_by_id
 from app.indexer.tools import init_conn
 from app.indexer.notification import get_user_notification_token
 import logging
+import json
 
 endpoint = "https://fcm.googleapis.com/fcm/send"
 # TODO: move to env file
@@ -26,7 +27,7 @@ def send_notification(token, title, body, priority="high"):
         "to": token,
         "priority": priority
     }
-    requests.post(endpoint, data=body, headers=headers)
+    requests.post(endpoint, data=json.dumps(body), headers=headers)
 
 def send_user_activity_notification(user_activity_fk_obj):
     for key in user_activity_fk_obj:

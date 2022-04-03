@@ -2,13 +2,14 @@ import {takeLatest, call, put, all} from 'redux-saga/effects';
 import axios from 'axios';
 import {API_URL} from '@env';
 import {
-  ADD_INGREDIENT,
+  ADD_PANTRY_INGREDIENT,
   GET_ALL_INGREDIENTS,
   GET_PANTRY,
   INGREDIENTS,
   PANTRY_ADD,
   PANTRY_REMOVE,
-  REMOVE_INGREDIENT,
+  REMOVE_PANTRY_INGREDIENT,
+  REMOVE_RECIPE_INGREDIENT,
   SEARCH_INGREDIENTS,
 } from '../actions/pantryActions';
 import { SET_ALERT } from '../actions/globalActions';
@@ -172,6 +173,27 @@ function* removeIngredientCall(param) {
   }
 }
 
+function* removeRecipeIngredientCall(param) {
+  try {
+    yield all(
+      param.payload.ingredients.map(item => {
+        return removeIngredientCall({
+          payload: {
+            userID: param.payload.userID,
+            item: {
+              category: item.category,
+              name: item.ingredient_name,
+              id: item.ingredient_id,
+            },
+          },
+        });
+      }),
+    );
+  } catch (e) {
+    console.log('DELETE Recipe Pantry Failed: ' + e);
+  }
+}
+
 export function* getPantry() {
   yield takeLatest(GET_PANTRY, getPantryCall);
 }
@@ -185,9 +207,13 @@ export function* searchIngredients() {
 }
 
 export function* addIngredient() {
-  yield takeLatest(ADD_INGREDIENT, addIngredientCall);
+  yield takeLatest(ADD_PANTRY_INGREDIENT, addIngredientCall);
 }
 
 export function* removeIngredient() {
-  yield takeLatest(REMOVE_INGREDIENT, removeIngredientCall);
+  yield takeLatest(REMOVE_PANTRY_INGREDIENT, removeIngredientCall);
+}
+
+export function* removeRecipeIngredient() {
+  yield takeLatest(REMOVE_RECIPE_INGREDIENT, removeRecipeIngredientCall);
 }

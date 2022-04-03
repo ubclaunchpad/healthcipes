@@ -10,9 +10,9 @@ import {
   ImageBackground
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { useDispatch, useSelector } from 'react-redux';
-import { PUT_USER } from '../../actions/accountActions';
-import { GET_FEED } from '../../actions/feedActions';
+import {useDispatch, useSelector} from 'react-redux';
+import {PUT_USER} from '../../actions/accountActions';
+import {GET_FEED, REPLACE_FEED} from '../../actions/feedActions';
 import color from '../../styles/color';
 import feedStyle from './feedStyle';
 import FilterChips from '../../components/filterChips';
@@ -21,6 +21,7 @@ import Loader from '../../components/Loader';
 import { SET_ALERT, SET_LOADING } from '../../actions/globalActions';
 import { GET_NOTIFICATIONS } from '../../actions/profileActions';
 import Alerts from '../../components/Alerts';
+import { Chip } from 'react-native-paper';
 
 export default function Feed({ navigation }) {
   const dispatch = useDispatch();
@@ -39,10 +40,9 @@ export default function Feed({ navigation }) {
   const snapPoints = useMemo(() => ['80%'], []);
 
   useEffect(() => {
-    if (user.user_id !== '') {
-      dispatch({ type: SET_LOADING, loading: true });
-      dispatch({ type: GET_FEED, user: user, startIndex: forYouFeed.length });
-      dispatch({ type: GET_NOTIFICATIONS, user });
+    if (user && user.user_id !== '') {
+      dispatch({type: SET_LOADING, loading: true});
+      dispatch({type: GET_FEED, user: user, startIndex: forYouFeed.length});
     }
   }, [user]);
 
@@ -118,8 +118,8 @@ export default function Feed({ navigation }) {
                 <Text style={feedStyle.feedTitle}>Featured</Text>
                 <FlatList
                   data={featuredFeed}
-                  style={{ flex: 1, marginBottom: 30 }}
-                  contentContainerStyle={{ paddingLeft: '5%' }}
+                  style={{marginBottom: 30}}
+                  contentContainerStyle={{paddingLeft: '5%'}}
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
                   renderItem={({ item }) => {
@@ -239,6 +239,38 @@ export default function Feed({ navigation }) {
           snapPoints={snapPoints}>
           <View style={{ flex: 1, paddingHorizontal: '7%' }}>
             <Text style={feedStyle.filterTitle}>Refine Results</Text>
+            <Chip
+            key={"Preference"}
+            onPress={() => {
+              dispatch({type: REPLACE_FEED, payload: []});
+              dispatch({
+                type: PUT_USER,
+                payload: {...user, recipe_driven: !user.recipe_driven},
+              });
+            }}
+            selectedColor={color.appPrimary}
+            style={[
+              {
+                marginRight: 10,
+                marginBottom: 15,
+                borderRadius: 50,
+              },
+              {
+                backgroundColor: !user.recipe_driven ? color.appPrimary : null,
+              },
+            ]}
+            textStyle={[
+              {
+                fontSize: 18,
+                paddingHorizontal: 8,
+                paddingVertical: 5,
+              },
+              {
+                color: !user.recipe_driven ? color.white : color.textGray,
+              },
+            ]}>
+            Only Recipes I Have Ingredients For
+          </Chip>
             {FilterChips()}
             <View style={{ flex: 2 }}>
               {GoButton('Save', () => {

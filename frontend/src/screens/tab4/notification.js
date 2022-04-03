@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Text, View, SafeAreaView, SectionList, Image} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import { GET_NOTIFICATIONS } from '../../actions/profileActions';
 import color from '../../styles/color';
 
 export default function Notification({navigation}) {
+  const dispatch = useDispatch();
   const notifications = useSelector(
     state => state.profileReducer.myNotificationReducer,
   );
+  const user = useSelector(state => state.accountReducer.userInfoReducer);
 
-  return (
+  const numNotification = notifications.length;
+
+  useEffect(() => {
+    if (user && user.user_id !== '') {
+      dispatch({type: GET_NOTIFICATIONS, user});
+    }
+  }, [user]);
+
+  return numNotification ? (
     <SafeAreaView style={{flex: 1}}>
       <SectionList
         sections={notifications}
@@ -27,11 +38,13 @@ export default function Notification({navigation}) {
                 paddingVertical: 10,
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-              }}>
+              }}
+            >
               <View
                 style={{
                   flex: 1,
-                }}>
+                }}
+              >
                 <Image
                   source={item.img}
                   style={{
@@ -44,9 +57,14 @@ export default function Notification({navigation}) {
               <View style={{flex: 3}}>
                 <Text style={{fontSize: 16}}>
                   {item.name + ' liked your recipe '}
-                  <Text style={{fontWeight: 'bold', color: color.appPrimary}} onPress={() => {
-                    navigation.push('Recipe', {recipe_id: item.recipeid});
-                  }}>{item.recipe}</Text>
+                  <Text
+                    style={{fontWeight: 'bold', color: color.appPrimary}}
+                    onPress={() => {
+                      navigation.push('Recipe', {recipe_id: item.recipeid});
+                    }}
+                  >
+                    {item.recipe}
+                  </Text>
                 </Text>
               </View>
             </View>
@@ -59,5 +77,11 @@ export default function Notification({navigation}) {
         )}
       />
     </SafeAreaView>
+  ) : (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{fontSize: 20, fontWeight: 'bold', marginTop: 20}}>
+        No Notifications Yet!
+      </Text>
+    </View>
   );
 }

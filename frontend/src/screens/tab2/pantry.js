@@ -15,7 +15,6 @@ import {GET_PANTRY} from '../../actions/pantryActions';
 import Alerts from '../../components/Alerts';
 import { SET_ALERT } from '../../actions/globalActions';
 
-
 export default function Pantry({navigation}) {
   const dispatch = useDispatch();
   const pantry = useSelector(state => state.pantryReducer.pantryReducer);
@@ -28,57 +27,52 @@ export default function Pantry({navigation}) {
   return (
     <SafeAreaView style={{flex: 1}}>
       {Alerts(alert, "Pantry Error")}
-       <View
-                disabled={true}
-                style={{
-                    borderColor: color.black,
-                    flexDirection: "row", 
-                    justifyContent: "space-around", 
-                    flex: 1,
-                    width: 250,
-                    alignSelf: 'center',
-                    marginBottom: 25,
-                    marginTop: 20, 
-                }}>
-                <View
-                    style={{
-                        borderBottomWidth: 2,
-                        borderColor: color.black,
+      <View
+        disabled={true}
+        style={{
+          borderColor: color.black,
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flex: 1,
+          width: 250,
+          alignSelf: 'center',
+          marginBottom: 25,
+          marginTop: 20,
+        }}>
+        <View
+          style={{
+            borderBottomWidth: 2,
+            borderColor: color.black,
+          }}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 24,
+              paddingVertical: 10,
+              // textAlign: 'flex-start',
+              marginRight: 0,
+              color: color.black,
+              // textDecorationLine: "underline"
+            }}>
+            Pantry
+          </Text>
+        </View>
 
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontWeight: 'bold',
-                            fontSize: 24,
-                            paddingVertical: 10,
-                            // textAlign: 'flex-start',
-                            marginRight: 0,
-                            color: color.black,
-                            // textDecorationLine: "underline"
-
-                        }}>
-                        Pantry
-                    </Text>
-                </View>
-
-
-                <Text
-                    onPress ={()=>{
-                        dispatch({type: SET_ALERT, alert: false});
-                        navigation.replace("Grocery")
-                    }}
-                    style={{
-                        fontWeight: 'bold',
-                        fontSize: 24,
-                        paddingVertical: 10,
-                        // textAlign: 'flex-end',
-                        marginLeft: 75, 
-                        color: color.black,
-                    }}>
-                    Grocery List
-                </Text>
-            </View>
+        <Text
+          onPress={() => {
+            navigation.replace('Grocery');
+          }}
+          style={{
+            fontWeight: 'bold',
+            fontSize: 24,
+            paddingVertical: 10,
+            // textAlign: 'flex-end',
+            marginLeft: 75,
+            color: color.black,
+          }}>
+          Grocery List
+        </Text>
+      </View>
 
       <View style={{flex: 1.5, justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity

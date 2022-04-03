@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   Alert,
+  Button,
 } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import moment from 'moment';
@@ -24,6 +25,9 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
+import {ADD_INGREDIENT} from '../../actions/groceryListActions';
+import GoButton from '../../components/goButton';
+import {REMOVE_PANTRY_INGREDIENT, REMOVE_RECIPE_INGREDIENT} from '../../actions/pantryActions';
 
 export default function Recipe({ navigation, route }) {
   const [recipe, setRecipe] = useState(route.params.recipe);
@@ -41,10 +45,8 @@ export default function Recipe({ navigation, route }) {
   const user = useSelector(state => state.accountReducer.userInfoReducer);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '88%'], []);
-
-  const open = useSelector(state => state.accordionReducer.accordionReducer);
   const stepIndex = useSelector(
-    state => state.accordionStepReducer.accordionStepReducer,
+    state => state.accordionReducer.accordionStepReducer,
   );
 
   useEffect(() => {
@@ -121,6 +123,8 @@ export default function Recipe({ navigation, route }) {
         console.log(error);
       });
   }
+
+  function addIngredientsToGroceryList(ingredients) {}
 
   function deleteLike(ID) {
     const apiConfig = {
@@ -313,7 +317,42 @@ export default function Recipe({ navigation, route }) {
   function ingredientTab() {
     return (
       <BottomSheetFlatList
-        contentContainerStyle={{ paddingTop: 20 }}
+        contentContainerStyle={{paddingTop: 20}}
+        ListHeaderComponent={() => {
+          return(
+            <TouchableOpacity
+              style={{
+                backgroundColor: color.appPrimary,
+                width: '80%',
+                alignSelf: 'center',
+                height: 50,
+                borderRadius: 29,
+                marginBottom: 20,
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                ingredients.forEach(ingredient => {
+                  dispatch({
+                    type: ADD_INGREDIENT,
+                    payload: {
+                      userID: auth().currentUser.uid,
+                      item: ingredient,
+                    },
+                  });
+                });
+              }}>
+              <Text
+                style={{
+                  color: color.white,
+                  alignSelf: 'center',
+                  fontSize: 16,
+                  fontWeight: '700',
+                }}>
+                {"Add to Grocery List"}
+              </Text>
+            </TouchableOpacity>
+          );
+        }}
         data={ingredients}
         keyExtractor={item => item.ingredient_id}
         renderItem={({ item }) => {
@@ -321,7 +360,7 @@ export default function Recipe({ navigation, route }) {
             <View
               style={{
                 flexDirection: 'row',
-                marginBottom: 10,
+                marginBotton: 10,
                 alignItems: 'center',
               }}>
               <Image
@@ -338,11 +377,10 @@ export default function Recipe({ navigation, route }) {
           );
         }}
       />
-    );
+      );
   }
 
   function stepTab() {
-    data = { steps };
     return (
       <BottomSheetFlatList
         contentContainerStyle={{ paddingTop: 20, paddingBottom: '30%' }}
@@ -357,10 +395,7 @@ export default function Recipe({ navigation, route }) {
                 borderWidth: 1,
                 borderRadius: 20,
                 marginBottom: 20,
-                backgroundColor:
-                  open && stepIndex == item.step_id
-                    ? 'white'
-                    : color.appPrimary,
+                backgroundColor: stepIndex[index] ? 'white' : color.appPrimary,
               }}>
               <AccordionItem title={`Step ${index + 1}`} index={index + 1}>
                 <Text>{item.description}</Text>
@@ -368,12 +403,27 @@ export default function Recipe({ navigation, route }) {
             </View>
           );
         }}
+        ListFooterComponent={
+          <View>
+            {GoButton('Finish Cooking', () => {
+              dispatch({
+                type: REMOVE_RECIPE_INGREDIENT,
+                payload: {
+                  userID: auth().currentUser.uid,
+                  ingredients
+                },
+              });
+            })}
+          </View>
+        }
       />
     );
   }
+
   if (!recipe) {
     return null;
   }
+
   return (
     <View
       style={{ flex: 1, backgroundColor: 'white' }}

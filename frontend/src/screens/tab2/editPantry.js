@@ -15,9 +15,9 @@ import SwitchSelector from 'react-native-switch-selector';
 import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import {
-  ADD_INGREDIENT,
+  ADD_PANTRY_INGREDIENT,
   GET_ALL_INGREDIENTS,
-  REMOVE_INGREDIENT,
+  REMOVE_PANTRY_INGREDIENT,
   SEARCH_INGREDIENTS,
 } from '../../actions/pantryActions';
 import Alerts from '../../components/Alerts';
@@ -32,6 +32,7 @@ export default function EditPantry({navigation}) {
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
   );
+  console.log("THESE ARE THE INGREDIENTS ----> ", ingredients)
   
   useEffect(() => {
     dispatch({type: GET_ALL_INGREDIENTS});
@@ -171,7 +172,7 @@ export default function EditPantry({navigation}) {
                   <TouchableOpacity
                     onPress={() => {
                       dispatch({
-                        type: ADD_INGREDIENT,
+                        type: ADD_PANTRY_INGREDIENT,
                         payload: {userID: auth().currentUser.uid, item: item},
                       });
                     }}
@@ -257,7 +258,7 @@ export default function EditPantry({navigation}) {
                       }}
                       onPress={() => {
                         dispatch({
-                          type: REMOVE_INGREDIENT,
+                          type: REMOVE_PANTRY_INGREDIENT,
                           payload: {userID: auth().currentUser.uid, item},
                         });
                       }}

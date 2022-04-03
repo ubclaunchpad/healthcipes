@@ -25,7 +25,7 @@ import {
 } from '../../actions/recipeActions';
 import auth from '@react-native-firebase/auth';
 import NutritionChips from '../../components/nutritionChips';
-import {ADD_INGREDIENT} from '../../actions/groceryListActions';
+import {ADD_GROCERY_INGREDIENT} from '../../actions/groceryListActions';
 import GoButton from '../../components/goButton';
 import {REMOVE_PANTRY_INGREDIENT, REMOVE_RECIPE_INGREDIENT} from '../../actions/pantryActions';
 
@@ -336,7 +336,7 @@ export default function Recipe({navigation, route}) {
                   console.log('Add to grocery list button pressed');
                   ingredients.forEach(ingredient => {
                     dispatch({
-                      type: ADD_INGREDIENT,
+                      type: ADD_GROCERY_INGREDIENT,
                       payload: {
                         userID: auth().currentUser.uid,
                         item: ingredient,

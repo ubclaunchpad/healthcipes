@@ -4,7 +4,7 @@ import {API_URL} from '@env';
 import axios from 'axios';
 import {
     GET_GROCERY,
-    ADD_INGREDIENT,
+    ADD_GROCERY_INGREDIENT,
     REMOVE_INGREDIENT,
     GET_ALL_INGREDIENTS,
     SEARCH_INGREDIENTS,
@@ -66,6 +66,7 @@ function* getGroceryCall(param) {
   }
 
   function* getAllGroceriesCall() {
+    console.log("HIT THE GET ALL GROCERIES CALL INSTEAD"); 
     try {
       const apiConfig = {
         method: 'get',
@@ -107,10 +108,17 @@ function* getGroceryCall(param) {
   }
 
   function* addIngredientCall(param) {
+    console.log("THIS IS THE PARAM ---->", param); 
+    console.log("THIS IS THE PARAM.payload.item[0] ---->", param.payload.item[0]); 
+    array = []; 
+    array.push(param.payload.item[0]); 
+    array2=[]
+    array2.push(array);
+    console.log("THIS IS THE ARRAY --->", array2); 
     try {
       const data = JSON.stringify({
         user_id: param.payload.userID,
-        ingredient_id: param.payload.item[0],
+        grocery_list_input: array2,
       });
       const apiConfig = {
         method: 'post',
@@ -119,7 +127,7 @@ function* getGroceryCall(param) {
           'Content-Type': 'application/json',
         },
         data,
-      };
+      }
 
       const response = yield call(axios, apiConfig);
       const results = response.data;
@@ -176,8 +184,8 @@ function* getGroceryCall(param) {
     yield takeLatest(SEARCH_INGREDIENTS, searchIngredientsCall);
   }
 
-  export function* addIngredient() {
-    yield takeLatest(ADD_INGREDIENT, addIngredientCall);
+  export function* addGroceryIngredient() {
+    yield takeLatest(ADD_GROCERY_INGREDIENT, addIngredientCall);
   }
 
   export function* removeIngredient() {

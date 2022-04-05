@@ -32,8 +32,8 @@ export default function EditPantry({navigation}) {
   const ingredients = useSelector(
     state => state.pantryReducer.ingredientReducer,
   );
-  console.log("THESE ARE THE INGREDIENTS ----> ", ingredients)
-  
+  console.log('THESE ARE THE INGREDIENTS ----> ', ingredients);
+
   useEffect(() => {
     dispatch({type: GET_ALL_INGREDIENTS});
   }, [dispatch]);
@@ -55,21 +55,19 @@ export default function EditPantry({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      {Alerts(alert, "Pantry Edit Error")}
+      {Alerts(alert, 'Pantry Edit Error')}
       <View
         style={{
           flex: 1,
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-        }}
-      >
+        }}>
         <TouchableOpacity
           style={{flex: 1, marginLeft: 20}}
           onPress={() => {
             navigation.pop();
-          }}
-        >
+          }}>
           <Image
             source={require('../../assets/Back.png')}
             style={{
@@ -102,7 +100,7 @@ export default function EditPantry({navigation}) {
           <FlatList
             style={{paddingHorizontal: '5%'}}
             data={ingredients}
-            ListHeaderComponent={ 
+            ListHeaderComponent={
               <View
                 style={{
                   backgroundColor: color.lightGray,
@@ -114,8 +112,7 @@ export default function EditPantry({navigation}) {
                   alignItems: 'center',
                   alignSelf: 'center',
                   flexDirection: 'row',
-                }}
-              >
+                }}>
                 <Image
                   source={require('../../assets/Search.png')}
                   style={{
@@ -145,7 +142,6 @@ export default function EditPantry({navigation}) {
                 />
               </View>
             }
-            
             contentContainerStyle={{paddingBottom: '30%'}}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => {
@@ -166,8 +162,7 @@ export default function EditPantry({navigation}) {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     flex: 1,
-                  }}
-                >
+                  }}>
                   <Text style={{fontSize: 18}}>{item[1]}</Text>
                   <TouchableOpacity
                     onPress={() => {
@@ -175,8 +170,7 @@ export default function EditPantry({navigation}) {
                         type: ADD_PANTRY_INGREDIENT,
                         payload: {userID: auth().currentUser.uid, item: item},
                       });
-                    }}
-                  >
+                    }}>
                     {!itemInPantry(item) && (
                       <Image
                         source={require('../../assets/Plus.png')}
@@ -207,7 +201,7 @@ export default function EditPantry({navigation}) {
         )}
         {!addState && (
           <SectionList
-            sections={pantry}
+            sections={pantry.filter(item => item.data.length > 0)}
             style={{paddingLeft: '5%', marginRight: '5%'}}
             ItemSeparatorComponent={() => {
               return (
@@ -234,8 +228,7 @@ export default function EditPantry({navigation}) {
                 }}
                 onPress={() => {
                   navigation.push('Search');
-                }}
-              >
+                }}>
                 <Image
                   source={require('../../assets/Search.png')}
                   style={{
@@ -261,8 +254,7 @@ export default function EditPantry({navigation}) {
                           type: REMOVE_PANTRY_INGREDIENT,
                           payload: {userID: auth().currentUser.uid, item},
                         });
-                      }}
-                    >
+                      }}>
                       <Image
                         source={require('../../assets/X.png')}
                         style={{
@@ -273,15 +265,13 @@ export default function EditPantry({navigation}) {
                         }}
                       />
                     </TouchableOpacity>,
-                  ]}
-                >
+                  ]}>
                   <Text
                     style={{
                       fontSize: 18,
                       marginVertical: 20,
                       marginLeft: 10,
-                    }}
-                  >
+                    }}>
                     {item.name}
                   </Text>
                 </Swipeable>

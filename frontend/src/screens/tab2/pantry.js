@@ -13,7 +13,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import {GET_PANTRY} from '../../actions/pantryActions';
 import Alerts from '../../components/Alerts';
-import { SET_ALERT } from '../../actions/globalActions';
 
 export default function Pantry({navigation}) {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ export default function Pantry({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      {Alerts(alert, "Pantry Error")}
+      {Alerts(alert, 'Pantry Error')}
       <View
         disabled={true}
         style={{
@@ -108,8 +107,13 @@ export default function Pantry({navigation}) {
         </TouchableOpacity>
       </View>
       <View style={{flex: 12, marginHorizontal: '5%', paddingBottom: 45}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: '20%'}}>
           {pantry.map(({title, data, chipColor}) => {
+            if (data.length <= 0) {
+              return null;
+            }
             return (
               <View style={{flex: 10}} key={title}>
                 <Text

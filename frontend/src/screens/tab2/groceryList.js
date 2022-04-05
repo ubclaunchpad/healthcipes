@@ -7,19 +7,13 @@ import {
   Image,
   TextInput,
   SectionList,
-  Swipeable,
-  Button,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
-import SwitchSelector from 'react-native-switch-selector';
 import color from '../../styles/color';
-import {GET_GROCERY, GROCERY} from '../../actions/groceryListActions';
+import {GET_GROCERY} from '../../actions/groceryListActions';
 import {ADD_PANTRY_INGREDIENT} from '../../actions/pantryActions';
-
-// This is the CRUD functionality of the groceryList
 import {
-  // ADD_INGREDIENT,
   GET_ALL_INGREDIENTS,
   SEARCH_INGREDIENTS,
 } from '../../actions/groceryListActions';
@@ -33,47 +27,8 @@ export default function GroceryList({navigation}) {
     state => state.groceryListReducer.groceryListReducer,
   );
   const pantrylist = useSelector(state => state.pantryReducer.pantryReducer);
-  // console.log("THIS IS THE PANTRY ----> ", pantrylist);
   const [pantryIngredientIds, setpantryIngredientIds] = useState([]);
-  const [pantryIds, setIds] = useState([]);
-  var pnatryIds = [];
-  const [refresh, setrefresh] = useState(true);
-  const [ingredientIds, setingredientIds] = useState([]);
-  // console.log(grocerylist);
-  const [addState, setAddState] = useState(true);
   const [search, setSearch] = useState('');
-  const ingredients = useSelector(
-    state => state.pantryReducer.ingredientReducer,
-  );
-  const sampleGroceryList = [
-    {
-      title: 'Dairy',
-      data: [
-        {category: 'Dairy', id: 'aaadced', name: 'Pinch of crushed red pepper'},
-        {category: 'Seasoning', id: 'aadsvavcadwaad', name: 'Cinnamon Sticks'},
-      ],
-    },
-
-    {
-      title: 'Fruits And Vegetables',
-      data: [
-        {category: 'Seasoning', id: 'acadaad', name: 'Cauliflower'},
-        {category: 'Seasoning', id: 'aacasdcaad', name: 'Cabbage'},
-        {category: 'Seasoning', id: 'aaacdcaad', name: 'Tomato'},
-      ],
-    },
-    {
-      title: 'Meats and Fish',
-      data: [{category: 'Seasoning', id: 'aaacadcadsd', name: 'Goldfish'}],
-    },
-    {title: 'Seasoning', data: []},
-    {
-      title: 'Other',
-      data: [
-        {category: 'Seasoning', id: 'aaaacdscadvd', name: 'Cookie Crumbs'},
-      ],
-    },
-  ];
 
   useEffect(() => {
     dispatch({type: GET_GROCERY, userID: auth().currentUser.uid});
@@ -90,13 +45,9 @@ export default function GroceryList({navigation}) {
     });
     setpantryIngredientIds(pantryIds.flat());
   }, [pantrylist]);
-  // console.log("these are the ingredient ids ----> ", pantryIngredientIds);
 
   const groceryItemInPantry = item => {
-    // console.log(item);
     const id = item.id;
-    //   console.log("THIS IS THE ITEM ID ----->", id);
-    // console.log(pantryIngredientIds.includes(id));
     return pantryIngredientIds.includes(id);
   };
 
@@ -196,8 +147,7 @@ export default function GroceryList({navigation}) {
             }}
           />
         </View>
-        <View
-          style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <TouchableOpacity
             style={{
               backgroundColor: color.black75,
@@ -234,7 +184,7 @@ export default function GroceryList({navigation}) {
 
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={grocerylist}
+          sections={grocerylist.filter(item => item.data.length > 0)}
           style={{paddingLeft: '5%', marginRight: '5%'}}
           renderSectionFooter={() => {
             return (

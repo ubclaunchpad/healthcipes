@@ -15,7 +15,6 @@ import SwitchSelector from 'react-native-switch-selector';
 import {useDispatch, useSelector} from 'react-redux';
 import color from '../../styles/color';
 import {
-  GET_GROCERY,
   ADD_GROCERY_INGREDIENT,
   GET_ALL_INGREDIENTS,
   REMOVE_INGREDIENT,
@@ -39,7 +38,6 @@ export default function EditGrocery({navigation}) {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('THIS IS THE GROCERY LIST ---->', groceryList[0].data[1].id);
     const groceryIds = groceryList.map(groceryItem => {
       const data = groceryItem.data;
       return data.map(ingredient => {
@@ -208,7 +206,7 @@ export default function EditGrocery({navigation}) {
         )}
         {!addState && (
           <SectionList
-            sections={groceryList}
+            sections={groceryList.filter(item => item.data.length > 0)}
             style={{paddingLeft: '5%', marginRight: '5%'}}
             ItemSeparatorComponent={() => {
               return (
@@ -290,7 +288,7 @@ export default function EditGrocery({navigation}) {
               return (
                 <View
                   style={{
-                    height: 1,
+                    height: 10,
                   }}
                 />
               );

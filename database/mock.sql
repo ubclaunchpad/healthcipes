@@ -7,13 +7,49 @@ CALL umami_db.postUser('XGHO9QrIGJeCcXEamZhnT9eH7TZ2', 'athens', 'athens', 't', 
 
 CALL umami_db.upsertUserNotificationToken('gNptOVCpuidg6plzj9ZaRi7brdj1', 'trial token');
 
-CALL umami_db.addMockUser();
-CALL umami_db.addMockRecipe();
-CALL umami_db.addMockSteps();
-CALL umami_db.addMockIngredientsInfo();
-CALL umami_db.addMockIngredients();
+CALL umami_db.createIngredientInfo('Dummy1', 'Milk', 'Dairy', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy2', 'Butter', 'Dairy', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy3', 'Cheese', 'Dairy', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy4', 'Orange', 'Fruits and Vegetables', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy5', 'Banana', 'Fruits and Vegetables', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy6', 'Strawberry', 'Fruits and Vegetables', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy7', 'Chicken Breast', 'Meat and Fish', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy8', 'Salmon', 'Meat and Fish', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy9', 'Cayenne Pepper', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('Dummy10', 'Soy Sauce', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('MagicID', 'Magic', 'Other', '', 0, 0, 0, 0, 0);
+CALL umami_db.createIngredientInfo('aaaa', 'Egg', 'Dairy', '', 10, 0, 5, 0, 300);
+CALL umami_db.createIngredientInfo('aaab', 'Salt', 'Seasoning', '', 0, 0, 0, 0, 0);
+CALL umami_db.createIngredientInfo('aaac', 'Pepper', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('aaad', 'Crushed Red Pepper', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('aaae', 'Curry Powder', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('aaaf', 'Garlic Powder', 'Seasoning', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('aaag', 'Tomato Soup', 'Other', '', 0, 0, 0, 0, 2);
+CALL umami_db.createIngredientInfo('aaah', 'Rice', 'Other', '', 0, 0, 0, 0, 2);
+
+CALL umami_db.postUser('abc', 'UBCLaunchpad', 'UBC', 'Launchpad', 'ubclaunchpad@gmail.com', 'Vancouver', '', 0, 0, 0, 0, 0, 0, 0, 0, 'ANY', 0.25);
+
+CALL umami_db.createRecipe(1, 'Scrambled Eggs', 'Scrambled eggs: timeless, simple, quick', 'abc', 'UBCLaunchpad', 'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg', 10, 1, 5, 0, 300, 1, 1, 0, 0, 0, 0, 0, 0, 5);
+CALL umami_db.addSteps(1, 'crack two eggs into a small bowl', 1, 'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg');
+CALL umami_db.addSteps(1, 'add salt, pepper, and crushed red pepper', 1, 'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg');
+CALL umami_db.addSteps(1, 'cook in small pan on medium heat, stirring occassionally', 5, 'gs://umami-2021.appspot.com/Recipes/Scrambled Eggs.jpeg');
+CALL umami_db.addIngredients('aaaa', 1, 1, 'Egg', 'Dairy');
+CALL umami_db.addIngredients('aaab', 1, 2, 'Salt', 'Seasoning');
+CALL umami_db.addIngredients('aaac', 1, 2, 'Pepper', 'Seasoning');
+CALL umami_db.addIngredients('aaad', 1, 2, 'Crushed Red Pepper', 'Seasoning');
 
 CALL umami_db.createRecipe(2, 'Butter Chicken', 'Tasty and savoury butter chicken', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
+CALL umami_db.addSteps(2, 'In a large non-stick skillet over high heat, brown the chicken thighs in the butter with the curry powder and garlic powder. Add the tomato soup and milk.', 5, 'gs://umami-2021.appspot.com/Recipes/Butter Chicken.jpeg');
+CALL umami_db.addSteps(2, 'Bring to a boil and simmer gently for 8 to 10 minutes or until the sauce thickens. Add pepper to taste. Serve with rice and naan bread, if desired.', 10, 'gs://umami-2021.appspot.com/Recipes/Butter Chickens.jpeg');
+CALL umami_db.addIngredients('Dummy7', 2, 1, 'Chicken Breast', 'Meat and Fish');
+CALL umami_db.addIngredients('Dummy2', 2, 1, 'Butter', 'Dairy');
+CALL umami_db.addIngredients('aaae', 2, 1, 'Curry Powder', 'Seasoning');
+CALL umami_db.addIngredients('aaaf', 2, 1, 'Garlic Powder', 'Seasoning');
+CALL umami_db.addIngredients('aaag', 2, 1, 'Tomato Soup', 'Other');
+CALL umami_db.addIngredients('Dummy2', 2, 1, 'Milk', 'Dairy');
+CALL umami_db.addIngredients('aaac', 2, 2, 'Pepper', 'Seasoning');
+CALL umami_db.addIngredients('aaah', 2, 2, 'Rice', 'Other');
+
 CALL umami_db.createRecipe(3, 'Teriyaki Chicken', 'The BEST teriyaki chicken recipe you will ever try', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Teriyaki Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
 CALL umami_db.createRecipe(4, 'Fried Chicken', 'Classic Louisiana-style fried chicken', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Fried Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
 CALL umami_db.createRecipe(5, 'Roasted Chicken', 'Who needs Costco anyways?', 'Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'harinwu', 'gs://umami-2021.appspot.com/Recipes/Roasted Chicken.jpeg', 20, 10, 5, 2, 600, 3, 0, 0, 0, 0, 0, 0, 0, 20);
@@ -40,18 +76,6 @@ CALL umami_db.postUserActivity('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'RECIPE_VIEW', NU
 CALL umami_db.postUserActivity('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'RECIPE_VIEW', NULL, NULL, 4);
 CALL umami_db.postUserActivity('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'RECIPE_VIEW', NULL, NULL, 3);
 CALL umami_db.postUserActivity('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'RECIPE_VIEW', NULL, NULL, 2);
-
-CALL umami_db.createIngredientInfo('Dummy1', 'Milk', 'Dairy', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy2', 'Butter', 'Dairy', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy3', 'Cheese', 'Dairy', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy4', 'Orange', 'Fruits and Vegetables', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy5', 'Banana', 'Fruits and Vegetables', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy6', 'Strawberry', 'Fruits and Vegetables', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy7', 'Chicken Breast', 'Meat and Fish', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy8', 'Salmon', 'Meat and Fish', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy9', 'Pepper', 'Seasoning', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('Dummy10', 'Soy Sauce', 'Seasoning', '', 0, 0, 0, 0, 2);
-CALL umami_db.createIngredientInfo('MagicID', 'Magic', 'Other', '', 0, 0, 0, 0, 0);
 
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy1');
 CALL umami_db.postPantry('Qnj6AjQOLoZlJw4TZBpRE3iNz0K3', 'Dummy2');

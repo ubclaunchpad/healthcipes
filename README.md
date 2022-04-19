@@ -99,7 +99,8 @@ Inide of Production machine from root umami folder
 3. sudo rm -rf ./database/data
 4. sudo ./init-letsencrypt.sh
 5. run `docker-compose up --build -d` 
-6. On a local device, run `bash ./import.sh` to re-upload saved data
+6. run `python3 recipe_data_update.py`
+7. On a local device, run `bash ./import.sh` to re-upload saved data
 
 ## Database Backup & Restore
 ### Backup

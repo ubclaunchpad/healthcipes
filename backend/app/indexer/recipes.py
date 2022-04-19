@@ -211,9 +211,11 @@ def post_recipe(conn, cursor, recipe):
 def recipe_from_video_url(url):
     return get_recipe_from_video_url(url)
 
-def post_scrape_steps(conn, cursor, stepList, recipe):
+def post_scrape_steps(conn, cursor, stepList, recipe, ingredients):
     sql_proc = 'addSteps'
+    sql_ingredient_proc = 'addIngredients'
 
+    ingredientAdded = False
     try:
         for step in stepList:
             cursor.callproc(sql_proc, (
@@ -224,6 +226,25 @@ def post_scrape_steps(conn, cursor, stepList, recipe):
             ))
             conn.commit()
             cursor.nextset()
+
+            if (not ingredientAdded):
+                cursor.execute('SELECT LAST_INSERT_ID()')
+                cursor.lastrowid = cursor.fetchone()[0] 
+                stepID = cursor.lastrowid
+                ingredientAdded = True
+
+                for ingredient in ingredients:
+                    res = get_all_ingredients(ingredient)
+
+                    cursor.callproc(sql_ingredient_proc, (
+                        res['data'][0][0],
+                        recipe,
+                        stepID,
+                        ingredient,
+                        "Other"
+                    ))
+                    conn.commit()
+                    cursor.nextset()
         return stepList
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
@@ -261,25 +282,6 @@ def post_steps(conn, cursor, stepList, recipeID):
                 conn.commit()
                 cursor.nextset()
         return stepList
-    except Exception as e:
-        print("MYSQL ERROR:", sql_proc)
-        logging.error(e)
-
-def post_ingredients(conn, cursor, ingredientList, recipe):
-    sql_proc = 'addIngredients'
-
-    try:
-        for ingredient in ingredientList:
-            cursor.callproc(sql_proc, (
-                "MagicID",
-                recipe,
-                0,
-                ingredient,
-                "Other"
-            ))
-            conn.commit()
-            cursor.nextset()
-        return ingredientList
     except Exception as e:
         print("MYSQL ERROR:", sql_proc)
         logging.error(e)

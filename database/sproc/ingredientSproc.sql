@@ -16,8 +16,11 @@ CREATE PROCEDURE `createIngredientInfo` (
     IN `_fiber` INT,
     IN `_calories` INT
 )
-BEGIN REPLACE INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`,`category`,`image`,`protein`,`carbs`,`fat`,`fiber`, `calories`)
+BEGIN 
+SET FOREIGN_KEY_CHECKS = 0;
+REPLACE INTO `ingredients_info_table` (`ingredient_id`, `ingredient_name`,`category`,`image`,`protein`,`carbs`,`fat`,`fiber`, `calories`)
 VALUES (`_ingredient_id`, `_ingredient_name`,`_category`,`_image`,`_protein`,`_carbs`,`_fat`,`_fiber`,`_calories`);
+SET FOREIGN_KEY_CHECKS = 1;
 
 END$$
 
@@ -36,7 +39,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE `getIngredientsKeyWordSearch` (IN `_keyword` VARCHAR(50))
+CREATE PROCEDURE `getIngredientsKeyWordSearch` (IN `_keyword` VARCHAR(255))
 BEGIN 
 
 SELECT * FROM `ingredients_info_table` WHERE ingredient_name LIKE CONCAT('%', _keyword , '%') ;

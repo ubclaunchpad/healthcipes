@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import logging
 import requests
 from app.indexer.tools import init_conn
-from app.indexer.recipes import get_all_recipes_driven, soft_delete_recipe_by_id, delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, post_ingredients, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
+from app.indexer.recipes import get_all_recipes_driven, soft_delete_recipe_by_id, delete_recipe_by_id, get_createdrecipe_by_userid, get_recipe_by_keyword, get_all_recipes, post_recipe, post_steps, post_scrape_steps, get_recipe_by_id, filter_recipes, get_featured_recipes, recipe_from_video_url
 from app.functions.scraper import scraper
 from app.functions.ingredient import parse_ingredients_from_text
 from functools import reduce
@@ -193,12 +193,9 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
         res = post_recipe(conn, cursor, recipe)
         if (len(steps) > 0):
             if (url != ""):
-                _ = post_scrape_steps(conn, cursor, steps, res[0])
+                _ = post_scrape_steps(conn, cursor, steps, res[0], ingredients)
             else:
                 _ = post_steps(conn, cursor, steps, res[0])
-        if (len(ingredients) > 0):
-            if (url != ""):
-                _ = post_ingredients(conn, cursor, ingredients, res[0])
         return res, 200
     except Exception as e:
         logging.error(e)
@@ -208,7 +205,6 @@ def create_recipe(url: str = "", recipe: dict = defaultRecipe, steps: list = [],
 def create_recipe_video(body: Dict):
     # body: {url: ''}
     try:
-        conn, cursor = init_conn()
         if (body['url'] != ""):
             res = recipe_from_video_url(body['url'])
         return {

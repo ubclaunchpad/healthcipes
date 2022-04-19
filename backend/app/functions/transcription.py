@@ -1,6 +1,6 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 import spacy
-from pprint import pprint
+import requests
 import urllib.request
 import json
 import urllib
@@ -129,6 +129,20 @@ def get_recipe_steps_from_transcript(transcript, transcript_text):
     return [], -1
 
 
+def get_recipe_steps_from_digestapi(transcript_text):
+    url = 'https://digestapi.azurewebsites.net/gpt3?performance=0'
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    body = {
+        "text": transcript_text
+    }
+    response = requests.post(url, data=json.dumps(body), headers=headers)
+
+    return response.json()[0]
+
 def get_recipe_ingredients_from_transcript(transcript_text):
     return parse_ingredients_from_text(transcript_text)
 
@@ -137,7 +151,10 @@ def get_recipe_from_video_url(video_url):
     transcript_text = ' '.join([item['text'] for item in transcript])
     print(transcript_text)
 
-    steps, avg_step_length = get_recipe_steps_from_transcript(transcript, transcript_text)
+    ### Odin's Algorithm
+    # steps, avg_step_length = get_recipe_steps_from_transcript(transcript, transcript_text)
+    ### Digest API
+    steps = get_recipe_steps_from_digestapi(transcript_text)
     ingredients = get_recipe_ingredients_from_transcript(transcript_text)
     servings = get_servings_from_transcript(transcript_text)
 

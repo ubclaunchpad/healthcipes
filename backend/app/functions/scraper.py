@@ -36,27 +36,27 @@ def scraper (url):
     try:
         protein = float(re.findall("\d+\.\d+", nutrients["proteinContent"])[0])
     except:
-        protein = None
+        protein = 0
     try:
         carbs = float(re.findall("\d+\.\d+", nutrients["carbohydrateContent"])[0])
     except:
-        carbs = None
+        carbs = 0
     try:
         fat = float(re.findall("\d+\.\d+", nutrients["fatContent"])[0])
     except:
-        fat = None
+        fat = 0
     try:
         fiber = float(re.findall("\d+\.\d+", nutrients["fiberContent"])[0])
     except:
-        fiber = None
+        fiber = 0
     try:
         cal = float(re.findall("\d+\.\d+", nutrients["calories"])[0])
     except:
-        cal = None
+        cal = 0
     try:
         servings = int(re.findall("\d+", scraper.yields())[0])
     except:
-        servings = None
+        servings = 0
 
     recipe = {
         'recipe_id': None,

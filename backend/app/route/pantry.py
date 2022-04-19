@@ -89,6 +89,7 @@ def get_all_ingredients(keyword: str = None):
     try:
         if keyword: 
             conn, cursor = init_conn()
+            keyword = keyword.replace("(", "").replace(")", "")
             res = get_ingredients_by_keyword(cursor, keyword)
             cursor.nextset()
             if len(res) == 0:
